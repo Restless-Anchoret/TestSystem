@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel>
+<schema name="public" protected="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<database name="test_system">
+</database>
+
+<table name="user">
+	<schema name="public"/>
+	<position x="480" y="340"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="login" not-null="true">
+		<type name="varchar" length="30"/>
+	</column>
+	<column name="password_hash" not-null="true">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="role" not-null="true">
+		<type name="varchar" length="15"/>
+	</column>
+	<column name="registration_date" not-null="true">
+		<type name="date"/>
+	</column>
+	<column name="actual" not-null="true" default-value="true">
+		<type name="boolean"/>
+	</column>
+	<constraint name="PK_user_id" type="pk-constr" factor="10" table="public.user">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_user_login" type="uq-constr" factor="10" table="public.user">
+		<columns names="login" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_user_id" table="public.user"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="id"/>
+		</idxelement>
+	</index>
+	<index name="IX_user_login" table="public.user"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="login"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="personal_data">
+	<schema name="public"/>
+	<position x="20" y="20"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="first_name">
+		<type name="varchar" length="30"/>
+	</column>
+	<column name="last_name">
+		<type name="varchar" length="30"/>
+	</column>
+	<column name="patronymic">
+		<type name="varchar" length="30"/>
+	</column>
+	<column name="organization">
+		<type name="varchar" length="100"/>
+	</column>
+	<column name="course">
+		<type name="smallint"/>
+	</column>
+	<column name="country">
+		<type name="varchar" length="50"/>
+	</column>
+	<column name="city">
+		<type name="varchar" length="50"/>
+	</column>
+	<constraint name="PK_personal_data_id" type="pk-constr" factor="10" table="public.personal_data">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_personal_data_id" table="public.personal_data"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="competition">
+	<schema name="public"/>
+	<position x="120" y="620"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="200"/>
+	</column>
+	<column name="hold_competition" not-null="true">
+		<type name="boolean"/>
+	</column>
+	<column name="evaluation_type" not-null="true">
+		<type name="varchar" length="5"/>
+	</column>
+	<column name="registration_type" not-null="true">
+		<type name="varchar" length="10"/>
+	</column>
+	<column name="visible" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="show_monitor" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="pretests_only" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="practice_permition" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="finished" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="folder_name" not-null="true">
+		<type name="varchar" length="20"/>
+	</column>
+	<column name="competition_start" default-value="null">
+		<type name="timestamp"/>
+	</column>
+	<column name="competition_interval" default-value="null">
+		<type name="interval"/>
+	</column>
+	<column name="interval_before_frozen" default-value="null">
+		<type name="interval"/>
+	</column>
+	<constraint name="PK_competition_id" type="pk-constr" factor="10" table="public.competition">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_competition_name" type="uq-constr" factor="10" table="public.competition">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_competition_folder_name" type="uq-constr" factor="10" table="public.competition">
+		<columns names="folder_name" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_competition_id" table="public.competition"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="participation">
+	<schema name="public"/>
+	<position x="20" y="320"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="competition_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="personal_data_id" default-value="null">
+		<type name="integer"/>
+	</column>
+	<column name="registered" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="points" default-value="null">
+		<type name="smallint"/>
+	</column>
+	<column name="fine" default-value="null">
+		<type name="integer"/>
+	</column>
+	<column name="place" default-value="null">
+		<type name="smallint"/>
+	</column>
+	<column name="solved_problems" default-value="null">
+		<type name="smallint"/>
+	</column>
+	<constraint name="PK_participation_id" type="pk-constr" factor="10" table="public.participation">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_participation_competition_id_user_id" type="uq-constr" factor="10" table="public.participation">
+		<columns names="competition_id,user_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_participation_personal_data_id" type="uq-constr" factor="10" table="public.participation">
+		<columns names="personal_data_id" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_participation_competition_id" table="public.participation"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="competition_id"/>
+		</idxelement>
+	</index>
+	<index name="IX_participation_user_id" table="public.participation"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="user_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="problem">
+	<schema name="public"/>
+	<position x="900" y="80"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="type" not-null="true">
+		<type name="varchar" length="8"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="40"/>
+	</column>
+	<column name="checker_type" not-null="true" default-value="'default'">
+		<type name="varchar" length="15"/>
+	</column>
+	<column name="time_limit" not-null="true" default-value="1000">
+		<type name="integer"/>
+	</column>
+	<column name="memory_limit" not-null="true" default-value="64">
+		<type name="smallint"/>
+	</column>
+	<column name="description_file_exists" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="validated" not-null="true" default-value="false">
+		<type name="boolean"/>
+	</column>
+	<column name="folder_name" not-null="true">
+		<type name="varchar" length="20"/>
+	</column>
+	<constraint name="PK_problem_id" type="pk-constr" factor="10" table="public.problem">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_problem_problem_folder_path" type="uq-constr" factor="10" table="public.problem">
+		<columns names="folder_name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_problem_name" type="uq-constr" factor="10" table="public.problem">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_problem_id" table="public.problem"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="competition_problem">
+	<schema name="public"/>
+	<position x="900" y="400"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="competition_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="problem_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="problem_number" not-null="true">
+		<type name="varchar" length="5"/>
+	</column>
+	<constraint name="PK_competition_problem_id" type="pk-constr" factor="10" table="public.competition_problem">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_competition_problem_competition_id_problem_id" type="uq-constr" factor="10" table="public.competition_problem">
+		<columns names="competition_id,problem_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_competition_problem_competition_id_problem_number" type="uq-constr" factor="10" table="public.competition_problem">
+		<columns names="competition_id,problem_number" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_competition_problem_id" table="public.competition_problem"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="id"/>
+		</idxelement>
+	</index>
+	<index name="IX_competition_problem_competition_id" table="public.competition_problem"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="competition_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="submission">
+	<schema name="public"/>
+	<position x="940" y="640"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="competition_problem_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="compilator_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="submission_time" not-null="true">
+		<type name="timestamp"/>
+	</column>
+	<column name="folder_name" not-null="true">
+		<type name="varchar" length="20"/>
+	</column>
+	<column name="verdict" not-null="true" default-value="'waiting'">
+		<type name="varchar" length="15"/>
+	</column>
+	<column name="wrong_test_number" default-value="null">
+		<type name="smallint"/>
+	</column>
+	<column name="decision_time" default-value="null">
+		<type name="integer"/>
+	</column>
+	<column name="decision_memory" default-value="null">
+		<type name="integer"/>
+	</column>
+	<column name="points" default-value="null">
+		<type name="smallint"/>
+	</column>
+	<constraint name="PK_submission_id" type="pk-constr" factor="10" table="public.submission">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_submission_folder_name" type="uq-constr" factor="10" table="public.submission">
+		<columns names="folder_name" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_submission_competition_problem_id" table="public.submission"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="competition_problem_id"/>
+		</idxelement>
+	</index>
+	<index name="IX_submission_user_id" table="public.submission"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="user_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="compilator">
+	<schema name="public"/>
+	<position x="1440" y="700"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="30"/>
+	</column>
+	<constraint name="PK_compilator_id" type="pk-constr" factor="10" table="public.compilator">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_compilator_name" type="uq-constr" factor="10" table="public.compilator">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="test_group">
+	<schema name="public"/>
+	<position x="1400" y="100"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="problem_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="test_group_type" not-null="true">
+		<type name="varchar" length="10"/>
+	</column>
+	<column name="tests_quantity" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<column name="points_for_test" not-null="true">
+		<type name="smallint"/>
+	</column>
+	<constraint name="PK_test_group_id" type="pk-constr" factor="10" table="public.test_group">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_test_group_problem_id" table="public.test_group"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="problem_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="participation_result">
+	<schema name="public"/>
+	<position x="440" y="40"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="competition_problem_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="points" not-null="true" default-value="0">
+		<type name="smallint"/>
+	</column>
+	<column name="fine" not-null="true" default-value="0">
+		<type name="integer"/>
+	</column>
+	<constraint name="PK_participation_result" type="pk-constr" factor="100" table="public.participation_result">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_participation_result_user_id_competition_problem_id" type="uq-constr" factor="100" table="public.participation_result">
+		<columns names="user_id,competition_problem_id" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_participation_result_user_id" table="public.participation_result"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="user_id"/>
+		</idxelement>
+	</index>
+	<index name="IX_participation_result_competition_problem_id" table="public.participation_result"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="competition_problem_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<table name="author_decision">
+	<schema name="public"/>
+	<position x="1400" y="400"/>
+	<column name="id" not-null="true">
+		<type name="serial"/>
+	</column>
+	<column name="problem_id" not-null="true">
+		<type name="integer"/>
+	</column>
+	<column name="folder_name" not-null="true">
+		<type name="varchar" length="15"/>
+	</column>
+	<column name="compilator_id">
+		<type name="integer"/>
+	</column>
+	<constraint name="PK_author_decision_id" type="pk-constr" factor="10" table="public.author_decision">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="UN_author_decision_problem_id_folder_name" type="uq-constr" factor="10" table="public.author_decision">
+		<columns names="problem_id,folder_name" ref-type="src-columns"/>
+	</constraint>
+	<index name="IX_author_decision_problem_id" table="public.author_decision"
+		 concurrent="false" unique="false" fast-update="false"
+		 index-type="btree" factor="0">
+		<idxelement use-sorting="true" nulls-first="false" asc-order="true">
+			<column name="problem_id"/>
+		</idxelement>
+	</index>
+</table>
+
+<constraint name="FK_participation_competition_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.competition" table="public.participation">
+	<columns names="competition_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_participation_user_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.user" table="public.participation">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_participation_personal_data_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.personal_data" table="public.participation">
+	<columns names="personal_data_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_competition_problem_competition_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.competition" table="public.competition_problem">
+	<columns names="competition_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_competition_problem_problem_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.problem" table="public.competition_problem">
+	<columns names="problem_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_submission_competition_problem_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.competition_problem" table="public.submission">
+	<columns names="competition_problem_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_submission_user_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.user" table="public.submission">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_submission_compilator_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.compilator" table="public.submission">
+	<columns names="compilator_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_test_group_problem_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.problem" table="public.test_group">
+	<columns names="problem_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_participation_result_user_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.user" table="public.participation_result">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_participation_result_competition_problem_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.competition_problem" table="public.participation_result">
+	<columns names="competition_problem_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_author_decision_problem_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.problem" table="public.author_decision">
+	<columns names="problem_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<constraint name="FK_author_decision_compilator_id" type="fk-constr"	 comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.compilator" table="public.author_decision">
+	<columns names="compilator_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+<relationship name="rel_participations_competitions" type="relfk"
+	 src-table="public.participation"
+	 dst-table="public.competition"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_participations_users" type="relfk"
+	 src-table="public.participation"
+	 dst-table="public.user"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_participations_personal_data" type="relfk"
+	 src-table="public.participation"
+	 dst-table="public.personal_data"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_competitions_problems_competitions" type="relfk"
+	 src-table="public.competition_problem"
+	 dst-table="public.competition"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_competitions_problems_problems" type="relfk"
+	 src-table="public.competition_problem"
+	 dst-table="public.problem"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_submissions_users" type="relfk"
+	 src-table="public.submission"
+	 dst-table="public.user"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_submissions_compilators" type="relfk"
+	 src-table="public.submission"
+	 dst-table="public.compilator"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_test_groups_problems" type="relfk"
+	 src-table="public.test_group"
+	 dst-table="public.problem"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_participation_results_users" type="relfk"
+	 src-table="public.participation_result"
+	 dst-table="public.user"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_submissions_competition_problems" type="relfk"
+	 src-table="public.submission"
+	 dst-table="public.competition_problem"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_participation_results_competition_problems" type="relfk"
+	 src-table="public.participation_result"
+	 dst-table="public.competition_problem"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_author_decision_problem" type="relfk"
+	 src-table="public.author_decision"
+	 dst-table="public.problem"
+	 src-required="true" dst-required="true"/>
+
+<relationship name="rel_author_decision_compilator" type="relfk"
+	 src-table="public.author_decision"
+	 dst-table="public.compilator"
+	 src-required="true" dst-required="true"/>
+
+</dbmodel>
