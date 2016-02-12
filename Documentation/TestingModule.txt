@@ -1,0 +1,176 @@
+TestingSystem
+
+Интерфейс, описывающий общие принципы взаимодействия с тестирующей системой. Имеет всего три метода:
+
+void start();
+void addSubmission(TestingInfo info);
+void stop();
+
+Вызывать их следует в соответствующем порядке. Метод start() инициализирует тестирующую систему, подготавливая её к работе. Он должен быть вызван только один раз, обязательно перед отправкой первой посылки. После вызова метода start() можно начинать добавлять объекты TestingInfo в очередь на проверку методом addSubmission(). По окончании работы необходимо вызвать метод stop() для выполнения системой завершающих операций (например, завершения всех работающих в ней потоков выполнения).
+
+
+
+
+MultithreadTestingSystem
+
+Основной класс, реализующий интерфейс TestingSystem. Объект этого класса представляет собой готовую для использования тестирующую систему, которой можно передавать приготовленные объекты TestingInfo и которая внутри себя самостоятельно выполнит всё, что необходимо сделать с посылкой. Внутри такой тестирующей системы проверка каждой отдельной посылки выполняется в отдельном потоке, а одновременно может выполняться количество проверок, равное по умолчанию количеству ядер в процессоре компьютера, но перед запуской системы это количество можно изменить.
+
+Статический метод getDefault() позволяет получить один и тот же объект MultithreadTestingSystem из любого места кода (его и следует использовать). Несмотря на это, конструктор класса MultithreadTestingSystem не закрытый, поэтому есть возможность создавать произвольное количество тестирующих систем, работающих независимо друг от друга.
+
+Важный момент заключается в том, что перед запуском тестирующей системы ей нужно сообщить, откуда ей брать файлы, установив в неё методом setFileSupplier() объект класса, реализующего интерфейс TestingFileSupplier (о нём говорится ниже). Если не сделать это до вызова метода start(), следует ожидать вердикта FAIL по всем отправляемым на проверку посылкам. Также важно, что методы start() и stop() должны вызываться за всё время жизни объекта класса MultithreadTestingSystem только по одному разу, соответственно в самом начале и в самом конце.
+
+
+
+
+TestingFileSupplier
+
+Интерфейс, описывающий все методы, необходимые тестирующей системе для получения путей к файлам в файловой системе.
+
+Path getSubmissionFolder(String submissionFolder);
+Path getSubmissionSourceFolder(String submissionFolder);
+Path getSubmissionSourceFile(String submissionFolder);
+Path getSubmissionCompileFolder(String submissionFolder);
+Path getSubmissionCompileFile(String submissionFolder);
+
+Path getTempFile();
+void deleteTempFile(Path path);
+void deleteAllTempFiles();
+
+Path getTestInputFile(String problemFolder, TestGroupType type, int testNumber);
+Path getTestAnswerFile(String problemFolder, TestGroupType type, int testNumber);
+
+Первые пять методов должны по имени папки с посылкой возвращать путь, соответственно, к самой папке с посылкой, к папке с исходным кодом, к самом файлу с исходным кодом, к папке со скомпилированным решением и к файлу скомпилированного решения. Следующие три метода должны уметь, соответственно, предоставлять системе временный файл (для вывода в него ответа, выдаваемого решением), удалять временный файл, а также удалять все временные файлы. И, наконец, последние два метода должны предоставлять пути к входным данным некоторого теста и к ответу на некоторый тест, по задаваемым имени папки с задачей, группе тестов и номеру теста. (Класс TestGroupType - класс перечислимого типа, обозначающий группу тестов; может иметь значения SAMPLES, PRETESTS, TESTS_1, и т. д. - см. исходный код)
+
+При проверке работоспособности модуля в качестве класса, реализующего интерфейс TestingFileSupplier, использовался простой класс SimpleFileSupplier. Для настоящей работы класса MultithreadTestingSystem необходимо разработать новый класс, содержащий в себе не только методы из интерфейса TestingFileSupplier, но и многие другие - для доступа к файловой системе.
+
+
+
+
+TestingInfo
+
+Класс, содержащий в себе всю информацию о посылке, которую необходимо предоставить тестирующей системе для проверки. Он содержит в себе следующие поля:
+
+TestResultHandler testResultHandler;
+ProblemTester problemTester;
+EvaluationSystem evaluationSystem;
+LanguageToolkit languageToolkit;
+Checker checker;
+String submissionFolder, problemFolder;
+boolean pretestsOnly;
+Integer timeLimit;
+Short memoryLimit;
+TestTable testTable;
+VerdictInfo verdictInfo = null;
+
+Все поля, кроме последнего, необходимо заполнять заранее, перед отправкой объекта в тестирующую систему. Брать всю информацию для их заполнения следует из базы данных. По окончании проверки посылки в поле verdictInfo будет записан её результат, который в дальнейшем можно будет обработать. Для создания объекта класса TestingInfo служит следующий сложный конструктор:
+
+public TestingInfo(TestResultHandler testResultHandler, ProblemTester problemTester,
+            EvaluationSystem evaluationSystem, LanguageToolkit languageToolkit,Checker checker,
+            String submissionFolder, String problemFolder, boolean pretestsOnly, Integer timeLimit,
+            Short memoryLimit, TestTable testTable)
+			
+Названия полей submissionFolder, problemFolder, pretestsOnly, timeLimit, memoryLimit говорят сами за себя. Назначение остальных полей будет описано ниже. Пример создания объекта TestingInfo приведён ниже (он будет подробно прокомментирован далее):
+
+TestResultHandler handler = new ConsoleResultHandler();
+ProblemTester tester = ProblemTesterRegistry.registry().get("coding");
+EvaluationSystem evaluationSystem = EvaluationSystemRegistry.registry().get("icpc");
+LanguageToolkit toolkit = LanguageToolkitRegistry.registry().get("java");
+Checker checker = CheckerRegistry.registry().getDefault();
+MultithreadTestingSystem.getDefault().addSubmission(new TestingInfo(handler, tester, evaluationSystem,
+        toolkit, checker, "1", "1", false, 1000, (short)64, getTestTable()));
+
+
+
+
+VerdictInfo
+
+Класс, содержащий в себе информацию о результате проверки. Используется сразу в двух вариантах: как результат проверки отдельного теста и как результат проверки всей посылки. Содержит следующие поля:
+
+Verdict verdict;
+Integer decisionTime;
+Short decisionMemory;
+Short points;
+Integer wrongTestNumber;
+
+Названия полей так же говорят сами за себя. Verdict - класс перечислимого типа, который может иметь значения вроде ACCEPTED, WRONG_ANSWER, и т. п. (см. исходный код). Поле points - количество баллов, начисляемое за посылку. Поле wrongTestNumber выставляется только в случае, когда объект VerdictInfo используется как результат всей посылки.
+
+
+
+
+TestTable
+
+Класс, содержащий в себе до проверки посылки информацию о количестве тестов в каждой группе тестов, а также количество баллов, начисляемых за тест, в каждой группе. При помощи метода putTestGroup(TestGroupType type, short pointsForTest, int testsQuantity) до отправки посылки необходимо заполнить таблицу всей необходимой информацией (её следует брать из базы данных). После проверки посылки объект класса TestTable заполняется информацией о результатах проверки на каждом тесте. При помощи get-методов можно получить всю необходимую информацию о результатах.
+
+
+
+
+TestResultHandler
+
+Интерфейс, предназначенный для выполнения тестирующей системой обратного вызова (call-back) после окончания проверки по посылке. Предоставляет всего один метод:
+
+void process(TestingInfo info);
+
+В классе-реализации данного интерфейса может происходить всё, что угодно: всё, что необходимо сделать с результатами проверки посылки. Это должен зависеть от цели тестирования. Например, если посылка была отправлена участником во время соревнования, необходимо записать результаты проверки в базу данных, а также вычислить результат участника по решаемой задаче. Если же посылка была отправлена модератором для просмотра полной информации о проверке посылки, необходимо вывести на экран результаты проверки на каждом тесте (см. use-cases). В тестирующем модуле есть лишь простая реализация данного интерфейса, выводящая краткую информацию о результате проверки в консоль, которую не следует использовать.
+
+
+
+
+ProblemTester
+
+Интерфейс, определяющий логику тестирования решения. Именно он соответствует тому, чем является задача: задачей по программированию или тестом с вариантами ответов. Для случая задачи по программированию этот интерфейс реализует класс TestingProblemTester. Объект этого класса удобно получить следующим образом (комментируется ниже):
+
+ProblemTester tester = ProblemTesterRegistry.registry().get("coding");
+
+
+
+
+EvaluationSystem
+
+Интерфейс, определяющий систему оценивания решения. Реализуется классами: ICPCEvaluationSystem, IOIEvaluationSystem, CheckEvaluationSystem (для полной проверки при запросе модератора). Получить объекты данных классов удобно следующим образом (комментируется ниже):
+
+EvaluationSystem evaluationSystemICPC = EvaluationSystemRegistry.registry().get("icpc");
+EvaluationSystem evaluationSystemIOI = EvaluationSystemRegistry.registry().get("ioi");
+EvaluationSystem evaluationSystemCheck = EvaluationSystemRegistry.registry().get("check");
+
+
+
+
+LanguageToolkit
+
+Интерфейс, описывающий интрументарий, предоставляемый языком программирования: компиляцию и выполнение программы. Реализуется классом JavaLanguageToolkit. Объект этого класса удобно получить следующим образом (комментируется ниже):
+
+LanguageToolkit toolkit = LanguageToolkitRegistry.registry().get("java");
+
+
+
+
+Checker
+
+Интерфейс, описывающий используемый чекер. Реализуется классом MatchChecker, выполняющим полное сопоставление выходных данных с ответом на тест. Получить объект данного класса можно следующим образом (комментируется ниже):
+
+Checker checker = CheckerRegistry.registry().getDefault();
+
+
+
+
+Registry<T>
+
+Интерфейс, описывающий реестр объектов типа T. Имеет всего три метода:
+
+T getDefault();
+void put(String id, Supplier<T> supplier);
+T get(String id);
+
+Суть данного интерфейса в том, чтобы регистрировать в реализующих его классах объекты некоторого класса под некоторыми строковыми id, а затем получать эти объекты, не вызывая непосредственно конструкторы этих классов. Интерфейс Registry<T> реализует абстрактный класс AbstractRegistry<T>, а его расширяют четыре класса ProblemTesterRegistry, EvaluationSystemRegistry, LanguageToolkitRegistry и CheckerRegistry. В каждом из них есть статическое поле с объектом соответствующего глобального реестра, который можно получить из любого места кода и который статически заполняется объектами по умолчанию. Получить такой объект можно с помощью статического метода registry(). Таким образом, объекты классов, реализующих интерфейсы ProblemTester, EvaluationSystem, LanguageToolkit и Checker можно получить следующим образом:
+
+ProblemTester tester = ProblemTesterRegistry.registry().get("coding");
+EvaluationSystem evaluationSystem = EvaluationSystemRegistry.registry().get("icpc");
+LanguageToolkit toolkit = LanguageToolkitRegistry.registry().get("java");
+Checker checker = CheckerRegistry.registry().getDefault();
+
+
+
+
+TestingLogging
+
+Класс, имеющий одно статическое поле logger класса Logger. Предназначен исключительно для логгирования. Лог выводится в файл testing.log, расположенный в той же папке, что и модуль тестирования. В лог выводятся сообщения каждый раз, когда при проверке посылки происходит ошибка, вызывающая вердикт FAIL.
