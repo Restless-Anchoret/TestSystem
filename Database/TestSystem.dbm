@@ -7,7 +7,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <schema name="public" protected="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<database name="test_system">
+<database name="test_system_test">
 </database>
 
 <table name="user">
@@ -132,10 +132,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp"/>
 	</column>
 	<column name="competition_interval" default-value="null">
-		<type name="interval"/>
+		<type name="integer"/>
 	</column>
 	<column name="interval_before_frozen" default-value="null">
-		<type name="interval"/>
+		<type name="integer"/>
 	</column>
 	<constraint name="PK_competition_id" type="pk-constr" factor="10" table="public.competition">
 		<columns names="id" ref-type="src-columns"/>

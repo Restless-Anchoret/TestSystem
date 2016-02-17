@@ -9,8 +9,8 @@ SET check_function_bodies = false;
 
 -- Database creation must be done outside an multicommand file.
 -- These commands were put in this file only for convenience.
--- -- object: test_system | type: DATABASE --
--- CREATE DATABASE test_system
+-- -- object: test_system_test | type: DATABASE --
+-- CREATE DATABASE test_system_test
 -- ;
 -- -- ddl-end --
 -- 
@@ -82,8 +82,8 @@ CREATE TABLE public.competition(
 	finished boolean NOT NULL DEFAULT false,
 	folder_name varchar(20) NOT NULL,
 	competition_start timestamp DEFAULT null,
-	competition_interval interval DEFAULT null,
-	interval_before_frozen interval DEFAULT null,
+	competition_interval integer DEFAULT null,
+	interval_before_frozen integer DEFAULT null,
 	CONSTRAINT "PK_competition_id" PRIMARY KEY (id),
 	CONSTRAINT "UN_competition_name" UNIQUE (name),
 	CONSTRAINT "UN_competition_folder_name" UNIQUE (folder_name)
