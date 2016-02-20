@@ -3,6 +3,8 @@ package com.netcracker.testingmodule.tester;
 import com.netcracker.testingmodule.evaluation.EvaluationSystem;
 import com.netcracker.testingmodule.language.FailException;
 import com.netcracker.testingmodule.language.LanguageToolkit;
+import com.netcracker.testingmodule.language.MemoryLimitException;
+import com.netcracker.testingmodule.language.SecurityViolatedException;
 import com.netcracker.testingmodule.language.TimeLimitException;
 import com.netcracker.testingmodule.logging.TestingLogging;
 import com.netcracker.testingmodule.system.TestGroupType;
@@ -21,16 +23,10 @@ public class CodingProblemTester implements ProblemTester {
     public void performTesting(TestingFileSupplier fileSupplier, TestingInfo info) {
         Path sourceFile = fileSupplier.getSubmissionSourceFile(info.getSubmissionFolder());
         Path compileFolder = fileSupplier.getSubmissionCompileFolder(info.getSubmissionFolder());
-        //System.out.println(sourceFile.toString());
-        //System.out.println(compileFolder.toString());
-        if (Files.notExists(sourceFile) || Files.notExists(compileFolder)) {
-            TestingLogging.logger.fine("Source code or directory to compilation were not found");
-            info.setVerdictInfo(VerdictInfo.VERDICT_FAIL);
-            return;
-        }
+        Path configFolder = fileSupplier.getConfigurationFolder();
         int compilationResult = 0;
         try {
-            compilationResult = info.getLanguageToolkit().compile(sourceFile, compileFolder);
+            compilationResult = info.getLanguageToolkit().compile(sourceFile, compileFolder, configFolder);
         } catch (FailException exception) {
             TestingLogging.logger.log(Level.FINE, "FailException while compilation of decision", exception);
             if (exception.getCause() != null) {
@@ -53,10 +49,12 @@ public class CodingProblemTester implements ProblemTester {
 
         private TestingInfo info;
         private TestingFileSupplier fileSupplier;
+        private Path configFolder;
 
         public CodingTesterDelegate(TestingInfo testingInfo, TestingFileSupplier fileSupplier) {
             this.info = testingInfo;
             this.fileSupplier = fileSupplier;
+            this.configFolder = fileSupplier.getConfigurationFolder();
         }
         
         @Override
@@ -98,7 +96,7 @@ public class CodingProblemTester implements ProblemTester {
                 }
                 try {
                     LanguageToolkit.ExecutionInfo executionInfo = info.getLanguageToolkit().execute(decisionFile,
-                            inputFile, outputFile, info.getTimeLimit(), info.getMemoryLimit());
+                            inputFile, outputFile, configFolder, info.getTimeLimit(), info.getMemoryLimit());
                     if (executionInfo.getExitCode() != 0) {
                         return new VerdictInfo(Verdict.RUNTIME_ERROR)
                                 .setDecisionTime(executionInfo.getDecisionTime())
@@ -110,6 +108,10 @@ public class CodingProblemTester implements ProblemTester {
                             .setDecisionMemory(executionInfo.getDecisionMemory());
                 } catch (TimeLimitException exception) {
                     return VerdictInfo.VERDICT_TIME_LIMIT;
+                } catch (MemoryLimitException exception) {
+                    return VerdictInfo.VERDICT_MEMORY_LIMIT;
+                } catch (SecurityViolatedException exception) {
+                    return VerdictInfo.VERDICT_SECUR_VIOL;
                 } catch (FailException exception) {
                     TestingLogging.logger.log(Level.FINE, "FailException while compilation of decision", exception);
                     if (exception.getCause() != null) {

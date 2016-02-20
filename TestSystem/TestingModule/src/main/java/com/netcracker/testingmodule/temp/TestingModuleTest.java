@@ -44,6 +44,8 @@ public class TestingModuleTest {
                 toolkit, checker, "5", "1", false, 1000, (short)64, getTestTable()));
         MultithreadTestingSystem.getDefault().addSubmission(new TestingInfo(handler, tester, evaluationSystem,
                 toolkit, checker, "6", "1", false, 1000, (short)64, getTestTable()));
+        MultithreadTestingSystem.getDefault().addSubmission(new TestingInfo(handler, tester, evaluationSystem,
+                toolkit, checker, "7", "1", false, 1000, (short)64, getTestTable()));
         
         try {
             Thread.sleep(10_000);

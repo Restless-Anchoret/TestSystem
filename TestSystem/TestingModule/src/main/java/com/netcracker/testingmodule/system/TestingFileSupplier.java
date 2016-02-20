@@ -9,6 +9,7 @@ public interface TestingFileSupplier {
     Path getSubmissionSourceFile(String submissionFolder);
     Path getSubmissionCompileFolder(String submissionFolder);
     Path getSubmissionCompileFile(String submissionFolder);
+    Path getConfigurationFolder();
 
     Path getTempFile();
     void deleteTempFile(Path path);

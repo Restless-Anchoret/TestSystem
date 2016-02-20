@@ -16,6 +16,7 @@ public class SimpleFileSupplier implements TestingFileSupplier {
     private static final String submissionsMainFolder = "submissions";
     private static final String sourceFolder = "src";
     private static final String compilingFolder = "bin";
+    private static final String configurationFolder = "config";
     private static final String tempFilesFolder = "temp";
     private static final String problemsMainFolder = "problems";
     private static final String testsFolder = "tests";
@@ -54,6 +55,11 @@ public class SimpleFileSupplier implements TestingFileSupplier {
     @Override
     public Path getSubmissionCompileFile(String submissionFolder) {
         return Paths.get(fileSystemFolder, submissionsMainFolder, submissionFolder, compilingFolder, "A.class");
+    }
+    
+    @Override
+    public Path getConfigurationFolder() {
+        return Paths.get(fileSystemFolder, configurationFolder).toAbsolutePath();
     }
 
     @Override

@@ -12,11 +12,11 @@ public class TestingLogging {
     static {
         logger.setLevel(Level.ALL);
         try {
-            FileHandler fileHandler = new FileHandler("testing.log");
+            FileHandler fileHandler = new FileHandler(loggerName + ".log");
             fileHandler.setLevel(Level.ALL);
             logger.addHandler(fileHandler);
         } catch (IOException exception) {
-            logger.fine("Cannot create FileHandler");
+            logger.log(Level.FINE, "Cannot create FileHandler", exception);
         }
     }
     
