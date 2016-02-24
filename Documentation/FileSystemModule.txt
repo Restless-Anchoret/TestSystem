@@ -1,0 +1,126 @@
+Структура папки со всеми файлами имеет следующий вид:
+
+- file_system
+	- problems
+		- tests
+			- samples
+				- 1
+					input.txt
+					answer.txt
+				- 2
+					input.txt
+					answer.txt
+				...
+			- pretests
+				...
+			- tests_1
+				...
+			...
+			- tests_8
+				...
+		- checker
+			<Скомпилированные файлы чекера> // (Например, SimpleChecker.class, SimpleChecker$1.class и т. д.)
+		- author_decisions
+			- bin
+				<Скомпилированные файлы> // (Например, Task.class, Task$1.class и т. д.)
+			- src
+				<Файл решения> // (Например, Task.java)
+		statement.pdf
+	- submissions
+		- bin
+			<Скомпилированные файлы> // (Например, Task.class, Task$1.class и т. д.)
+		- src
+			<Файл решения> // (Например, Task.java)
+	- competitions
+		actual_results.xml
+		visible_results.xml
+	- temp
+		<Временные файлы> // (Например, 2356236325662.txt)
+	- config
+		java_problem.policy
+		<Другие конфигурационные файлы>
+	
+
+	
+FileSupplier
+
+Интерфейс, имеющий все методы, необходимые для работы тестирующей системы:
+
+Path getProblemFolder(String problemFolder);
+Path getProblemStatement(String problemFolder);
+Path getProblemCheckerFolder(String problemFolder);
+
+Path getTestInputFile(String problemFolder, TestGroupType type, int testNumber);
+Path getTestAnswerFile(String problemFolder, TestGroupType type, int testNumber);
+
+Path getAuthorDecisionFolder(String problemFolder, String authorDecisionFolder);
+Path getAuthorDecisionSourceFolder(String problemFolder, String authorDecisionFolder);
+Path getAuthorDecisionSourceFile(String problemFolder, String authorDecisionFolder);
+Path getAuthorDecisionCompileFolder(String submiproblemFolder, String authorDecisionFolderssionFolder);
+Path getAuthorDecisionCompileFile(String submisproblemFolder, String authorDecisionFoldersionFolder);
+
+Path getSubmissionFolder(String submissionFolder);
+Path getSubmissionSourceFolder(String submissionFolder);
+Path getSubmissionSourceFile(String submissionFolder);
+Path getSubmissionCompileFolder(String submissionFolder);
+Path getSubmissionCompileFile(String submissionFolder);
+
+Path getCompetitionActualResults(String competitionFolder);
+Path getCompetitionVisibleResults(String competitionFolder);
+
+Path getTempFile();
+void deleteTempFile(Path path);
+void deleteAllTempFiles();
+
+Path getConfigurationFolder();
+
+
+
+StandardFileSupplier
+
+Класс, реализующий интерфейс FileSupplier. Имеет статическое поле типа FileSupplier, содержащее в себе объект типа StandardFileSupplier, используемый по умолчанию. Имеет статический метод getDefault(), возврающий этот объект по умолчанию. Реализует все методы интерфейса FileSupplier. Если метод возвращает путь к папке, перед возвращением результата всегда проверяет, существует ли папка, и, если нет, создаёт её. Если метод возвращает путь к файлу, всегда проверяет, существует ли папка, содержащая файл, и если нет, создаёт её, а если не существует файл, возвращает null.
+
+
+
+FileSystemLogging
+
+Файл со статическим полем типа Logger для логгирования. В классе StandardFileSupplier во всех ситуациях, когда что-то пошло не так (например, папка или файл не найдены, возвращается null), всегда необходимо выводить информацию об этом в лог. Исходный код класса FileSystemLogging приведён ниже:
+
+---------------------------
+package com.netcracker.filesystem.logging;
+
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class FileSystemLogging {
+
+    public static final String loggerName = "file_system";
+    public static final Logger logger = Logger.getLogger(loggerName);
+    static {
+        logger.setLevel(Level.ALL);
+        try {
+            FileHandler fileHandler = new FileHandler(loggerName + ".log");
+            fileHandler.setLevel(Level.ALL);
+            logger.addHandler(fileHandler);
+        } catch (IOException exception) {
+            logger.log(Level.FINE, "Cannot create FileHandler", exception);
+        }
+    }
+    
+}
+--------------------------
+
+
+
+Структура модуля имеет следующий вид:
+
+- com
+	- netcracker
+		- filesystem
+			- supplier
+				FileSupplier.java
+				StandardFileSupplier.java
+			- logging
+				FileSystemLogging.java

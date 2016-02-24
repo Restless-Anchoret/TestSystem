@@ -8,6 +8,7 @@
     <modules>
         <module>DatabaseModul</module>
         <module>TestingModule</module>
+        <module>FileSystemModule</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
