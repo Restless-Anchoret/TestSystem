@@ -1,0 +1,239 @@
+ProblemResultInfo
+
+Интерфейс, описывающий результат определённого участника по определённой задаче (методы этого интерфейса подобны классу-сущности ParticipationResult). Содержит следующие методы:
+
+short getPoints();
+int getFine();
+int getUsedId();
+int getProblemId();
+
+
+
+TotalResultInfo
+
+Класс, содержащий в себе информацию о результате определённого участника по данному соревнованию. Содержит id участника, место, которое он занял, список объектов ProblemResultInfo, которые ему соответствуют, а также суммарное количество очков и штрафа по всем задачам. Предоставляет get-методы для всех полей.
+
+
+
+CompetitionTimeInfo
+
+Класс, содержащий три ссылки на объекты типа Date (времена начала соревнования, заморозки и окончания), а также два числа типа int (длительность соревнования в минутах и длительность заморозки). Все поля доступны через get-методы и инициализируются через конструктор.
+
+
+
+CompetitionPhase
+
+Перечислимый тип, соответствующий всем статусам соревнования. Содержит следующие значения (значение WAITING_RESULTS соответствует времени, когда, возможно, происходит системное тестирование):
+
+BEFORE,
+CODING,
+CODING_FROZEN,
+WAITING_RESULTS,
+FINISHED
+
+
+
+DatabaseDelegate
+
+Интерфейс, описывающий взаимодействие модуля с базой данных. Имеет следующие методы:
+
+CompetitionPhase getCompetitionPhase(int competitionId);
+List<ProblemResultInfo> getProblemResultInfos(int competitionId);
+CompetitionTimeInfo getCompetitionTimeInfo(int competitionId);
+String getCompetitionFolder(int competitionId);
+
+Первый метод возвращает состояние соревнования. Второй - информацию о текущих результатах всех участников по всем задачам в соревновании. При этом он проверяет, есть ли уже в базе данных вообще значения результатов о текущем соревновании, и, если их нет, сначала записывает в них нули. Третий метод - имя папки в файловой системе, соответствующей соревнованию.
+
+
+
+ResultsConservator
+
+Интерфейс, описывающий взаимодействие модуля с местом для хранения видимых результатов (по умолчанию это файловая система). Реализуется классом XmlResultsConservator (см. далее). Имеет следующие методы:
+
+List<TotalResultInfo> getVisibleResults(String competitionFolder);
+boolean persistVisibleResults(String competitionFolder, List<TotalResultInfo> results);
+
+Первый метод ищет сохранённые видимые результаты и, если находит, то возвращает их, а если нет, возвращает null. Второй метод сохраняет текущие результаты и возвращает true, если это прошло удачно, и false, если нет.
+
+
+
+FileSystemDelegate
+
+Интерфейс, описывающий взаимодействие с файловой системой. Имеет единственный метод:
+
+Path getCompetitionVisibleResults(String competitionFolder);
+
+Метод возвращает путь к файлу с видимыми результатами.
+
+
+
+RankStrategy
+
+Интерфейс, описывающий стратегию ранжирования результатов. Реализуется классом StandardRankStrategy (см. далее). Имеет всего один метод:
+
+List<TotalResultInfo> formResults(List<ProblemResultInfo> problemResultInfos);
+
+
+
+MonitorPool
+
+Интерфейс, описывающий взаимодействие с пулом мониторов по соревнованиям. Содержит единственный метод:
+
+sychronized Monitor getMonitor(int competitionId);
+
+Метод должен проверять, имеется ли уже монитор по данному соревнованию, затем, если не имеется, создавать его и возвращать.
+
+
+
+Monitor
+
+Интерфейс, описывающий доступ к текущим и видимым результатам некоторого соревнования. Содержит следующие методы:
+
+sychronized void startMonitoring();
+sychronized List<TotalResultInfo> getActualResults();
+sychronized List<TotalResultInfo> getVisibleResults();
+sychronized void setRankStrategy(RankStrategy strategy);
+
+Первый метод производит всю необходимую инициализацию объекта и запускает, если нужно, некоторые потоки. Второй и третий методы должны возвращать, соответственно, текущие и видимые результаты, либо null, если по прошествии некоторого промежутка времени результат не был получен. Последний метод позволяет менять стратегию ранжирования результатов.
+
+
+
+StandardMonitorPool
+
+Класс, реализующий интерфейс MonitorPool и оперирующий объектами StandardMonitor в пуле мониторов. В этом классе содержится объект типа Map<Integer, Monitor>, в котором хранятся все мониторы. Также в этом классе есть статическое поле типа MonitorPool, содержащее в себе пул мониторов по умолчанию, и статический метод getDefault(), возвращающий значения этого поля (оно должно инициализироваться лениво). Также содержатся поля для объектов типа DatabaseDelegate (инициализируется null), ResultsConservator (инициализируется null) и RankStrategy (инициализируется объектом класса StandardRankStrategy). Все они устанавливаются set-методами (поля должны быть иницииализированы перед использованием объекта этого класса):
+
+void setDatabaseDelegate(DatabaseDelegate delegate)
+void setResultsConservator(ResultsConservator conservator)
+void setRankStrategy(RankStrategy strategy)
+
+Как только объекту этого класса приходится создать новый объект класса StandardMonitor, он создаёт его (передавая в его конструктор объекты типов DatabaseDelegate, ResultsConservator и RankStrategy) и вызывает метод startMonitoring() у нового объекта, а затем добавляет его в Map, и только потом возвращает.
+
+
+
+StandardMonitor
+
+Класс, реализующий интерфейс Monitor. Содержит в себе следующие поля: id соревнования, имя папки соревнования (строка), ссылки на текущие и видимые результаты типа List<TotalResultInfo>, объекты типов DatabaseDelegate, ResultsConservator и RankStrategy, ссылка на объект типа ScheduledFuture<List<TotalResultInfo>> (задача сохранения видимых результатов), ссылка на объект типа Date (время последнего обновления текущих результатов), задержка для обновления результатов (переменная типа long). Конструктор задаёт только id соревнования и объекты типов DatabaseDelegate, ResultsConservator и RankStrategy, остальные поля инициализируются null-значениями (кроме задержки обновления, она инициализируется значением статической константы из этого же класса, равной 30_000).
+
+Метод startMonitoring() должен быть вызван до первого использования объекта. В нём сначала заполняется поле с именем папки соревнования посредством обращения к объекту типа DatabaseDelegate. Затем вызывается закрытый метод updateResults().
+
+Метод getActualResults() вначале вызывает метод updateResults(), а затем возвращает содержимое ссылки на текущие результатые, обёрнутое в немодифицируемую коллекцию. Метод getVisibleResults() вначале вызывает метод updateResults(), а затем возвращает содержимое ссылки на видимые результаты, обёрнутое в немодифицируемую коллекцию.
+
+Метод setRankStrategy(RankStrategy strategy) устанавливает в монитор новую стратегию ранжирования.
+
+Закрытый метод updateResults() выполняет несколько действий в следующем порядке:
+Получает из объекта типа DatabaseDelegate статус текущего соревнования;
+Если статус BEFORE, метод сразу завершается;
+Если ссылка на актуальные результаты равна null, либо если текущее время минус время последнего обновления больше времени задержки:
+	Получает текущие результаты по задачам из объекта типа DatabaseDelegate методом getProblemResultInfos();
+	Получает ранжированную таблицу результатов из объекта типа RankStrategy методом formResults();
+	Записывает таблицу в ссылку с текущими результатами;
+	Записывает текущее время в дату последнего обновления;
+Если статус CODING:
+	Если ссылка на объект типа ScheduledFuture<List<TotalResultInfo>> равна null (сохранение видимых результатов не запланировно):
+		Запланировать сохранение результатов (детали см. ниже);
+Иначе (после заморозки):
+	Если ссылка на видимые результаты не равна null (видимые результаты уже сохранены):
+		Метод завершается;
+	Если ссылка на объект типа ScheduledFuture<List<TotalResultInfo>> не равна null:
+		Получить сохранённые видимые результаты из объекта типа ScheduledFuture<List<TotalResultInfo>>;
+		Сохранить видимые результаты в мониторе;
+	Иначе:
+		Получить видимые результы из объекта типа ResultsConservator;
+		Если была получена не null-ссылка:
+			Сохранить видимые результаты в мониторе;
+		Иначе:
+			Создать новую задачу VisibleResultsSavingTask;
+			Сразу же выполнить её и получить видимые результаты;
+			Сохранить видимые результаты в мониторе;
+
+В данном классе присутствует вложенный класс VisibleResultsSavingTask, соответствующий задаче сохранения видимых результатов. Содержит одно поле ScheduledExecutorService, в котором хранится исполнитель, выполняющий данную задачу; это поле инициализируется в конструкторе. Данный класс реализует интерфейс Callable<List<TotalResultInfo>>, и его метод call() выполняет следующие действия:
+Сразу запоминает ссылку на текущие результаты в мониторе;
+Сохраняет видимые результаты с помощью вызова метода persistVisibleResults() объекта типа ResultsConservator;
+Останавливает выполнение исполнителя (вызывает его метод shutdown());
+Возвращает видимые результаты.
+
+Для того, чтобы запланировать сохранение результатов, выполняется код, подобный следующему (в конце необходимо запомнить полученный объект ScheduledFuture<List<TotalResultInfo>>):
+
+ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+Date dateNow = new Date();
+Date dateMoment = ... // Получить момент времени, когда необходимо выполнить сохранение видимых результатов;
+long milliseconds = dateMoment.getTime() - dateNow.getTime();
+VisibleResultsSavingTask task = new VisibleResultsSavingTask(service);
+ScheduledFuture<List<TotalResultInfo>> future = service.schedule(task, milliseconds, TimeUnit.MILLISECONDS);
+
+
+
+XmlResultsConservator
+
+Класс, реализующий интерфейс ResultsConservator. Содержит в себе ссылку на объект типа FileSystemDelegate, инициализирует её в конструкторе.
+
+В методе getVisibleResults() вначале получает от объекта типа FileSystemDelegate ссылку Path на xml-файл с видимыми результатами, затем пытается считать из него результаты и преобразовать их в список List<TotalResultInfo>. Если у него это не получается, возвращает null (что означает, что видимые результаты не были сохранены в файл).
+
+В методе persistVisibleResults() вначале получает от объекта типа FileSystemDelegate ссылку Path на xml-файл с видимыми результатами, затем записывает в него результаты в виде xml. Возвращает true, если запись прошла удачно, и false, если нет.
+
+
+
+StandardRankStrategy
+
+Класс, реализующий интерфейс RankStrategy. Формирует по списку объектов ProblemResultInfo список объектов TotalResultInfo, ранжируя участников сначала по соответствующему ему значению points (по возрастанию), а затем, при равных значениях points, по значению fine (по убыванию).
+
+
+
+MonitoringLogging
+
+Файл со статическим полем типа Logger для логгирования. Когда ловится какой-либо exception, всегда выводится информация об этом в лог. Исходный код класса MonitoringLogging приведён ниже:
+
+---------------------------
+package com.netcracker.monitoring.logging;
+
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class MonitoringLogging {
+
+    public static final String loggerName = "monitoring";
+    public static final Logger logger = Logger.getLogger(loggerName);
+    static {
+        logger.setLevel(Level.ALL);
+        try {
+            FileHandler fileHandler = new FileHandler(loggerName + ".log");
+            fileHandler.setLevel(Level.ALL);
+            logger.addHandler(fileHandler);
+        } catch (IOException exception) {
+            logger.log(Level.FINE, "Cannot create FileHandler", exception);
+        }
+    }
+    
+}
+--------------------------
+
+
+
+Структура модуля имеет следующий вид:
+
+- com
+	- netcracker
+		- monitoring
+			- info
+				ProblemResultInfo.java
+				TotalResultInfo.java
+				CompetitionTimeInfo.java
+				CompetitionPhase.java
+			- delegate
+				DatabaseDelegate.java
+				FileSystemDelegate.java
+			- rank
+				RankStrategy.java
+				StandardRankStrategy.java
+			- conservator
+				ResultsConservator.java
+				XmlResultsConservator.java
+			- monitor
+				MonitorPool.java
+				Monitor.java
+				StandardMonitorPool.java
+				StandardMonitor.java
+			- logging
+				MonitoringLogging.java

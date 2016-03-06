@@ -2,38 +2,53 @@
 
 - file_system
 	- problems
-		- tests
-			- samples
-				- 1
-					input.txt
-					answer.txt
-				- 2
-					input.txt
-					answer.txt
+		- <Имя папки задачи>
+			- tests
+				- samples
+					- 1
+						input.txt
+						answer.txt
+					- 2
+						input.txt
+						answer.txt
+					...
+				- pretests
+					...
+				- tests_1
+					...
 				...
-			- pretests
+				- tests_8
+					...
+			- checker
+				<Скомпилированные файлы чекера> // (Например, SimpleChecker.class, SimpleChecker$1.class и т. д.)
+			- author_decisions
+				- <Имя папки авторского решения>
+					- bin
+						<Скомпилированные файлы> // (Например, Task.class, Task$1.class и т. д.)
+					- src
+						<Файл решения> // (Например, Task.java)
+				- <Имя папки авторского решения>
+					...
 				...
-			- tests_1
-				...
+			statement.pdf
+		- <Имя папки задачи>
 			...
-			- tests_8
-				...
-		- checker
-			<Скомпилированные файлы чекера> // (Например, SimpleChecker.class, SimpleChecker$1.class и т. д.)
-		- author_decisions
+		...
+	- submissions
+		- <Имя папки посылки>
 			- bin
 				<Скомпилированные файлы> // (Например, Task.class, Task$1.class и т. д.)
 			- src
 				<Файл решения> // (Например, Task.java)
-		statement.pdf
-	- submissions
-		- bin
-			<Скомпилированные файлы> // (Например, Task.class, Task$1.class и т. д.)
-		- src
-			<Файл решения> // (Например, Task.java)
+		- <Имя папки посылки>
+			...
+		...
 	- competitions
-		actual_results.xml
-		visible_results.xml
+		- <Имя папки соревнования>
+			visible_results.xml
+		- <Имя папки соревнования>
+			...
+		...
 	- temp
 		<Временные файлы> // (Например, 2356236325662.txt)
 	- config
@@ -46,6 +61,7 @@ FileSupplier
 
 Интерфейс, имеющий все методы, необходимые для работы тестирующей системы:
 
+boolean addProblemFolder(String problemFolder);
 Path getProblemFolder(String problemFolder);
 Path getProblemStatement(String problemFolder);
 Path getProblemCheckerFolder(String problemFolder);
@@ -53,20 +69,22 @@ Path getProblemCheckerFolder(String problemFolder);
 Path getTestInputFile(String problemFolder, TestGroupType type, int testNumber);
 Path getTestAnswerFile(String problemFolder, TestGroupType type, int testNumber);
 
+boolean addAuthorDecisionFolder(String problemFolder, String authorDecisionFolder);
 Path getAuthorDecisionFolder(String problemFolder, String authorDecisionFolder);
 Path getAuthorDecisionSourceFolder(String problemFolder, String authorDecisionFolder);
 Path getAuthorDecisionSourceFile(String problemFolder, String authorDecisionFolder);
 Path getAuthorDecisionCompileFolder(String submiproblemFolder, String authorDecisionFolderssionFolder);
 Path getAuthorDecisionCompileFile(String submisproblemFolder, String authorDecisionFoldersionFolder);
 
+boolean addSubmissionFolder(String submissionFolder);
 Path getSubmissionFolder(String submissionFolder);
 Path getSubmissionSourceFolder(String submissionFolder);
 Path getSubmissionSourceFile(String submissionFolder);
 Path getSubmissionCompileFolder(String submissionFolder);
 Path getSubmissionCompileFile(String submissionFolder);
 
-Path getCompetitionActualResults(String competitionFolder);
-Path getCompetitionVisibleResults(String competitionFolder);
+boolean addCompetitionFolder(String competitionFolder);
+Path getCompetitionVisibleResults(String competitionFolder, boolean checkExisting);
 
 Path getTempFile();
 void deleteTempFile(Path path);
@@ -78,7 +96,25 @@ Path getConfigurationFolder();
 
 StandardFileSupplier
 
-Класс, реализующий интерфейс FileSupplier. Имеет статическое поле типа FileSupplier, содержащее в себе объект типа StandardFileSupplier, используемый по умолчанию. Имеет статический метод getDefault(), возврающий этот объект по умолчанию. Реализует все методы интерфейса FileSupplier. Если метод возвращает путь к папке, перед возвращением результата всегда проверяет, существует ли папка, и, если нет, создаёт её. Если метод возвращает путь к файлу, всегда проверяет, существует ли папка, содержащая файл, и если нет, создаёт её, а если не существует файл, возвращает null.
+Класс, реализующий интерфейс FileSupplier. Имеет статическое поле типа FileSupplier, содержащее в себе объект типа StandardFileSupplier, используемый по умолчанию. Имеет статический метод getDefault(), возврающий этот объект по умолчанию. Реализует все методы интерфейса FileSupplier.
+
+/*Если метод возвращает путь к папке, перед возвращением результата всегда проверяет, существует ли папка, и, если нет, создаёт её. Если метод возвращает путь к файлу, всегда проверяет, существует ли папка, содержащая файл, и если нет, создаёт её, а если не существует файл, возвращает null.*/
+
+Все реализуемые методы вначале реализуют закрытый метод checkFileStructure(), который сначала проверяет, существует ли папка file_system, и создаёт её, если не существует, и то же самое делает для папок problems, submissions, competitions, temp, config.
+
+Все add-методы вначале проверяют существует ли уже соответсвующая папка. Если существует, возвращают false (означает неудачу создания папки). Если не существует, создают её и соответсвующую ей внутреннюю структуру (например, для папки с задачей внутри создаются только папки tests, checker, author_decisions; то есть создаются только папки на уровень ниже, файлы не создаются).
+
+Get-методы (за некоторыми исключениями, см. далее) перед возвращением пути проверяют, существует ли искомая папка или файл. Если не существует, делать запись об этом в лог и возвращает null (искомая папка при этом не создаётся); если существует, возвращает путь.
+
+Исключения:
+getCompetitionVisibleResults(String competitionFolder, boolean checkExisting) - если флаг checkExisting равен true, работает по общему правилу, если false - возвращает путь в любом случае, вне зависимости от того, существует файл или нет.
+getTempFile() - создаёт в папке temp новый временный файл (всегда новый) и возвращает путь к нему.
+
+Уточнения:
+getSubmissionSourceFile() и getAuthorDecisionSourceFile() вначале просматривают папку с исходным кодом (в ней должен лежать только один файл). Если в папке есть файл, возвращается путь к нему, если нет, возвращается null (отличие в том, что имя файла заранее не известно).
+getSubmissionCompileFile() и getAuthorDecisionCompileFile() вначале получают имя файла с исходным кодом (без расширения), затем просматривают папку со скомпилированным решением (в ней может быть много файлов) и ищут в ней файл, имя которого (без расширения) совпадает с именем файла с исходным кодом. Если такого файла нет, возвращается null, если есть, - путь к нему.
+
+Методы deleteTempFile() и deleteAllTempFiles() удаляют, соответственно, один временный файл (вначале проверяя, существует ли он), либо все временные файлы в папке temp.
 
 
 
