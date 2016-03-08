@@ -6,9 +6,11 @@
 package com.netcracker.dal;
 
 import com.netcracker.entity.Submission;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -27,6 +29,16 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
 
     public SubmissionFacade() {
         super(Submission.class);
+    }
+
+    @Override
+    public List<Submission> findByUserIdAndCompetitionId(int userId, int competitionId, int[] range) {
+        TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionId", 
+                Submission.class);
+        query.setParameter("competitionProblemId", competitionId);
+        query.setParameter("userId", userId);
+        query.setFirstResult(range[0]).setMaxResults(range[1] - range[0] + 1);
+        return query.getResultList();
     }
     
 }

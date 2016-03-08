@@ -5,6 +5,7 @@
  */
 package com.netcracker.dal;
 
+import com.netcracker.entity.Participation;
 import com.netcracker.entity.User;
 import java.util.List;
 import javax.ejb.Local;
@@ -22,12 +23,14 @@ public interface UserFacadeLocal {
 
     void remove(User user);
 
-    User find(Object id);
+    //User find(Object id);
 
-    List<User> findAll();
+    //List<User> findAll();
 
-    List<User> findRange(int[] range);
+    //List<User> findAll(int[] range);
 
-    int count();
+    //int count();
+    
+    List<Participation> getAllCompetitionsByUser(User user);
     
 }

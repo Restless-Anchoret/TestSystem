@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -53,7 +54,7 @@ public class CompetitionProblem implements Serializable {
     @ManyToOne(optional = false)
     private Competition competitionId;
     @JoinColumn(name = "problem_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Problem problemId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "competitionProblemId")
     private List<ParticipationResult> participationResultList;

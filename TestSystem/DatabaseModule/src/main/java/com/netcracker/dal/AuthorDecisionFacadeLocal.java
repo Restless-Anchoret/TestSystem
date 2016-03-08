@@ -26,7 +26,7 @@ public interface AuthorDecisionFacadeLocal {
 
     List<AuthorDecision> findAll();
 
-    List<AuthorDecision> findRange(int[] range);
+    List<AuthorDecision> findAll(int[] range);
 
     int count();
     

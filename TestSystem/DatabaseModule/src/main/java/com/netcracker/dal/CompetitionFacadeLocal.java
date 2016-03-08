@@ -6,6 +6,8 @@
 package com.netcracker.dal;
 
 import com.netcracker.entity.Competition;
+import com.netcracker.entity.CompetitionProblem;
+import com.netcracker.entity.ParticipationResult;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -22,12 +24,18 @@ public interface CompetitionFacadeLocal {
 
     void remove(Competition competition);
 
-    Competition find(Object id);
+    //Competition find(Object id);
 
-    List<Competition> findAll();
+    //List<Competition> findAll();
 
-    List<Competition> findRange(int[] range);
+    List<Competition> findAll(int[] range);
 
-    int count();
+    //int count();
+    
+    List<Competition> findVisible(int[] range);
+    
+    List<CompetitionProblem> getCompetitionProblems(Competition competition);
+    
+    List<ParticipationResult> createNullsResults(Competition competition);
     
 }

@@ -26,7 +26,7 @@ public interface CompilatorFacadeLocal {
 
     List<Compilator> findAll();
 
-    List<Compilator> findRange(int[] range);
+    List<Compilator> findAll(int[] range);
 
     int count();
     

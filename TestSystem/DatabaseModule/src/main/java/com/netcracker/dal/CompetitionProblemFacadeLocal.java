@@ -26,7 +26,7 @@ public interface CompetitionProblemFacadeLocal {
 
     List<CompetitionProblem> findAll();
 
-    List<CompetitionProblem> findRange(int[] range);
+    List<CompetitionProblem> findAll(int[] range);
 
     int count();
     

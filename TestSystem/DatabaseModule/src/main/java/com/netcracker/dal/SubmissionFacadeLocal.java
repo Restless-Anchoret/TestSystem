@@ -22,12 +22,14 @@ public interface SubmissionFacadeLocal {
 
     void remove(Submission submission);
 
-    Submission find(Object id);
+    //Submission find(Object id);
 
-    List<Submission> findAll();
+    //List<Submission> findAll();
 
-    List<Submission> findRange(int[] range);
+    //List<Submission> findAll(int[] range);
 
-    int count();
+    //int count();
+    
+    List<Submission> findByUserIdAndCompetitionId(int userId, int competitionId, int[] range);
     
 }

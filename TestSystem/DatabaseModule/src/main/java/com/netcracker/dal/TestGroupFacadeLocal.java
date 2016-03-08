@@ -26,7 +26,7 @@ public interface TestGroupFacadeLocal {
 
     List<TestGroup> findAll();
 
-    List<TestGroup> findRange(int[] range);
+    List<TestGroup> findAll(int[] range);
 
     int count();
     

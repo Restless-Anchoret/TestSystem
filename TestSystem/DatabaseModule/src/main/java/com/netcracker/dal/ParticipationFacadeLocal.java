@@ -26,7 +26,7 @@ public interface ParticipationFacadeLocal {
 
     List<Participation> findAll();
 
-    List<Participation> findRange(int[] range);
+    List<Participation> findAll(int[] range);
 
     int count();
     

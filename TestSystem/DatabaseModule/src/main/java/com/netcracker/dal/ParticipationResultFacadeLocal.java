@@ -26,7 +26,7 @@ public interface ParticipationResultFacadeLocal {
 
     List<ParticipationResult> findAll();
 
-    List<ParticipationResult> findRange(int[] range);
+    List<ParticipationResult> findAll(int[] range);
 
     int count();
     

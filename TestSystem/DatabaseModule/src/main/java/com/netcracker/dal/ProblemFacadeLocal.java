@@ -26,7 +26,7 @@ public interface ProblemFacadeLocal {
 
     List<Problem> findAll();
 
-    List<Problem> findRange(int[] range);
+    List<Problem> findAll(int[] range);
 
     int count();
     

@@ -32,6 +32,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "submission", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
+    @NamedQuery(name = "Submission.findAllByUserIdAndCompetitionId", 
+            query = "SELECT s FROM Submission s WHERE s.competitionProblemId = :competitionProblemId "
+                    + "AND s.userId = :userId ORDER BY s.submissionTime"),
     @NamedQuery(name = "Submission.findAll", query = "SELECT s FROM Submission s"),
     @NamedQuery(name = "Submission.findById", query = "SELECT s FROM Submission s WHERE s.id = :id"),
     @NamedQuery(name = "Submission.findBySubmissionTime", query = "SELECT s FROM Submission s WHERE s.submissionTime = :submissionTime"),

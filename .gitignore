@@ -12,3 +12,6 @@
 hs_err_pid*
 /TestSystem/DatabaseModul/target/
 /TestSystem/TestingModule/target/
+/TestSystem/WebModule/target/
+/TestSystem/EarModule/target/
+/TestSystem/FileSystemModule/target/

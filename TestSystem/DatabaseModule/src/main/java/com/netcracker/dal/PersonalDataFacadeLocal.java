@@ -26,7 +26,7 @@ public interface PersonalDataFacadeLocal {
 
     List<PersonalData> findAll();
 
-    List<PersonalData> findRange(int[] range);
+    List<PersonalData> findAll(int[] range);
 
     int count();
     
