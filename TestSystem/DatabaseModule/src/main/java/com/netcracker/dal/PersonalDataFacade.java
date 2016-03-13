@@ -28,5 +28,11 @@ public class PersonalDataFacade extends AbstractFacade<PersonalData> implements 
     public PersonalDataFacade() {
         super(PersonalData.class);
     }
+
+    @Override
+    public PersonalData find(Object id) {
+        return super.find(id, "PersonalData.findById");
+    } 
+    
     
 }

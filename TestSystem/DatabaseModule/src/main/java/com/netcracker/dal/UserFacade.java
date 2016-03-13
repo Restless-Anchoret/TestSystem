@@ -5,18 +5,18 @@
  */
 package com.netcracker.dal;
 
-import com.netcracker.entity.Participation;
 import com.netcracker.entity.User;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 /**
  *
  * @author Ataman
  */
-@Stateless(name = "userService")
+@Stateless
 public class UserFacade extends AbstractFacade<User> implements UserFacadeLocal {
 
     @PersistenceContext(unitName = "com.netcracker_DatabaseModule_ejb_1.0-SNAPSHOTPU")
@@ -32,8 +32,35 @@ public class UserFacade extends AbstractFacade<User> implements UserFacadeLocal 
     }
 
     @Override
-    public List<Participation> getAllCompetitionsByUser(User user) {
-        return em.merge(user).getParticipationList();
+    public User loadParticipations(User user) {
+        em.merge(user).getParticipationList();
+        return user;
     }
+
+    @Override
+    public User loadParticipationResults(User user) {
+        em.merge(user).getParticipationResultList();
+        return user;
+    }
+
+    @Override
+    public User loadSubmissions(User user) {
+        em.merge(user).getSubmissionList();
+        return user;
+    }
+
+    @Override
+    public User find(Object id) {
+        return super.find(id, "User.findById");
+    }
+
+    @Override
+    public User findByLogin(String login) {
+        TypedQuery query = em.createNamedQuery("User.findById", User.class);
+        query.setParameter("login", login);
+        return (User) query.getSingleResult();
+    }
+    
+    
     
 }

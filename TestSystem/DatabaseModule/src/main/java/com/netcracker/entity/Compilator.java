@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -47,9 +48,9 @@ public class Compilator implements Serializable {
     @Size(min = 1, max = 30)
     @Column(name = "name")
     private String name;
-    @OneToMany(mappedBy = "compilatorId")
+    @OneToMany(mappedBy = "compilatorId", fetch = FetchType.LAZY)
     private List<AuthorDecision> authorDecisionList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compilatorId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "compilatorId", fetch = FetchType.LAZY)
     private List<Submission> submissionList;
 
     public Compilator() {

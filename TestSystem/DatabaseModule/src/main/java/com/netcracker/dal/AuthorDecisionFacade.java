@@ -28,5 +28,18 @@ public class AuthorDecisionFacade extends AbstractFacade<AuthorDecision> impleme
     public AuthorDecisionFacade() {
         super(AuthorDecision.class);
     }
+
+    @Override
+    public AuthorDecision find(Object id) {
+        return super.find(id, "AuthorDecision.findById");
+    }
+
+    @Override
+    public AuthorDecision loadCompilator(AuthorDecision authorDecision) {
+        em.merge(authorDecision).getCompilatorId();
+        return authorDecision;
+    }
+    
+    
     
 }

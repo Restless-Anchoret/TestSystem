@@ -19,6 +19,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import com.netcracker.entity.CompetitionProblem;
+import javax.persistence.FetchType;
 
 /**
  *
@@ -28,10 +30,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "participation_result", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ParticipationResult.findAll", query = "SELECT p FROM ParticipationResult p"),
-    @NamedQuery(name = "ParticipationResult.findById", query = "SELECT p FROM ParticipationResult p WHERE p.id = :id"),
-    @NamedQuery(name = "ParticipationResult.findByPoints", query = "SELECT p FROM ParticipationResult p WHERE p.points = :points"),
-    @NamedQuery(name = "ParticipationResult.findByFine", query = "SELECT p FROM ParticipationResult p WHERE p.fine = :fine")})
+    @NamedQuery(name = "ParticipationResult.findByCompetitionId", query = "SELECT p FROM ParticipationResult p JOIN CompetitionProblem c ON c.id = p.competitionProblemId WHERE c.competitionId = :competitionId"),
+    @NamedQuery(name = "ParticipationResult.findByCompetitionIdAndUserId", query = "SELECT p FROM ParticipationResult p JOIN CompetitionProblem c ON c.id = p.competitionProblemId WHERE c.competitionId = :competitionId AND p.userId = :userId"),
+    @NamedQuery(name = "ParticipationResult.findById", query = "SELECT p FROM ParticipationResult p WHERE p.id = :id")})
 public class ParticipationResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,10 +50,10 @@ public class ParticipationResult implements Serializable {
     @Column(name = "fine")
     private int fine;
     @JoinColumn(name = "competition_problem_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CompetitionProblem competitionProblemId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User userId;
 
     public ParticipationResult() {

@@ -29,11 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "test_group", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TestGroup.findAll", query = "SELECT t FROM TestGroup t"),
-    @NamedQuery(name = "TestGroup.findById", query = "SELECT t FROM TestGroup t WHERE t.id = :id"),
-    @NamedQuery(name = "TestGroup.findByTestGroupType", query = "SELECT t FROM TestGroup t WHERE t.testGroupType = :testGroupType"),
-    @NamedQuery(name = "TestGroup.findByTestsQuantity", query = "SELECT t FROM TestGroup t WHERE t.testsQuantity = :testsQuantity"),
-    @NamedQuery(name = "TestGroup.findByPointsForTest", query = "SELECT t FROM TestGroup t WHERE t.pointsForTest = :pointsForTest")})
+    @NamedQuery(name = "TestGroup.findById", query = "SELECT t FROM TestGroup t WHERE t.id = :id")})
 public class TestGroup implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,9 +51,9 @@ public class TestGroup implements Serializable {
     @NotNull
     @Column(name = "points_for_test")
     private short pointsForTest;
-    @JoinColumn(name = "problem_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Problem problemId;
+    //@JoinColumn(name = "problem_id", referencedColumnName = "id")
+    //@ManyToOne(optional = false)
+    //private Problem problemId;
 
     public TestGroup() {
     }
@@ -105,13 +101,13 @@ public class TestGroup implements Serializable {
         this.pointsForTest = pointsForTest;
     }
 
-    public Problem getProblemId() {
+    /*public Problem getProblemId() {
         return problemId;
     }
 
     public void setProblemId(Problem problemId) {
         this.problemId = problemId;
-    }
+    }*/
 
     @Override
     public int hashCode() {

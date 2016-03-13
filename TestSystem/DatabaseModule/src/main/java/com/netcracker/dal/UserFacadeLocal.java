@@ -23,14 +23,13 @@ public interface UserFacadeLocal {
 
     void remove(User user);
 
-    //User find(Object id);
-
-    //List<User> findAll();
-
-    //List<User> findAll(int[] range);
-
-    //int count();
+    User find(Object id);
     
-    List<Participation> getAllCompetitionsByUser(User user);
+    User loadParticipations(User user);
     
+    User loadParticipationResults(User user);
+    
+    User loadSubmissions(User user);
+    
+    User findByLogin(String login);
 }

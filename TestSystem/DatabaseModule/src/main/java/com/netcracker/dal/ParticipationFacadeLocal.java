@@ -23,11 +23,6 @@ public interface ParticipationFacadeLocal {
     void remove(Participation participation);
 
     Participation find(Object id);
-
-    List<Participation> findAll();
-
-    List<Participation> findAll(int[] range);
-
-    int count();
+    
     
 }

@@ -7,6 +7,7 @@ package com.netcracker.dal;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -59,6 +60,12 @@ public abstract class AbstractFacade<T> {
         cq.select(getEntityManager().getCriteriaBuilder().count(rt));
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
+    }
+    
+    protected T find(Object id, String queryName) {
+        TypedQuery query = getEntityManager().createNamedQuery(queryName, entityClass);
+        query.setParameter("id", id);
+        return (T) query.getSingleResult();
     }
     
 }

@@ -32,13 +32,31 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
     }
 
     @Override
-    public List<Submission> findByUserIdAndCompetitionId(int userId, int competitionId, int[] range) {
+    public List<Submission> findByUserIdAndCompetitionId(int userId, int competitionId) {
         TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionId", 
                 Submission.class);
         query.setParameter("competitionProblemId", competitionId);
         query.setParameter("userId", userId);
-        query.setFirstResult(range[0]).setMaxResults(range[1] - range[0] + 1);
         return query.getResultList();
     }
+
+    @Override
+    public Submission find(Object id) {
+        return super.find(id, "Submission.findById");
+    }
+
+    @Override
+    public Submission loadCompetitionProblem(Submission submission) {
+        em.merge(submission).getCompetitionProblemId();
+        return submission;
+    }
+
+    @Override
+    public Submission loadUser(Submission submission) {
+        em.merge(submission).getUserId();
+        return submission;
+    }
+    
+    
     
 }

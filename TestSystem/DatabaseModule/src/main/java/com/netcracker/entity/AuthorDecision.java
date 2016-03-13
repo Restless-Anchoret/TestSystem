@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,9 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "author_decision", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AuthorDecision.findAll", query = "SELECT a FROM AuthorDecision a"),
-    @NamedQuery(name = "AuthorDecision.findById", query = "SELECT a FROM AuthorDecision a WHERE a.id = :id"),
-    @NamedQuery(name = "AuthorDecision.findByFolderName", query = "SELECT a FROM AuthorDecision a WHERE a.folderName = :folderName")})
+    @NamedQuery(name = "AuthorDecision.findById", query = "SELECT a FROM AuthorDecision a WHERE a.id = :id")})
 public class AuthorDecision implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,11 +45,11 @@ public class AuthorDecision implements Serializable {
     @Column(name = "folder_name")
     private String folderName;
     @JoinColumn(name = "compilator_id", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Compilator compilatorId;
-    @JoinColumn(name = "problem_id", referencedColumnName = "id")
+    /*@JoinColumn(name = "problem_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Problem problemId;
+    private Problem problemId;*/
 
     public AuthorDecision() {
     }
@@ -88,13 +87,13 @@ public class AuthorDecision implements Serializable {
         this.compilatorId = compilatorId;
     }
 
-    public Problem getProblemId() {
+    /*public Problem getProblemId() {
         return problemId;
     }
 
     public void setProblemId(Problem problemId) {
         this.problemId = problemId;
-    }
+    }*/
 
     @Override
     public int hashCode() {

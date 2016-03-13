@@ -9,6 +9,8 @@ import com.netcracker.entity.Competition;
 import com.netcracker.entity.CompetitionProblem;
 import com.netcracker.entity.Participation;
 import com.netcracker.entity.ParticipationResult;
+import com.netcracker.entity.PersonalData;
+import com.netcracker.entity.User;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,25 +37,30 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
     public CompetitionFacade() {
         super(Competition.class);
     }
-
-    @Override
-    public List<Competition> findVisible(int[] range) {
-        TypedQuery query = em.createNamedQuery("Competition.findByVisible", Competition.class);
+    
+    private List<Competition> findVisibleByHoldCompetitions(boolean holdCompetition, int[] range) {
+        TypedQuery query = em.createNamedQuery("Competition.findByVisibleAndHoldCompetition", Competition.class);
         query.setParameter("visible", true);
+        query.setParameter("holdCompetition", holdCompetition);
         query.setFirstResult(range[0]).setMaxResults(range[1] - range[0] + 1);
         return query.getResultList();
     }
-
-    @Override
-    public List<Competition> findAll(int[] range) {
-        TypedQuery query = em.createNamedQuery("Competition.findAll", Competition.class);
+    
+    private List<Competition> findByHoldCompetitions(boolean holdCompetition, int[] range) {
+        TypedQuery query = em.createNamedQuery("Competition.findByHoldCompetition", Competition.class);
+        query.setParameter("holdCompetition", holdCompetition);
         query.setFirstResult(range[0]).setMaxResults(range[1] - range[0] + 1);
         return query.getResultList();
     }
+    
+    @Override
+    public List<Competition> findVisibleCompetiotions(int[] range) {
+        return findVisibleByHoldCompetitions(true, range);
+    }
 
     @Override
-    public List<CompetitionProblem> getCompetitionProblems(Competition competition) {
-        return em.merge(competition).getCompetitionProblemList();
+    public List<Competition> findAllCompetiotions(int[] range) {
+        return findByHoldCompetitions(true, range);
     }
 
     @Override
@@ -72,5 +79,58 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
         }
         return participationResults;
     }
+
+    @Override
+    public List<Competition> findAllTranings(int[] range) {
+        return findByHoldCompetitions(false, range);
+    }
+
+    @Override
+    public List<Competition> findVisibleTranings(int[] range) {
+        return findVisibleByHoldCompetitions(false, range);
+    }
+
+    @Override
+    public Competition find(Object id) {
+        return super.find(id, "Competition.findById");
+    }
+
+    @Override
+    public void finishedCompetition(Competition competition, List<ParticipationResult> participationResults) {
+        em.merge(competition).setFinished(true);
+        for (ParticipationResult participationResult: participationResults)
+            em.merge(participationResult);
+    }
+
+    @Override
+    public Competition loadCompetitionProblems(Competition competition) {
+        em.merge(competition).getCompetitionProblemList();
+        return competition;
+    }
+
+    @Override
+    public Competition loadParticipations(Competition competition) {
+        em.merge(competition).getParticipationList();
+        return competition;
+    }
+
+    @Override
+    public void registrationNewParticipation(Competition competition, User user, PersonalData personalData) {
+        Participation participation = new Participation();
+        participation.setPersonalDataId(personalData);
+        participation.setRegistered(false);
+        participation.setUserId(user);
+        em.merge(competition).getParticipationList().add(participation);
+    }
+
+    @Override
+    public void registrationNewParticipation(Competition competition, User user) {
+        Participation participation = new Participation();
+        participation.setRegistered(true);
+        participation.setUserId(user);
+        em.merge(competition).getParticipationList().add(participation);
+    }
+    
+    
     
 }

@@ -9,6 +9,7 @@ import com.netcracker.entity.Participation;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -28,5 +29,12 @@ public class ParticipationFacade extends AbstractFacade<Participation> implement
     public ParticipationFacade() {
         super(Participation.class);
     }
+
+    @Override
+    public Participation find(Object id) {
+        return super.find(id, "Participation.findById");
+    }
+    
+    
     
 }

@@ -23,11 +23,5 @@ public interface PersonalDataFacadeLocal {
     void remove(PersonalData personalData);
 
     PersonalData find(Object id);
-
-    List<PersonalData> findAll();
-
-    List<PersonalData> findAll(int[] range);
-
-    int count();
     
 }

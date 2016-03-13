@@ -7,6 +7,7 @@ package com.netcracker.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,13 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "participation", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Participation.findAll", query = "SELECT p FROM Participation p"),
-    @NamedQuery(name = "Participation.findById", query = "SELECT p FROM Participation p WHERE p.id = :id"),
-    @NamedQuery(name = "Participation.findByRegistered", query = "SELECT p FROM Participation p WHERE p.registered = :registered"),
-    @NamedQuery(name = "Participation.findByPoints", query = "SELECT p FROM Participation p WHERE p.points = :points"),
-    @NamedQuery(name = "Participation.findByFine", query = "SELECT p FROM Participation p WHERE p.fine = :fine"),
-    @NamedQuery(name = "Participation.findByPlace", query = "SELECT p FROM Participation p WHERE p.place = :place"),
-    @NamedQuery(name = "Participation.findBySolvedProblems", query = "SELECT p FROM Participation p WHERE p.solvedProblems = :solvedProblems")})
+    @NamedQuery(name = "Participation.findById", query = "SELECT p FROM Participation p WHERE p.id = :id")})
 public class Participation implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,14 +52,14 @@ public class Participation implements Serializable {
     private Short place;
     @Column(name = "solved_problems")
     private Short solvedProblems;
-    @JoinColumn(name = "competition_id", referencedColumnName = "id")
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    private Competition competitionId;
+    /*@JoinColumn(name = "competition_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Competition competitionId;*/
     @JoinColumn(name = "personal_data_id", referencedColumnName = "id")
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private PersonalData personalDataId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private User userId;
 
     public Participation() {
@@ -127,13 +122,13 @@ public class Participation implements Serializable {
         this.solvedProblems = solvedProblems;
     }
 
-    public Competition getCompetitionId() {
+    /*public Competition getCompetitionId() {
         return competitionId;
     }
 
     public void setCompetitionId(Competition competitionId) {
         this.competitionId = competitionId;
-    }
+    }*/
 
     public PersonalData getPersonalDataId() {
         return personalDataId;

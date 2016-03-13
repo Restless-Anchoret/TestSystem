@@ -23,11 +23,13 @@ public interface CompilatorFacadeLocal {
     void remove(Compilator compilator);
 
     Compilator find(Object id);
+    
+    Compilator findByName(String name);
 
     List<Compilator> findAll();
-
-    List<Compilator> findAll(int[] range);
-
-    int count();
+    
+    Compilator loadAuthorDecisions(Compilator compilator);
+    
+    Compilator loadSubmissions(Compilator compilator);
     
 }
