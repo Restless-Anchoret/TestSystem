@@ -15,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -79,9 +80,11 @@ public class Problem implements Serializable {
     private String folderName;
     @OneToMany(mappedBy = "problemId", fetch = FetchType.LAZY)
     private List<CompetitionProblem> competitionProblemList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "problemId", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "problem_id")
     private List<AuthorDecision> authorDecisionList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "problemId", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "problem_id")
     private List<TestGroup> testGroupList;
 
     public Problem() {

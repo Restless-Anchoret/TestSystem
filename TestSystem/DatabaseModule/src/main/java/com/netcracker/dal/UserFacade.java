@@ -60,6 +60,13 @@ public class UserFacade extends AbstractFacade<User> implements UserFacadeLocal 
         query.setParameter("login", login);
         return (User) query.getSingleResult();
     }
+
+    @Override
+    public List<User> getModerators() {
+        TypedQuery query = em.createNamedQuery("User.findByRole", User.class);
+        query.setParameter("role", "moderator");
+        return query.getResultList();
+    }
     
     
     

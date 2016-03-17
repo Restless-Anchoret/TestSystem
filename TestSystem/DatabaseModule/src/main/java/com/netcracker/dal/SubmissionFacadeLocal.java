@@ -24,10 +24,12 @@ public interface SubmissionFacadeLocal {
 
     Submission find(Object id);
     
-    List<Submission> findByUserIdAndCompetitionId(int userId, int competitionId);
+    List<Submission> findByUserIdAndCompetitionProblemId(Object userId, Object competitionProblemId);
     
     Submission loadCompetitionProblem(Submission submission);
     
     Submission loadUser(Submission submission);
+    
+    List<Submission> getAllSubmissionsByCompetitionId(Object competitionId);
     
 }

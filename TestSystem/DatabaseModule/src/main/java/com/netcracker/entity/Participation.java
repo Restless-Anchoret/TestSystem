@@ -52,9 +52,9 @@ public class Participation implements Serializable {
     private Short place;
     @Column(name = "solved_problems")
     private Short solvedProblems;
-    /*@JoinColumn(name = "competition_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Competition competitionId;*/
+    @JoinColumn(name = "competition_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Competition competitionId;
     @JoinColumn(name = "personal_data_id", referencedColumnName = "id")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private PersonalData personalDataId;
@@ -122,13 +122,13 @@ public class Participation implements Serializable {
         this.solvedProblems = solvedProblems;
     }
 
-    /*public Competition getCompetitionId() {
+    public Competition getCompetitionId() {
         return competitionId;
     }
 
     public void setCompetitionId(Competition competitionId) {
         this.competitionId = competitionId;
-    }*/
+    }
 
     public PersonalData getPersonalDataId() {
         return personalDataId;

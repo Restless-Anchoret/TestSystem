@@ -5,12 +5,17 @@
  */
 package com.netcracker.dal;
 
+import com.netcracker.entity.Competition;
+import com.netcracker.entity.CompetitionProblem;
 import com.netcracker.entity.Submission;
+import java.util.Date;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.inject.Inject;
 
 /**
  *
@@ -19,6 +24,12 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class SubmissionFacade extends AbstractFacade<Submission> implements SubmissionFacadeLocal {
 
+    @EJB(beanName = "CompetitionProblemFacade")
+    CompetitionProblemFacadeLocal competitionProblemFacade;
+    
+    @EJB(beanName = "CompetitionFacade")
+    CompetitionFacadeLocal competitionFacade;
+    
     @PersistenceContext(unitName = "com.netcracker_DatabaseModule_ejb_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -32,11 +43,16 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
     }
 
     @Override
-    public List<Submission> findByUserIdAndCompetitionId(int userId, int competitionId) {
-        TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionId", 
+    public List<Submission> findByUserIdAndCompetitionProblemId(Object userId, Object competitionProblemId) {
+        CompetitionProblem competiotionProblem = competitionProblemFacade.find(competitionProblemId);
+        Date finish = competiotionProblem.getCompetitionId().getCompetitionStart();
+        finish.setTime(finish.getTime() + competiotionProblem.getCompetitionId().getCompetitionInterval());
+        TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionProblemId", 
                 Submission.class);
-        query.setParameter("competitionProblemId", competitionId);
+        query.setParameter("competitionProblemId", competitionProblemId);
         query.setParameter("userId", userId);
+        query.setParameter("start", competiotionProblem.getCompetitionId().getCompetitionStart());
+        query.setParameter("finish", finish);
         return query.getResultList();
     }
 
@@ -55,6 +71,19 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
     public Submission loadUser(Submission submission) {
         em.merge(submission).getUserId();
         return submission;
+    }
+
+    @Override
+    public List<Submission> getAllSubmissionsByCompetitionId(Object competitionId) {
+        Competition competiotion = competitionFacade.find(competitionId);
+        Date finish = competiotion.getCompetitionStart();
+        finish.setTime(finish.getTime() + competiotion.getCompetitionInterval());
+        TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionProblemId", 
+                Submission.class);
+        query.setParameter("competitionId", competitionId);
+        query.setParameter("start", competiotion.getCompetitionStart());
+        query.setParameter("finish", finish);
+        return query.getResultList();
     }
     
     

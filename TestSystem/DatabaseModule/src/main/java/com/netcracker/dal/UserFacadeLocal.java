@@ -32,4 +32,6 @@ public interface UserFacadeLocal {
     User loadSubmissions(User user);
     
     User findByLogin(String login);
+    
+    List<User> getModerators();    
 }

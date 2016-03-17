@@ -7,6 +7,7 @@ package com.netcracker.dal;
 
 import com.netcracker.entity.Competition;
 import com.netcracker.entity.CompetitionProblem;
+import com.netcracker.entity.Participation;
 import com.netcracker.entity.ParticipationResult;
 import com.netcracker.entity.PersonalData;
 import com.netcracker.entity.User;
@@ -47,5 +48,7 @@ public interface CompetitionFacadeLocal {
     void registrationNewParticipation(Competition competition, User user, PersonalData personalData);
     
     void registrationNewParticipation(Competition competition, User user);
+    
+    void addPaticipations(Competition competition, List<User> users);
     
 }

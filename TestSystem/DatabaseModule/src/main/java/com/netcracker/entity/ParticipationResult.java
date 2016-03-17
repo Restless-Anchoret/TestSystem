@@ -30,8 +30,8 @@ import javax.persistence.FetchType;
 @Table(name = "participation_result", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "ParticipationResult.findByCompetitionId", query = "SELECT p FROM ParticipationResult p JOIN CompetitionProblem c ON c.id = p.competitionProblemId WHERE c.competitionId = :competitionId"),
-    @NamedQuery(name = "ParticipationResult.findByCompetitionIdAndUserId", query = "SELECT p FROM ParticipationResult p JOIN CompetitionProblem c ON c.id = p.competitionProblemId WHERE c.competitionId = :competitionId AND p.userId = :userId"),
+    @NamedQuery(name = "ParticipationResult.findByCompetitionId", query = "SELECT p FROM ParticipationResult p INNER JOIN CompetitionProblem c ON c.id = p.competitionProblemId WHERE c.competitionId = :competitionId"),
+    @NamedQuery(name = "ParticipationResult.findByCompetitionIdAndUserId", query = "SELECT p FROM ParticipationResult p INNER JOIN CompetitionProblem c ON c.id = p.competitionProblemId WHERE c.competitionId = :competitionId AND p.userId = :userId"),
     @NamedQuery(name = "ParticipationResult.findById", query = "SELECT p FROM ParticipationResult p WHERE p.id = :id")})
 public class ParticipationResult implements Serializable {
 

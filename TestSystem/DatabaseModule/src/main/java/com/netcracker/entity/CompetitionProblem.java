@@ -48,9 +48,9 @@ public class CompetitionProblem implements Serializable {
     @Size(min = 1, max = 5)
     @Column(name = "problem_number")
     private String problemNumber;
-    /*@JoinColumn(name = "competition_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Competition competitionId;*/
+    @JoinColumn(name = "competition_id", referencedColumnName = "id")
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Competition competitionId;
     @JoinColumn(name = "problem_id", referencedColumnName = "id")
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Problem problemId;
@@ -87,13 +87,13 @@ public class CompetitionProblem implements Serializable {
         this.problemNumber = problemNumber;
     }
 
-    /*public Competition getCompetitionId() {
+    public Competition getCompetitionId() {
         return competitionId;
     }
 
     public void setCompetitionId(Competition competitionId) {
         this.competitionId = competitionId;
-    }*/
+    }
 
     public Problem getProblemId() {
         return problemId;

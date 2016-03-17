@@ -33,8 +33,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "submission", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Submission.findAllByUserIdAndCompetitionId", 
-            query = "SELECT s FROM Submission s WHERE s.competitionProblemId = :competitionProblemId AND s.userId = :userId ORDER BY s.submissionTime"),
+    @NamedQuery(name = "Submission.findAllByUserIdAndCompetitionProblemId", 
+            query = "SELECT s FROM Submission s WHERE s.competitionProblemId = :competitionProblemId AND s.userId = :userId AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime"),
+    @NamedQuery(name = "Submission.findAllSubmissionsByCompetitionId", 
+            query = "SELECT s FROM Submission s INNER JOIN CompetitionProblem cp ON cp.id = s.competitionProblemId INNER JOIN Competition c ON c.id = cp.competitionId WHERE c.id = :competitionId AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime"),
     @NamedQuery(name = "Submission.findById", query = "SELECT s FROM Submission s WHERE s.id = :id")})
 public class Submission implements Serializable {
 

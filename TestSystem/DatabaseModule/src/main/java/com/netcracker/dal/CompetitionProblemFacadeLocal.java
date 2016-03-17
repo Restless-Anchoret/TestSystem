@@ -28,4 +28,6 @@ public interface CompetitionProblemFacadeLocal {
     
     CompetitionProblem loadSubmissionLists(CompetitionProblem competitionProblem);
     
+    CompetitionProblem loadCompetition(CompetitionProblem competitionProblem);
+    
 }

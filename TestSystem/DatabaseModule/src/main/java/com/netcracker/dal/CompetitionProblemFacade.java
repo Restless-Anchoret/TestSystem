@@ -45,6 +45,12 @@ public class CompetitionProblemFacade extends AbstractFacade<CompetitionProblem>
         em.merge(competitionProblem).getSubmissionList();
         return competitionProblem;
     }
+
+    @Override
+    public CompetitionProblem loadCompetition(CompetitionProblem competitionProblem) {
+        em.merge(competitionProblem).getCompetitionId();
+        return competitionProblem;
+    }
     
     
     

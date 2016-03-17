@@ -120,7 +120,8 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
         participation.setPersonalDataId(personalData);
         participation.setRegistered(false);
         participation.setUserId(user);
-        em.merge(competition).getParticipationList().add(participation);
+        participation.setCompetitionId(competition);
+        em.persist(participation);
     }
 
     @Override
@@ -128,8 +129,23 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
         Participation participation = new Participation();
         participation.setRegistered(true);
         participation.setUserId(user);
-        em.merge(competition).getParticipationList().add(participation);
+        participation.setCompetitionId(competition);
+        em.persist(participation);
     }
+
+    @Override
+    public void addPaticipations(Competition competition, List<User> users) {
+        Participation participation;
+        for (User user: users) {
+            participation = new Participation();
+            participation.setRegistered(true);
+            participation.setUserId(user);
+            participation.setCompetitionId(competition);
+            em.persist(participation);
+        }
+    }
+    
+    
     
     
     
