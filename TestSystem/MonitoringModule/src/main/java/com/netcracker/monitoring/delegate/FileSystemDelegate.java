@@ -5,10 +5,13 @@
  */
 package com.netcracker.monitoring.delegate;
 
+import java.nio.file.Path;
+
 /**
  *
  * @author Магистраж
  */
 public interface FileSystemDelegate {
-    
+
+    Path getCompetitionVisibleResults(String competitionFolder);
 }

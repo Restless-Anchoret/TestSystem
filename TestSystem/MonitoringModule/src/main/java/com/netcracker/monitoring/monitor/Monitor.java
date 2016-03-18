@@ -4,11 +4,17 @@
  * and open the template in the editor.
  */
 package com.netcracker.monitoring.monitor;
-
 /**
  *
  * @author Магистраж
  */
 public interface Monitor {
-    
+
+    synchronized void startMonitoring();
+
+    synchronized List<TotalResultInfo> getActualResults();
+
+    synchronized List<TotalResultInfo> getVisibleResults();
+
+    synchronized void setRankStrategy(RankStrategy strategy);
 }

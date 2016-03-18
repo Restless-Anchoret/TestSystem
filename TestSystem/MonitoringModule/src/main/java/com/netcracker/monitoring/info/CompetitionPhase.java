@@ -9,13 +9,12 @@ package com.netcracker.monitoring.info;
  *
  * @author Магистраж
  */
-public class CompetitionPhase {
+public enum CompetitionPhase {
 
-    public enum Phase {
-        BEFORE,
-        CODING,
-        CODING_FROZEN,
-        WAITING_RESULTS,
-        FINISHED
-    }
+    BEFORE,
+    CODING,
+    CODING_FROZEN,
+    WAITING_RESULTS,
+    FINISHED
+
 }

@@ -10,5 +10,6 @@ package com.netcracker.monitoring.monitor;
  * @author Магистраж
  */
 public interface MonitorPool {
-    
+
+    synchronized Monitor getMonitor(int competitionId);
 }

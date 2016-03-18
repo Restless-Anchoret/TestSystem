@@ -5,27 +5,34 @@
  */
 package com.netcracker.monitoring.info;
 
+import java.util.List;
+
 /**
  *
  * @author Магистраж
  */
 public class TotalResultInfo {
 
-    //    private User userId;
-    private short place;
-    private short points;
+    private int id;
+    private int place;
+    List<ProblemResultInfo> problemResultInfos;
+    private int points;
     private int fine;
 
-    public short getPlace() {
+    public int getPlace() {
         return place;
     }
 
-    public short getPoints() {
+    public int getPoints() {
         return points;
     }
 
     public int getFine() {
         return fine;
+    }
+
+    public int getId() {
+        return id;
     }
 
 }

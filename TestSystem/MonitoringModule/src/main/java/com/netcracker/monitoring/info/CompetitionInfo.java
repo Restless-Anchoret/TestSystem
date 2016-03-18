@@ -13,15 +13,18 @@ import java.util.Date;
  */
 public class CompetitionInfo {
 
-    Date timeOfBegin = new Date();
-    Date timeOfFreezing = new Date();
-    Date timeOfEnd = new Date();
-    int theDurationOfTheCompetition;
-    int freezingDuration;
-    CompetitionPhase competitionStatus;
-    String competitionFolder;
+    private Date timeOfBegin;
+    private Date timeOfFreezing;
+    private Date timeOfEnd;
+    private int theDurationOfTheCompetition;
+    private int freezingDuration;
+    private CompetitionPhase competitionStatus;
+    private String competitionFolder;
 
     public CompetitionInfo(int theDurationOfTheCompetition, int freezingDuration, CompetitionPhase competitionStatus, String competitionFolder) {
+        this.timeOfEnd = new Date();
+        this.timeOfFreezing = new Date();
+        this.timeOfBegin = new Date();
         this.theDurationOfTheCompetition = theDurationOfTheCompetition;
         this.freezingDuration = freezingDuration;
         this.competitionStatus = competitionStatus;
