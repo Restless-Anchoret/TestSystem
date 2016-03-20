@@ -66,8 +66,8 @@ Path getProblemFolder(String problemFolder);
 Path getProblemStatement(String problemFolder);
 Path getProblemCheckerFolder(String problemFolder);
 
-Path getTestInputFile(String problemFolder, TestGroupType type, int testNumber);
-Path getTestAnswerFile(String problemFolder, TestGroupType type, int testNumber);
+Path getTestInputFile(String problemFolder, String TestGroupType, int testNumber);
+Path getTestAnswerFile(String problemFolder, String TestGroupType, int testNumber);
 
 boolean addAuthorDecisionFolder(String problemFolder, String authorDecisionFolder);
 Path getAuthorDecisionFolder(String problemFolder, String authorDecisionFolder);
