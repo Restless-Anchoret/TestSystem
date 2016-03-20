@@ -6,9 +6,11 @@
 package com.netcracker.dal;
 
 import com.netcracker.entity.Participation;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -28,5 +30,25 @@ public class ParticipationFacade extends AbstractFacade<Participation> implement
     public ParticipationFacade() {
         super(Participation.class);
     }
+
+    @Override
+    public Participation find(Object id) {
+        return super.find(id, "Participation.findById");
+    }
+
+    @Override
+    public void edit(List<Participation> participations) {
+        for (Participation participation: participations)
+            em.merge(participation);
+    }
+
+    @Override
+    public Participation loadCompetition(Participation participation) {
+        em.merge(participation);
+        participation.getCompetitionId();
+        return participation;
+    }
+    
+    
     
 }

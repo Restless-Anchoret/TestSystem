@@ -23,11 +23,11 @@ public interface CompetitionProblemFacadeLocal {
     void remove(CompetitionProblem competitionProblem);
 
     CompetitionProblem find(Object id);
-
-    List<CompetitionProblem> findAll();
-
-    List<CompetitionProblem> findRange(int[] range);
-
-    int count();
+    
+    CompetitionProblem loadParticipationResults(CompetitionProblem competitionProblem);
+    
+    CompetitionProblem loadSubmissionLists(CompetitionProblem competitionProblem);
+    
+    CompetitionProblem loadCompetition(CompetitionProblem competitionProblem);
     
 }

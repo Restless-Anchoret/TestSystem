@@ -23,11 +23,7 @@ public interface TestGroupFacadeLocal {
     void remove(TestGroup testGroup);
 
     TestGroup find(Object id);
-
-    List<TestGroup> findAll();
-
-    List<TestGroup> findRange(int[] range);
-
-    int count();
+    
+    List<TestGroup> getTestGroupsByProblemId(Object problemId);
     
 }

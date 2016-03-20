@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -33,9 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "competition_problem", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CompetitionProblem.findAll", query = "SELECT c FROM CompetitionProblem c"),
-    @NamedQuery(name = "CompetitionProblem.findById", query = "SELECT c FROM CompetitionProblem c WHERE c.id = :id"),
-    @NamedQuery(name = "CompetitionProblem.findByProblemNumber", query = "SELECT c FROM CompetitionProblem c WHERE c.problemNumber = :problemNumber")})
+    @NamedQuery(name = "CompetitionProblem.findById", query = "SELECT c FROM CompetitionProblem c WHERE c.id = :id")})
 public class CompetitionProblem implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,14 +49,14 @@ public class CompetitionProblem implements Serializable {
     @Column(name = "problem_number")
     private String problemNumber;
     @JoinColumn(name = "competition_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Competition competitionId;
     @JoinColumn(name = "problem_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Problem problemId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "competitionProblemId")
+    @OneToMany(mappedBy = "competitionProblemId", fetch = FetchType.LAZY)
     private List<ParticipationResult> participationResultList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "competitionProblemId")
+    @OneToMany(mappedBy = "competitionProblemId", fetch = FetchType.LAZY)
     private List<Submission> submissionList;
 
     public CompetitionProblem() {

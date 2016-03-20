@@ -10,6 +10,7 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,15 +33,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "submission", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Submission.findAll", query = "SELECT s FROM Submission s"),
-    @NamedQuery(name = "Submission.findById", query = "SELECT s FROM Submission s WHERE s.id = :id"),
-    @NamedQuery(name = "Submission.findBySubmissionTime", query = "SELECT s FROM Submission s WHERE s.submissionTime = :submissionTime"),
-    @NamedQuery(name = "Submission.findByFolderName", query = "SELECT s FROM Submission s WHERE s.folderName = :folderName"),
-    @NamedQuery(name = "Submission.findByVerdict", query = "SELECT s FROM Submission s WHERE s.verdict = :verdict"),
-    @NamedQuery(name = "Submission.findByWrongTestNumber", query = "SELECT s FROM Submission s WHERE s.wrongTestNumber = :wrongTestNumber"),
-    @NamedQuery(name = "Submission.findByDecisionTime", query = "SELECT s FROM Submission s WHERE s.decisionTime = :decisionTime"),
-    @NamedQuery(name = "Submission.findByDecisionMemory", query = "SELECT s FROM Submission s WHERE s.decisionMemory = :decisionMemory"),
-    @NamedQuery(name = "Submission.findByPoints", query = "SELECT s FROM Submission s WHERE s.points = :points")})
+    @NamedQuery(name = "Submission.findAllByUserIdAndCompetitionProblemId", 
+            query = "SELECT s FROM Submission s WHERE s.competitionProblemId = :competitionProblemId AND s.userId = :userId AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime"),
+    @NamedQuery(name = "Submission.findAllSubmissionsByCompetitionId", 
+            query = "SELECT s FROM Submission s INNER JOIN CompetitionProblem cp ON cp.id = s.competitionProblemId INNER JOIN Competition c ON c.id = cp.competitionId WHERE c.id = :competitionId AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime"),
+    @NamedQuery(name = "Submission.findById", query = "SELECT s FROM Submission s WHERE s.id = :id")})
 public class Submission implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,13 +70,13 @@ public class Submission implements Serializable {
     @Column(name = "points")
     private Short points;
     @JoinColumn(name = "competition_problem_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private CompetitionProblem competitionProblemId;
     @JoinColumn(name = "compilator_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Compilator compilatorId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User userId;
 
     public Submission() {

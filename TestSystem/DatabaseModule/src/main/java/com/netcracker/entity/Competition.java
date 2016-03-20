@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,21 +35,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "competition", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Competition.findAll", query = "SELECT c FROM Competition c"),
-    @NamedQuery(name = "Competition.findById", query = "SELECT c FROM Competition c WHERE c.id = :id"),
-    @NamedQuery(name = "Competition.findByName", query = "SELECT c FROM Competition c WHERE c.name = :name"),
-    @NamedQuery(name = "Competition.findByHoldCompetition", query = "SELECT c FROM Competition c WHERE c.holdCompetition = :holdCompetition"),
-    @NamedQuery(name = "Competition.findByEvaluationType", query = "SELECT c FROM Competition c WHERE c.evaluationType = :evaluationType"),
-    @NamedQuery(name = "Competition.findByRegistrationType", query = "SELECT c FROM Competition c WHERE c.registrationType = :registrationType"),
-    @NamedQuery(name = "Competition.findByVisible", query = "SELECT c FROM Competition c WHERE c.visible = :visible"),
-    @NamedQuery(name = "Competition.findByShowMonitor", query = "SELECT c FROM Competition c WHERE c.showMonitor = :showMonitor"),
-    @NamedQuery(name = "Competition.findByPretestsOnly", query = "SELECT c FROM Competition c WHERE c.pretestsOnly = :pretestsOnly"),
-    @NamedQuery(name = "Competition.findByPracticePermition", query = "SELECT c FROM Competition c WHERE c.practicePermition = :practicePermition"),
-    @NamedQuery(name = "Competition.findByFinished", query = "SELECT c FROM Competition c WHERE c.finished = :finished"),
-    @NamedQuery(name = "Competition.findByFolderName", query = "SELECT c FROM Competition c WHERE c.folderName = :folderName"),
-    @NamedQuery(name = "Competition.findByCompetitionStart", query = "SELECT c FROM Competition c WHERE c.competitionStart = :competitionStart"),
-    @NamedQuery(name = "Competition.findByCompetitionInterval", query = "SELECT c FROM Competition c WHERE c.competitionInterval = :competitionInterval"),
-    @NamedQuery(name = "Competition.findByIntervalBeforeFrozen", query = "SELECT c FROM Competition c WHERE c.intervalBeforeFrozen = :intervalBeforeFrozen")})
+    @NamedQuery(name = "Competition.findByHoldCompetition", query = "SELECT c FROM Competition c WHERE c.holdCompetition = :holdCompetition ORDER BY c.competitionStart NULLS LAST"),
+    @NamedQuery(name = "Competition.findByVisibleAndHoldCompetition", query = "SELECT c FROM Competition c WHERE c.visible = :visible AND c.holdCompetition = :holdCompetition ORDER BY c.competitionStart NULLS LAST"),
+    @NamedQuery(name = "Competition.findById", query = "SELECT c FROM Competition c WHERE c.id = :id")})
 public class Competition implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -108,9 +97,9 @@ public class Competition implements Serializable {
     private Integer competitionInterval;
     @Column(name = "interval_before_frozen")
     private Integer intervalBeforeFrozen;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "competitionId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "competitionId", fetch = FetchType.LAZY)
     private List<CompetitionProblem> competitionProblemList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "competitionId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "competitionId", fetch = FetchType.LAZY)
     private List<Participation> participationList;
 
     public Competition() {

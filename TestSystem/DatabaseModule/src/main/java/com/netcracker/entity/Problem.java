@@ -11,9 +11,11 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -31,16 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "problem", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Problem.findAll", query = "SELECT p FROM Problem p"),
-    @NamedQuery(name = "Problem.findById", query = "SELECT p FROM Problem p WHERE p.id = :id"),
-    @NamedQuery(name = "Problem.findByType", query = "SELECT p FROM Problem p WHERE p.type = :type"),
-    @NamedQuery(name = "Problem.findByName", query = "SELECT p FROM Problem p WHERE p.name = :name"),
-    @NamedQuery(name = "Problem.findByCheckerType", query = "SELECT p FROM Problem p WHERE p.checkerType = :checkerType"),
-    @NamedQuery(name = "Problem.findByTimeLimit", query = "SELECT p FROM Problem p WHERE p.timeLimit = :timeLimit"),
-    @NamedQuery(name = "Problem.findByMemoryLimit", query = "SELECT p FROM Problem p WHERE p.memoryLimit = :memoryLimit"),
-    @NamedQuery(name = "Problem.findByDescriptionFileExists", query = "SELECT p FROM Problem p WHERE p.descriptionFileExists = :descriptionFileExists"),
-    @NamedQuery(name = "Problem.findByValidated", query = "SELECT p FROM Problem p WHERE p.validated = :validated"),
-    @NamedQuery(name = "Problem.findByFolderName", query = "SELECT p FROM Problem p WHERE p.folderName = :folderName")})
+    @NamedQuery(name = "Problem.findById", query = "SELECT p FROM Problem p WHERE p.id = :id")})
 public class Problem implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -85,11 +78,13 @@ public class Problem implements Serializable {
     @Size(min = 1, max = 20)
     @Column(name = "folder_name")
     private String folderName;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "problemId")
+    @OneToMany(mappedBy = "problemId", fetch = FetchType.LAZY)
     private List<CompetitionProblem> competitionProblemList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "problemId")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "problem_id")
     private List<AuthorDecision> authorDecisionList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "problemId")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "problem_id")
     private List<TestGroup> testGroupList;
 
     public Problem() {

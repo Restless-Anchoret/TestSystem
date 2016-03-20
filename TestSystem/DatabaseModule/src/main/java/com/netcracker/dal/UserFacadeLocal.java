@@ -5,6 +5,7 @@
  */
 package com.netcracker.dal;
 
+import com.netcracker.entity.Participation;
 import com.netcracker.entity.User;
 import java.util.List;
 import javax.ejb.Local;
@@ -23,11 +24,14 @@ public interface UserFacadeLocal {
     void remove(User user);
 
     User find(Object id);
-
-    List<User> findAll();
-
-    List<User> findRange(int[] range);
-
-    int count();
     
+    User loadParticipations(User user);
+    
+    User loadParticipationResults(User user);
+    
+    User loadSubmissions(User user);
+    
+    User findByLogin(String login);
+    
+    List<User> getModerators();    
 }

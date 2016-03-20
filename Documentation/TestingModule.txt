@@ -22,27 +22,43 @@ MultithreadTestingSystem
 
 
 
+CodeFileSupplier
+
+Интерфейс, предоставляющий методы для доступа к файлам отправляемой посылки. Имеет следующие методы:
+
+Path getFolder();
+Path getSourceFolder();
+Path getSourceFile();
+Path getCompileFolder();
+Path getCompileFile();
+
+Методы должны возвращать путь, соответственно, к самой папке с посылкой, к папке с исходным кодом, к самом файлу с исходным кодом, к папке со скомпилированным решением и к файлу скомпилированного решения. Интерфейс не имеет реализации в модуле, должен быть реализован вне модуля.
+
+
+
+
+ProblemFileSupplier
+
+Интерфейс, предоставляющий методы для доступа к тестам задачи. Имеет следующие методы:
+
+Path getTestInputFile(TestGroupType type, int testNumber);
+Path getTestAnswerFile(TestGroupType type, int testNumber);
+
+Методы должны предоставлять пути к входным данным некоторого теста и к ответу на некоторый тест, по задаваемым имени папки с задачей, группе тестов и номеру теста. (Класс TestGroupType - класс перечислимого типа, обозначающий группу тестов; может иметь значения SAMPLES, PRETESTS, TESTS_1, и т. д. - см. исходный код). Интерфейс не имеет реализации в модуле, должен быть реализован вне модуля.
+
+
+
+
 TestingFileSupplier
 
 Интерфейс, описывающий все методы, необходимые тестирующей системе для получения путей к файлам в файловой системе.
 
-Path getSubmissionFolder(String submissionFolder);
-Path getSubmissionSourceFolder(String submissionFolder);
-Path getSubmissionSourceFile(String submissionFolder);
-Path getSubmissionCompileFolder(String submissionFolder);
-Path getSubmissionCompileFile(String submissionFolder);
-Path getConfigurationFolder();
-
 Path getTempFile();
 void deleteTempFile(Path path);
 void deleteAllTempFiles();
+Path getConfigurationFolder();
 
-Path getTestInputFile(String problemFolder, TestGroupType type, int testNumber);
-Path getTestAnswerFile(String problemFolder, TestGroupType type, int testNumber);
-
-Первые пять методов должны по имени папки с посылкой возвращать путь, соответственно, к самой папке с посылкой, к папке с исходным кодом, к самом файлу с исходным кодом, к папке со скомпилированным решением и к файлу скомпилированного решения. Шестой метод должен возвращать путь к папке с конфигурационными файлами. Следующие три метода должны уметь, соответственно, предоставлять системе временный файл (для вывода в него ответа, выдаваемого решением), удалять временный файл, а также удалять все временные файлы. И, наконец, последние два метода должны предоставлять пути к входным данным некоторого теста и к ответу на некоторый тест, по задаваемым имени папки с задачей, группе тестов и номеру теста. (Класс TestGroupType - класс перечислимого типа, обозначающий группу тестов; может иметь значения SAMPLES, PRETESTS, TESTS_1, и т. д. - см. исходный код)
-
-При проверке работоспособности модуля в качестве класса, реализующего интерфейс TestingFileSupplier, использовался простой класс SimpleFileSupplier. Для настоящей работы класса MultithreadTestingSystem необходимо разработать новый класс, содержащий в себе не только методы из интерфейса TestingFileSupplier, но и многие другие - для доступа к файловой системе.
+Первые три метода должны уметь, соответственно, предоставлять системе временный файл (для вывода в него ответа, выдаваемого решением), удалять временный файл, а также удалять все временные файлы. Последний метод должен возвращать путь к папке с конфигурационными файлами. Интерфейс не имеет реализации в модуле, должен быть реализован вне модуля.
 
 
 
@@ -56,7 +72,8 @@ ProblemTester problemTester;
 EvaluationSystem evaluationSystem;
 LanguageToolkit languageToolkit;
 Checker checker;
-String submissionFolder, problemFolder;
+CodeFileSupplier codeFileSupplier;
+ProblemFileSupplier problemFileSupplier;
 boolean pretestsOnly;
 Integer timeLimit;
 Short memoryLimit;
@@ -67,18 +84,20 @@ VerdictInfo verdictInfo = null;
 
 public TestingInfo(TestResultHandler testResultHandler, ProblemTester problemTester,
             EvaluationSystem evaluationSystem, LanguageToolkit languageToolkit,Checker checker,
-            String submissionFolder, String problemFolder, boolean pretestsOnly, Integer timeLimit,
+            CodeFileSupplier codeFileSupplier, ProblemFileSupplier problemFileSupplier, boolean pretestsOnly, Integer timeLimit,
             Short memoryLimit, TestTable testTable)
 			
-Названия полей submissionFolder, problemFolder, pretestsOnly, timeLimit, memoryLimit говорят сами за себя. Назначение остальных полей будет описано ниже. Пример создания объекта TestingInfo приведён ниже (он будет подробно прокомментирован далее):
+Названия полей pretestsOnly, timeLimit, memoryLimit говорят сами за себя. Назначение остальных полей будет описано ниже. Пример создания объекта TestingInfo приведён ниже (он будет подробно прокомментирован далее):
 
 TestResultHandler handler = new ConsoleResultHandler();
 ProblemTester tester = ProblemTesterRegistry.registry().get("coding");
 EvaluationSystem evaluationSystem = EvaluationSystemRegistry.registry().get("icpc");
 LanguageToolkit toolkit = LanguageToolkitRegistry.registry().get("java");
 Checker checker = CheckerRegistry.registry().getDefault();
+CodeFileSupplier codeFileSupplier = ...;
+ProblemFileSupplier problemFileSupplier = ...;
 MultithreadTestingSystem.getDefault().addSubmission(new TestingInfo(handler, tester, evaluationSystem,
-        toolkit, checker, "1", "1", false, 1000, (short)64, getTestTable()));
+        toolkit, checker, codeFileSupplier, problemFileSupplier, false, 1000, (short)64, getTestTable()));
 
 
 

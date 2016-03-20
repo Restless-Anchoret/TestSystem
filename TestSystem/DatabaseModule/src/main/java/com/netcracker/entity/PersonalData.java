@@ -27,15 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "personal_data", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PersonalData.findAll", query = "SELECT p FROM PersonalData p"),
-    @NamedQuery(name = "PersonalData.findById", query = "SELECT p FROM PersonalData p WHERE p.id = :id"),
-    @NamedQuery(name = "PersonalData.findByFirstName", query = "SELECT p FROM PersonalData p WHERE p.firstName = :firstName"),
-    @NamedQuery(name = "PersonalData.findByLastName", query = "SELECT p FROM PersonalData p WHERE p.lastName = :lastName"),
-    @NamedQuery(name = "PersonalData.findByPatronymic", query = "SELECT p FROM PersonalData p WHERE p.patronymic = :patronymic"),
-    @NamedQuery(name = "PersonalData.findByOrganization", query = "SELECT p FROM PersonalData p WHERE p.organization = :organization"),
-    @NamedQuery(name = "PersonalData.findByCourse", query = "SELECT p FROM PersonalData p WHERE p.course = :course"),
-    @NamedQuery(name = "PersonalData.findByCountry", query = "SELECT p FROM PersonalData p WHERE p.country = :country"),
-    @NamedQuery(name = "PersonalData.findByCity", query = "SELECT p FROM PersonalData p WHERE p.city = :city")})
+    @NamedQuery(name = "PersonalData.findById", query = "SELECT p FROM PersonalData p WHERE p.id = :id")})
 public class PersonalData implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -64,8 +56,8 @@ public class PersonalData implements Serializable {
     @Size(max = 50)
     @Column(name = "city")
     private String city;
-    @OneToOne(mappedBy = "personalDataId")
-    private Participation participation;
+    /*@OneToOne(mappedBy = "personalDataId")
+    private Participation participation;*/
 
     public PersonalData() {
     }
@@ -138,13 +130,13 @@ public class PersonalData implements Serializable {
         this.city = city;
     }
 
-    public Participation getParticipation() {
+    /*public Participation getParticipation() {
         return participation;
     }
 
     public void setParticipation(Participation participation) {
         this.participation = participation;
-    }
+    }*/
 
     @Override
     public int hashCode() {

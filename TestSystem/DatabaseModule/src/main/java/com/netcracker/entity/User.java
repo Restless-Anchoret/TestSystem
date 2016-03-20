@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,13 +35,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "user", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
     @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
     @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM User u WHERE u.login = :login"),
-    @NamedQuery(name = "User.findByPasswordHash", query = "SELECT u FROM User u WHERE u.passwordHash = :passwordHash"),
-    @NamedQuery(name = "User.findByRole", query = "SELECT u FROM User u WHERE u.role = :role"),
-    @NamedQuery(name = "User.findByRegistrationDate", query = "SELECT u FROM User u WHERE u.registrationDate = :registrationDate"),
-    @NamedQuery(name = "User.findByActual", query = "SELECT u FROM User u WHERE u.actual = :actual")})
+    @NamedQuery(name = "User.findByRole", query = "SELECT u FROM User u WHERE u.role = :role")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,11 +70,11 @@ public class User implements Serializable {
     @NotNull
     @Column(name = "actual")
     private boolean actual;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY)
     private List<Participation> participationList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY)
     private List<ParticipationResult> participationResultList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY)
     private List<Submission> submissionList;
 
     public User() {

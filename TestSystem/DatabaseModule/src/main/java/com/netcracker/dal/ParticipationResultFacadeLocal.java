@@ -23,11 +23,13 @@ public interface ParticipationResultFacadeLocal {
     void remove(ParticipationResult participationResult);
 
     ParticipationResult find(Object id);
-
-    List<ParticipationResult> findAll();
-
-    List<ParticipationResult> findRange(int[] range);
-
-    int count();
+    
+    List<ParticipationResult> findByCompetitionId(Object competitionId);
+    
+    List<ParticipationResult> findByCompetitionIdAndUserId(Object competitionId, Object userId);
+    
+    ParticipationResult loadCompetitionProblem(ParticipationResult participationResult);
+    
+    ParticipationResult loadUser(ParticipationResult participationResult);
     
 }

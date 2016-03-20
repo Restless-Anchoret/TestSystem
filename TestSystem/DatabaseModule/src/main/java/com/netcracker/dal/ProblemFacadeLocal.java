@@ -6,6 +6,7 @@
 package com.netcracker.dal;
 
 import com.netcracker.entity.Problem;
+import com.netcracker.entity.AuthorDecision;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -23,11 +24,11 @@ public interface ProblemFacadeLocal {
     void remove(Problem problem);
 
     Problem find(Object id);
-
-    List<Problem> findAll();
-
-    List<Problem> findRange(int[] range);
-
-    int count();
+    
+    Problem loadAuthorDecisions(Problem problem);
+    
+    Problem loadCompetitionProblems(Problem problem);
+    
+    Problem loadTestGroups(Problem problem);
     
 }

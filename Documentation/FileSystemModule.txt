@@ -66,8 +66,8 @@ Path getProblemFolder(String problemFolder);
 Path getProblemStatement(String problemFolder);
 Path getProblemCheckerFolder(String problemFolder);
 
-Path getTestInputFile(String problemFolder, String TestGroupType, int testNumber);
-Path getTestAnswerFile(String problemFolder, String TestGroupType, int testNumber);
+Path getTestInputFile(String problemFolder, String testGroupType, int testNumber);
+Path getTestAnswerFile(String problemFolder, String testGroupType, int testNumber);
 
 boolean addAuthorDecisionFolder(String problemFolder, String authorDecisionFolder);
 Path getAuthorDecisionFolder(String problemFolder, String authorDecisionFolder);
@@ -96,9 +96,7 @@ Path getConfigurationFolder();
 
 StandardFileSupplier
 
-Класс, реализующий интерфейс FileSupplier. Имеет статическое поле типа FileSupplier, содержащее в себе объект типа StandardFileSupplier, используемый по умолчанию. Имеет статический метод getDefault(), возврающий этот объект по умолчанию. Реализует все методы интерфейса FileSupplier.
-
-/*Если метод возвращает путь к папке, перед возвращением результата всегда проверяет, существует ли папка, и, если нет, создаёт её. Если метод возвращает путь к файлу, всегда проверяет, существует ли папка, содержащая файл, и если нет, создаёт её, а если не существует файл, возвращает null.*/
+Класс, реализующий интерфейс FileSupplier. Объект этого класса имеет в себе поле типа Path с путём к папке, в которой лежит папка file_system. Это поле инициализируеся в конструкторе. Имеет статическое поле типа FileSupplier, содержащее в себе объект типа StandardFileSupplier, используемый по умолчанию; этот объект создаётся с помощью конструктора, которому параметром передаётся путь, получаемый как Paths.get(System.getProperty("user.dir")). Класс также имеет статический метод getDefault(), возврающий этот объект по умолчанию.
 
 Все реализуемые методы вначале реализуют закрытый метод checkFileStructure(), который сначала проверяет, существует ли папка file_system, и создаёт её, если не существует, и то же самое делает для папок problems, submissions, competitions, temp, config.
 

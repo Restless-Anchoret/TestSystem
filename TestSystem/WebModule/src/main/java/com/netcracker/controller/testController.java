@@ -27,7 +27,7 @@ public class testController {
     
     private User user;
     
-    @EJB(beanName = "userService")
+    @EJB(beanName = "UserFacade")
     private UserFacadeLocal userFacade;
     
     public void addUser(ActionEvent actionEvent) {

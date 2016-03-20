@@ -19,15 +19,13 @@ public interface ParticipationFacadeLocal {
     void create(Participation participation);
 
     void edit(Participation participation);
+    
+    void edit(List<Participation> participations);
 
     void remove(Participation participation);
 
     Participation find(Object id);
-
-    List<Participation> findAll();
-
-    List<Participation> findRange(int[] range);
-
-    int count();
+    
+    Participation loadCompetition(Participation participation);
     
 }

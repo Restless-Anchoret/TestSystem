@@ -23,11 +23,7 @@ public interface AuthorDecisionFacadeLocal {
     void remove(AuthorDecision authorDecision);
 
     AuthorDecision find(Object id);
-
-    List<AuthorDecision> findAll();
-
-    List<AuthorDecision> findRange(int[] range);
-
-    int count();
+    
+    AuthorDecision loadCompilator(AuthorDecision authorDecision);
     
 }

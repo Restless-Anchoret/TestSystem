@@ -12,3 +12,9 @@
 hs_err_pid*
 /TestSystem/DatabaseModul/target/
 /TestSystem/TestingModule/target/
+/TestSystem/DatabaseModule/target/
+/TestSystem/WebModule/target/
+/TestSystem/FileSystemModule/target/
+/TestSystem/EarModule/target/
+/TestSystem/TestingModule/src/main/java/com/netcracker/testingmodule/temp/
+/TestSystem/TestingModule/file_system/
