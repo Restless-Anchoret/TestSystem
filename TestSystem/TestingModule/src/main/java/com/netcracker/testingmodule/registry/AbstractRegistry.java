@@ -1,5 +1,7 @@
 package com.netcracker.testingmodule.registry;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +17,11 @@ public abstract class AbstractRegistry<T> implements Registry<T> {
     @Override
     public T get(String id) {
         return map.get(id).supply();
+    }
+
+    @Override
+    public Collection<String> getAvailableIds() {
+        return Collections.unmodifiableCollection(map.keySet());
     }
 
 }

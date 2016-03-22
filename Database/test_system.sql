@@ -45,6 +45,18 @@ CREATE INDEX "IX_user_login" ON public.user
 -- ddl-end --
 
 
+COMMENT ON COLUMN public.user.login IS 'Логин';
+-- ddl-end --
+COMMENT ON COLUMN public.user.password_hash IS 'Хэш пароля';
+-- ddl-end --
+COMMENT ON COLUMN public.user.role IS 'Роль. Допустимые значения: "admin", "moderator", "participant"';
+-- ddl-end --
+COMMENT ON COLUMN public.user.registration_date IS 'Дата регистрации';
+-- ddl-end --
+COMMENT ON COLUMN public.user.actual IS 'Обозначает, разрешено ли пользователю заходить в систему';
+-- ddl-end --
+-- ddl-end --
+
 -- object: public.personal_data | type: TABLE --
 CREATE TABLE public.personal_data(
 	id serial NOT NULL,
@@ -68,6 +80,22 @@ CREATE INDEX "IX_personal_data_id" ON public.personal_data
 -- ddl-end --
 
 
+COMMENT ON COLUMN public.personal_data.first_name IS 'Имя';
+-- ddl-end --
+COMMENT ON COLUMN public.personal_data.last_name IS 'Фамилия';
+-- ddl-end --
+COMMENT ON COLUMN public.personal_data.patronymic IS 'Отчество';
+-- ddl-end --
+COMMENT ON COLUMN public.personal_data.organization IS 'Организация';
+-- ddl-end --
+COMMENT ON COLUMN public.personal_data.course IS 'Курс (или класс)';
+-- ddl-end --
+COMMENT ON COLUMN public.personal_data.country IS 'Страна';
+-- ddl-end --
+COMMENT ON COLUMN public.personal_data.city IS 'Город';
+-- ddl-end --
+-- ddl-end --
+
 -- object: public.competition | type: TABLE --
 CREATE TABLE public.competition(
 	id serial NOT NULL,
@@ -83,7 +111,7 @@ CREATE TABLE public.competition(
 	folder_name varchar(20) NOT NULL,
 	competition_start timestamp DEFAULT null,
 	competition_interval integer DEFAULT null,
-	interval_before_frozen integer DEFAULT null,
+	interval_frozen integer DEFAULT null,
 	CONSTRAINT "PK_competition_id" PRIMARY KEY (id),
 	CONSTRAINT "UN_competition_name" UNIQUE (name),
 	CONSTRAINT "UN_competition_folder_name" UNIQUE (folder_name)
@@ -98,6 +126,34 @@ CREATE INDEX "IX_competition_id" ON public.competition
 	);
 -- ddl-end --
 
+
+COMMENT ON COLUMN public.competition.name IS 'Название соревнования';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.hold_competition IS 'true - означает соревнование, false - означает тренировку';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.evaluation_type IS 'Тип системы оценивания. Допустимые значения: "icpc", "ioi"';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.registration_type IS 'Тип регистрации. Допустимые значения: "public", "moderation", "closed"';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.visible IS 'Обозначает, видимо ли данное соревнование участникам';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.show_monitor IS 'Обозначает, показывается ли участникам монитор по данному соревнованию';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.pretests_only IS 'Обозначает, только ли претесты используются при тестировании во время данного соревнования';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.practice_permition IS 'Обозначает, разрешено ли дорешивание по данному соревнованию';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.finished IS 'Обозначает, считается ли соревнование официально завершённым';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.folder_name IS 'Имя папки соревнования в файловой системе';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.competition_start IS 'Время начала соревнования';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.competition_interval IS 'Длительность соревнования (в минутах)';
+-- ddl-end --
+COMMENT ON COLUMN public.competition.interval_frozen IS 'Длительность заморозки (в минутах)';
+-- ddl-end --
+-- ddl-end --
 
 -- object: public.participation | type: TABLE --
 CREATE TABLE public.participation(
@@ -133,12 +189,24 @@ CREATE INDEX "IX_participation_user_id" ON public.participation
 -- ddl-end --
 
 
+COMMENT ON COLUMN public.participation.registered IS 'Обозначает, зарегистрирован ли окончательно участник на соревнование';
+-- ddl-end --
+COMMENT ON COLUMN public.participation.points IS 'Суммарные очки участника за соревнование';
+-- ddl-end --
+COMMENT ON COLUMN public.participation.fine IS 'Суммарный штраф участника за соревнование';
+-- ddl-end --
+COMMENT ON COLUMN public.participation.place IS 'Место участника по итогам соревнования';
+-- ddl-end --
+COMMENT ON COLUMN public.participation.solved_problems IS 'Количество решённых участником задач в течение соревнования';
+-- ddl-end --
+-- ddl-end --
+
 -- object: public.problem | type: TABLE --
 CREATE TABLE public.problem(
 	id serial NOT NULL,
 	type varchar(8) NOT NULL,
 	name varchar(40) NOT NULL,
-	checker_type varchar(15) NOT NULL DEFAULT 'default',
+	checker_type varchar(15) NOT NULL DEFAULT 'match',
 	time_limit integer NOT NULL DEFAULT 1000,
 	memory_limit smallint NOT NULL DEFAULT 64,
 	description_file_exists boolean NOT NULL DEFAULT false,
@@ -158,6 +226,24 @@ CREATE INDEX "IX_problem_id" ON public.problem
 	);
 -- ddl-end --
 
+
+COMMENT ON COLUMN public.problem.type IS 'Тип задачи. Допустимые значения: "coding", "test"';
+-- ddl-end --
+COMMENT ON COLUMN public.problem.name IS 'Название задачи';
+-- ddl-end --
+COMMENT ON COLUMN public.problem.checker_type IS 'Тип чекера. Допустимые значения: "match", "special"';
+-- ddl-end --
+COMMENT ON COLUMN public.problem.time_limit IS 'Ограничение по времени на задачу';
+-- ddl-end --
+COMMENT ON COLUMN public.problem.memory_limit IS 'Ограничение по памяти на задачу';
+-- ddl-end --
+COMMENT ON COLUMN public.problem.description_file_exists IS 'Обозначает, присутствует ли в файловой системе условие задачи';
+-- ddl-end --
+COMMENT ON COLUMN public.problem.validated IS 'Обозначает, считается ли данная задача провалидированной';
+-- ddl-end --
+COMMENT ON COLUMN public.problem.folder_name IS 'Имя папки с данной задачей';
+-- ddl-end --
+-- ddl-end --
 
 -- object: public.competition_problem | type: TABLE --
 CREATE TABLE public.competition_problem(
@@ -187,6 +273,10 @@ CREATE INDEX "IX_competition_problem_competition_id" ON public.competition_probl
 	);
 -- ddl-end --
 
+
+COMMENT ON COLUMN public.competition_problem.problem_number IS 'Порядковый номер задачи в списке задач соревнования';
+-- ddl-end --
+-- ddl-end --
 
 -- object: public.submission | type: TABLE --
 CREATE TABLE public.submission(
@@ -223,6 +313,22 @@ CREATE INDEX "IX_submission_user_id" ON public.submission
 -- ddl-end --
 
 
+COMMENT ON COLUMN public.submission.submission_time IS 'Время, когда была сделана посылка';
+-- ddl-end --
+COMMENT ON COLUMN public.submission.folder_name IS 'Имя папки с посылкой в файловой системе';
+-- ddl-end --
+COMMENT ON COLUMN public.submission.verdict IS 'Вердикт по посылке';
+-- ddl-end --
+COMMENT ON COLUMN public.submission.wrong_test_number IS 'Номер первого теста, не прошедшего тестирование';
+-- ddl-end --
+COMMENT ON COLUMN public.submission.decision_time IS 'Максимальное время, затраченное на решение';
+-- ddl-end --
+COMMENT ON COLUMN public.submission.decision_memory IS 'Максимальная памяти, затраченная на решение';
+-- ddl-end --
+COMMENT ON COLUMN public.submission.points IS 'Очки за посылку';
+-- ddl-end --
+-- ddl-end --
+
 -- object: public.compilator | type: TABLE --
 CREATE TABLE public.compilator(
 	id serial NOT NULL,
@@ -232,6 +338,10 @@ CREATE TABLE public.compilator(
 
 );
 -- ddl-end --
+COMMENT ON COLUMN public.compilator.name IS 'Имя компилятора. Допустимые значения: "java"';
+-- ddl-end --
+-- ddl-end --
+
 -- object: public.test_group | type: TABLE --
 CREATE TABLE public.test_group(
 	id serial NOT NULL,
@@ -251,6 +361,14 @@ CREATE INDEX "IX_test_group_problem_id" ON public.test_group
 	);
 -- ddl-end --
 
+
+COMMENT ON COLUMN public.test_group.test_group_type IS 'Тип группы тестов. Допустимые значения: "samples", "pretests", "tests_1", ... , "tests_8"';
+-- ddl-end --
+COMMENT ON COLUMN public.test_group.tests_quantity IS 'Количество тестов в группе';
+-- ddl-end --
+COMMENT ON COLUMN public.test_group.points_for_test IS 'Количество очков за тест из данной группы';
+-- ddl-end --
+-- ddl-end --
 
 -- object: public.participation_result | type: TABLE --
 CREATE TABLE public.participation_result(
@@ -281,6 +399,12 @@ CREATE INDEX "IX_participation_result_competition_problem_id" ON public.particip
 -- ddl-end --
 
 
+COMMENT ON COLUMN public.participation_result.points IS 'Очки за задачу';
+-- ddl-end --
+COMMENT ON COLUMN public.participation_result.fine IS 'Штраф за задачу';
+-- ddl-end --
+-- ddl-end --
+
 -- object: public.author_decision | type: TABLE --
 CREATE TABLE public.author_decision(
 	id serial NOT NULL,
@@ -300,6 +424,10 @@ CREATE INDEX "IX_author_decision_problem_id" ON public.author_decision
 	);
 -- ddl-end --
 
+
+COMMENT ON COLUMN public.author_decision.folder_name IS 'Имя папки с авторским решением в файловой системе';
+-- ddl-end --
+-- ddl-end --
 
 -- object: "FK_participation_competition_id" | type: CONSTRAINT --
 ALTER TABLE public.participation ADD CONSTRAINT "FK_participation_competition_id" FOREIGN KEY (competition_id)
