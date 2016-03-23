@@ -15,7 +15,7 @@ public class TotalResultInfo {
 
     private int id;
     private int place;
-    List<ProblemResultInfo> problemResultInfos;
+    List<ProblemResultInfo> problemResultInfo;
     private int points;
     private int fine;
 

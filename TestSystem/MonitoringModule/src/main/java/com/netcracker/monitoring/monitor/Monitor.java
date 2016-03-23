@@ -4,17 +4,22 @@
  * and open the template in the editor.
  */
 package com.netcracker.monitoring.monitor;
+
+import com.netcracker.monitoring.info.TotalResultInfo;
+import com.netcracker.monitoring.rank.RankStrategy;
+import java.util.List;
+
 /**
  *
  * @author Магистраж
  */
 public interface Monitor {
 
-    synchronized void startMonitoring();
+    void startMonitoring();
 
-    synchronized List<TotalResultInfo> getActualResults();
+    List<TotalResultInfo> getActualResults();
 
-    synchronized List<TotalResultInfo> getVisibleResults();
+    List<TotalResultInfo> getVisibleResults();
 
-    synchronized void setRankStrategy(RankStrategy strategy);
+    void setRankStrategy(RankStrategy strategy);
 }

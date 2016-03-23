@@ -11,5 +11,5 @@ package com.netcracker.monitoring.monitor;
  */
 public interface MonitorPool {
 
-    synchronized Monitor getMonitor(int competitionId);
+    Monitor getMonitor(int competitionId);
 }
