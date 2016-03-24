@@ -11,7 +11,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import com.netcracker.filesystem.logging.FileSystemLogging;
+import java.io.File;
 import java.nio.file.DirectoryStream;
+import static java.nio.file.Files.delete;
 
 /**
  *
@@ -32,7 +34,7 @@ public class StandardFileSupplier implements FileSupplier {
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-       
+
         return null;
     }
 
@@ -201,24 +203,43 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getAuthorDecisionSourceFolder(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "author_decisions", authorDecisionFolder, "scr");
+        if (!Files.exists(path)) {
+            return path;
+        } else {
+            FileSystemLogging.logger.fine("Not autorDecision Folder");
+            return null;
+        }
     }
 
     @Override
     public Path getAuthorDecisionSourceFile(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "author_decisions", authorDecisionFolder, "scr");
+        path = nameFile(path);
+        if (!Files.exists(path)) {
+            return path;
+        } else {
+            FileSystemLogging.logger.fine("Not Submission scr File");
+            return null;
+        }
     }
 
     @Override
     public Path getAuthorDecisionCompileFolder(String submiproblemFolder, String authorDecisionFolderssionFolder) {
         checkFileStructure();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Path path = Paths.get(pathFile.toString(), "file_system", "problems", submiproblemFolder, "author_decisions", authorDecisionFolderssionFolder, "bin");
+        if (!Files.exists(path)) {
+            return path;
+        } else {
+            FileSystemLogging.logger.fine("Not autorDecision Folder");
+            return null;
+        }
     }
 
     @Override
     public Path getAuthorDecisionCompileFile(String submisproblemFolder, String authorDecisionFoldersionFolder) {
-        checkFileStructure();
+        checkFileStructure();//много файлов
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -296,13 +317,13 @@ public class StandardFileSupplier implements FileSupplier {
     public Path getSubmissionCompileFile(String submissionFolder) {
         checkFileStructure();
         Path path = Paths.get(pathFile.toString(), "file_system", "submissions", submissionFolder, "bin");
-        path = nameFile(path);
+        path = nameFile(path);//не то, много файлов
 
         if (!Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Submission scr File");
-            return null;
+            return null;//доделать
         }
     }
 
@@ -383,13 +404,27 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public void deleteAllTempFiles() {
         checkFileStructure();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Path path = Paths.get(pathFile.toString(), "file_system", "temp");
+        try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
+            for (Path entry : entries) {
+                delete(entry);
+            }
+        } catch (IOException e) {
+            FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
+        }
+
     }
 
     @Override
     public Path getConfigurationFolder() {
         checkFileStructure();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Path path = Paths.get(pathFile.toString(), "file_system", "config");
+        if (!Files.exists(path)) {
+            return path;
+        } else {
+            FileSystemLogging.logger.fine("Not Submission Folder");
+            return null;
+        }
     }
 
 }
