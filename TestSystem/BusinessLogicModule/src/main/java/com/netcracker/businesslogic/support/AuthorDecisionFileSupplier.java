@@ -1,7 +1,7 @@
 package com.netcracker.businesslogic.support;
 
 import com.netcracker.filesystem.supplier.FileSupplier;
-import com.netcracker.testingmodule.system.CodeFileSupplier;
+import com.netcracker.testing.system.CodeFileSupplier;
 import java.nio.file.Path;
 
 public class AuthorDecisionFileSupplier implements CodeFileSupplier {

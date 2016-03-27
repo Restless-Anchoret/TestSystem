@@ -1,8 +1,8 @@
 package com.netcracker.businesslogic.support;
 
 import com.netcracker.filesystem.supplier.FileSupplier;
-import com.netcracker.testingmodule.system.ProblemFileSupplier;
-import com.netcracker.testingmodule.system.TestGroupType;
+import com.netcracker.testing.system.ProblemFileSupplier;
+import com.netcracker.testing.system.TestGroupType;
 import java.nio.file.Path;
 
 public class ProblemFileSupplierImpl implements ProblemFileSupplier {
