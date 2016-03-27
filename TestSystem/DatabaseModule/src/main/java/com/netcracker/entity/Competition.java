@@ -95,8 +95,8 @@ public class Competition implements Serializable {
     private Date competitionStart;
     @Column(name = "competition_interval")
     private Integer competitionInterval;
-    @Column(name = "interval_before_frozen")
-    private Integer intervalBeforeFrozen;
+    @Column(name = "interval_frozen")
+    private Integer intervalFrozen;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "competitionId", fetch = FetchType.LAZY)
     private List<CompetitionProblem> competitionProblemList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "competitionId", fetch = FetchType.LAZY)
@@ -228,11 +228,11 @@ public class Competition implements Serializable {
     }
 
     public Integer getIntervalBeforeFrozen() {
-        return intervalBeforeFrozen;
+        return intervalFrozen;
     }
 
     public void setIntervalBeforeFrozen(Integer intervalBeforeFrozen) {
-        this.intervalBeforeFrozen = intervalBeforeFrozen;
+        this.intervalFrozen = intervalBeforeFrozen;
     }
 
     @XmlTransient

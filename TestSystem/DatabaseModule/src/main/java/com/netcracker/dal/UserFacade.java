@@ -56,7 +56,7 @@ public class UserFacade extends AbstractFacade<User> implements UserFacadeLocal 
 
     @Override
     public User findByLogin(String login) {
-        TypedQuery query = em.createNamedQuery("User.findById", User.class);
+        TypedQuery query = em.createNamedQuery("User.findByLogin", User.class);
         query.setParameter("login", login);
         return (User) query.getSingleResult();
     }

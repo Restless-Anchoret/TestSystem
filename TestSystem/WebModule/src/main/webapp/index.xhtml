@@ -13,10 +13,10 @@
             <p:panel header="Добавить">
                 <p:panelGrid columns="2">
                     <h:outputText  value = "Логин:"/>
-                    <p:inputText id = "login" value="#{testController.login}" />
+                    <p:password id = "login" value="#{testController.login}" />
             
                     <h:outputText  value = "Пароль:" />
-                    <p:password id = "password" value="#{testController.password}" />
+                    <p:inputText id = "password" value="#{testController.password}" />
                 </p:panelGrid>
                 <p:commandButton id="add" value="Добавить" actionListener="#{testController.addUser}" ajax="false" />            
             </p:panel>
