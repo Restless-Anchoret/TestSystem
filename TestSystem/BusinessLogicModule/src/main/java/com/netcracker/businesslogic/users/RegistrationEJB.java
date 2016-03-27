@@ -51,11 +51,10 @@ public class RegistrationEJB {
             return new Result(null, Info.UNSUITABLE_PASSWORD);
         }
         try {
-//            if (userFacade.findByLogin(login) != null) {
-//                return new Result(null, Info.LOGIN_ALREADY_EXISTS);
-//            }
+            if (userFacade.findByLogin(login) != null) {
+                return new Result(null, Info.LOGIN_ALREADY_EXISTS);
+            }
             Date registrationDate = new Date();
-            //Date registrationDate = new GregorianCalendar(2016, 0, 1).getTime();
             String hash = HashCreator.getHash(password, registrationDate);
             User user = new User();
             user.setLogin(login);

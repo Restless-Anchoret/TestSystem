@@ -1,9 +1,12 @@
 package com.netcracker.web.guest;
 
-import com.netcracker.dal.UserFacadeLocal;
-import javax.ejb.EJB;
+import com.netcracker.businesslogic.users.AuthenticationEJB;
+import com.netcracker.web.session.AuthenticationController;
+import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 @Named
 @RequestScoped
@@ -11,10 +14,14 @@ public class LogInController {
 
     private String login;
     private String password;
-    @EJB(beanName = "UserFacade")
-    private UserFacadeLocal userFacade;
+    private AuthenticationEJB authenticationEJB;
     
     public LogInController() { }
+    
+    @PostConstruct
+    public void initController() {
+        authenticationEJB = AuthenticationController.getSessionAuthenticationEJB();
+    }
 
     public String getLogin() {
         return login;
@@ -57,6 +64,25 @@ public class LogInController {
 //    }
     
     public String doAuthentication() {
+//        AuthenticationEJB.Result authenticationResult = authenticationEJB
+//                .tryAuthenticateUser(login, password);
+        AuthenticationEJB.Result authenticationResult = new AuthenticationEJB.Result(null, AuthenticationEJB.Info.INCORRECT_PASSWORD);
+        String message = null;
+        switch (authenticationResult.getInfo()) {
+            case SUCCESS:
+                return "index.xhtml";
+            case INCORRECT_PASSWORD:
+                message = "Неверный пароль";
+                break;
+            case LOGIN_DOES_NOT_EXIST:
+                message = "Данный логин не зарегистрирован";
+                break;
+            case FAIL:
+                message = "Ошибка при аутентификации";
+                break;
+        }
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, message, message);
+        FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         return null;
     }
 
