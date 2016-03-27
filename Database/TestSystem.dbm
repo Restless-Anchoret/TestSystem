@@ -18,18 +18,23 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="login" not-null="true">
 		<type name="varchar" length="30"/>
+		<comment><![CDATA[Логин]]></comment>
 	</column>
 	<column name="password_hash" not-null="true">
 		<type name="varchar" length="100"/>
+		<comment><![CDATA[Хэш пароля]]></comment>
 	</column>
 	<column name="role" not-null="true">
 		<type name="varchar" length="15"/>
+		<comment><![CDATA[Роль. Допустимые значения: "admin", "moderator", "participant"]]></comment>
 	</column>
 	<column name="registration_date" not-null="true">
 		<type name="date"/>
+		<comment><![CDATA[Дата регистрации]]></comment>
 	</column>
 	<column name="actual" not-null="true" default-value="true">
 		<type name="boolean"/>
+		<comment><![CDATA[Обозначает, разрешено ли пользователю заходить в систему]]></comment>
 	</column>
 	<constraint name="PK_user_id" type="pk-constr" factor="10" table="public.user">
 		<columns names="id" ref-type="src-columns"/>
@@ -61,24 +66,31 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="first_name">
 		<type name="varchar" length="30"/>
+		<comment><![CDATA[Имя]]></comment>
 	</column>
 	<column name="last_name">
 		<type name="varchar" length="30"/>
+		<comment><![CDATA[Фамилия]]></comment>
 	</column>
 	<column name="patronymic">
 		<type name="varchar" length="30"/>
+		<comment><![CDATA[Отчество]]></comment>
 	</column>
 	<column name="organization">
 		<type name="varchar" length="100"/>
+		<comment><![CDATA[Организация]]></comment>
 	</column>
 	<column name="course">
 		<type name="smallint"/>
+		<comment><![CDATA[Курс (или класс)]]></comment>
 	</column>
 	<column name="country">
 		<type name="varchar" length="50"/>
+		<comment><![CDATA[Страна]]></comment>
 	</column>
 	<column name="city">
 		<type name="varchar" length="50"/>
+		<comment><![CDATA[Город]]></comment>
 	</column>
 	<constraint name="PK_personal_data_id" type="pk-constr" factor="10" table="public.personal_data">
 		<columns names="id" ref-type="src-columns"/>
@@ -100,42 +112,55 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="name" not-null="true">
 		<type name="varchar" length="200"/>
+		<comment><![CDATA[Название соревнования]]></comment>
 	</column>
 	<column name="hold_competition" not-null="true">
 		<type name="boolean"/>
+		<comment><![CDATA[true - означает соревнование, false - означает тренировку]]></comment>
 	</column>
 	<column name="evaluation_type" not-null="true">
 		<type name="varchar" length="5"/>
+		<comment><![CDATA[Тип системы оценивания. Допустимые значения: "icpc", "ioi"]]></comment>
 	</column>
 	<column name="registration_type" not-null="true">
 		<type name="varchar" length="10"/>
+		<comment><![CDATA[Тип регистрации. Допустимые значения: "public", "moderation", "closed"]]></comment>
 	</column>
 	<column name="visible" not-null="true" default-value="false">
 		<type name="boolean"/>
+		<comment><![CDATA[Обозначает, видимо ли данное соревнование участникам]]></comment>
 	</column>
 	<column name="show_monitor" not-null="true" default-value="false">
 		<type name="boolean"/>
+		<comment><![CDATA[Обозначает, показывается ли участникам монитор по данному соревнованию]]></comment>
 	</column>
 	<column name="pretests_only" not-null="true" default-value="false">
 		<type name="boolean"/>
+		<comment><![CDATA[Обозначает, только ли претесты используются при тестировании во время данного соревнования]]></comment>
 	</column>
 	<column name="practice_permition" not-null="true" default-value="false">
 		<type name="boolean"/>
+		<comment><![CDATA[Обозначает, разрешено ли дорешивание по данному соревнованию]]></comment>
 	</column>
 	<column name="finished" not-null="true" default-value="false">
 		<type name="boolean"/>
+		<comment><![CDATA[Обозначает, считается ли соревнование официально завершённым]]></comment>
 	</column>
 	<column name="folder_name" not-null="true">
 		<type name="varchar" length="20"/>
+		<comment><![CDATA[Имя папки соревнования в файловой системе]]></comment>
 	</column>
 	<column name="competition_start" default-value="null">
 		<type name="timestamp"/>
+		<comment><![CDATA[Время начала соревнования]]></comment>
 	</column>
 	<column name="competition_interval" default-value="null">
 		<type name="integer"/>
+		<comment><![CDATA[Длительность соревнования (в минутах)]]></comment>
 	</column>
-	<column name="interval_before_frozen" default-value="null">
+	<column name="interval_frozen" default-value="null">
 		<type name="integer"/>
+		<comment><![CDATA[Длительность заморозки (в минутах)]]></comment>
 	</column>
 	<constraint name="PK_competition_id" type="pk-constr" factor="10" table="public.competition">
 		<columns names="id" ref-type="src-columns"/>
@@ -172,18 +197,23 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="registered" not-null="true" default-value="false">
 		<type name="boolean"/>
+		<comment><![CDATA[Обозначает, зарегистрирован ли окончательно участник на соревнование]]></comment>
 	</column>
 	<column name="points" default-value="null">
 		<type name="smallint"/>
+		<comment><![CDATA[Суммарные очки участника за соревнование]]></comment>
 	</column>
 	<column name="fine" default-value="null">
 		<type name="integer"/>
+		<comment><![CDATA[Суммарный штраф участника за соревнование]]></comment>
 	</column>
 	<column name="place" default-value="null">
 		<type name="smallint"/>
+		<comment><![CDATA[Место участника по итогам соревнования]]></comment>
 	</column>
 	<column name="solved_problems" default-value="null">
 		<type name="smallint"/>
+		<comment><![CDATA[Количество решённых участником задач в течение соревнования]]></comment>
 	</column>
 	<constraint name="PK_participation_id" type="pk-constr" factor="10" table="public.participation">
 		<columns names="id" ref-type="src-columns"/>
@@ -218,27 +248,35 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="type" not-null="true">
 		<type name="varchar" length="8"/>
+		<comment><![CDATA[Тип задачи. Допустимые значения: "coding", "test"]]></comment>
 	</column>
 	<column name="name" not-null="true">
 		<type name="varchar" length="40"/>
+		<comment><![CDATA[Название задачи]]></comment>
 	</column>
-	<column name="checker_type" not-null="true" default-value="'default'">
+	<column name="checker_type" not-null="true" default-value="'match'">
 		<type name="varchar" length="15"/>
+		<comment><![CDATA[Тип чекера. Допустимые значения: "match", "special"]]></comment>
 	</column>
 	<column name="time_limit" not-null="true" default-value="1000">
 		<type name="integer"/>
+		<comment><![CDATA[Ограничение по времени на задачу]]></comment>
 	</column>
 	<column name="memory_limit" not-null="true" default-value="64">
 		<type name="smallint"/>
+		<comment><![CDATA[Ограничение по памяти на задачу]]></comment>
 	</column>
 	<column name="description_file_exists" not-null="true" default-value="false">
 		<type name="boolean"/>
+		<comment><![CDATA[Обозначает, присутствует ли в файловой системе условие задачи]]></comment>
 	</column>
 	<column name="validated" not-null="true" default-value="false">
 		<type name="boolean"/>
+		<comment><![CDATA[Обозначает, считается ли данная задача провалидированной]]></comment>
 	</column>
 	<column name="folder_name" not-null="true">
 		<type name="varchar" length="20"/>
+		<comment><![CDATA[Имя папки с данной задачей]]></comment>
 	</column>
 	<constraint name="PK_problem_id" type="pk-constr" factor="10" table="public.problem">
 		<columns names="id" ref-type="src-columns"/>
@@ -272,6 +310,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="problem_number" not-null="true">
 		<type name="varchar" length="5"/>
+		<comment><![CDATA[Порядковый номер задачи в списке задач соревнования]]></comment>
 	</column>
 	<constraint name="PK_competition_problem_id" type="pk-constr" factor="10" table="public.competition_problem">
 		<columns names="id" ref-type="src-columns"/>
@@ -315,24 +354,31 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="submission_time" not-null="true">
 		<type name="timestamp"/>
+		<comment><![CDATA[Время, когда была сделана посылка]]></comment>
 	</column>
 	<column name="folder_name" not-null="true">
 		<type name="varchar" length="20"/>
+		<comment><![CDATA[Имя папки с посылкой в файловой системе]]></comment>
 	</column>
 	<column name="verdict" not-null="true" default-value="'waiting'">
 		<type name="varchar" length="15"/>
+		<comment><![CDATA[Вердикт по посылке]]></comment>
 	</column>
 	<column name="wrong_test_number" default-value="null">
 		<type name="smallint"/>
+		<comment><![CDATA[Номер первого теста, не прошедшего тестирование]]></comment>
 	</column>
 	<column name="decision_time" default-value="null">
 		<type name="integer"/>
+		<comment><![CDATA[Максимальное время, затраченное на решение]]></comment>
 	</column>
 	<column name="decision_memory" default-value="null">
 		<type name="integer"/>
+		<comment><![CDATA[Максимальная памяти, затраченная на решение]]></comment>
 	</column>
 	<column name="points" default-value="null">
 		<type name="smallint"/>
+		<comment><![CDATA[Очки за посылку]]></comment>
 	</column>
 	<constraint name="PK_submission_id" type="pk-constr" factor="10" table="public.submission">
 		<columns names="id" ref-type="src-columns"/>
@@ -364,6 +410,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="name" not-null="true">
 		<type name="varchar" length="30"/>
+		<comment><![CDATA[Имя компилятора. Допустимые значения: "java"]]></comment>
 	</column>
 	<constraint name="PK_compilator_id" type="pk-constr" factor="10" table="public.compilator">
 		<columns names="id" ref-type="src-columns"/>
@@ -384,12 +431,15 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="test_group_type" not-null="true">
 		<type name="varchar" length="10"/>
+		<comment><![CDATA[Тип группы тестов. Допустимые значения: "samples", "pretests", "tests_1", ... , "tests_8"]]></comment>
 	</column>
 	<column name="tests_quantity" not-null="true">
 		<type name="smallint"/>
+		<comment><![CDATA[Количество тестов в группе]]></comment>
 	</column>
 	<column name="points_for_test" not-null="true">
 		<type name="smallint"/>
+		<comment><![CDATA[Количество очков за тест из данной группы]]></comment>
 	</column>
 	<constraint name="PK_test_group_id" type="pk-constr" factor="10" table="public.test_group">
 		<columns names="id" ref-type="src-columns"/>
@@ -417,9 +467,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="points" not-null="true" default-value="0">
 		<type name="smallint"/>
+		<comment><![CDATA[Очки за задачу]]></comment>
 	</column>
 	<column name="fine" not-null="true" default-value="0">
 		<type name="integer"/>
+		<comment><![CDATA[Штраф за задачу]]></comment>
 	</column>
 	<constraint name="PK_participation_result" type="pk-constr" factor="100" table="public.participation_result">
 		<columns names="id" ref-type="src-columns"/>
@@ -454,6 +506,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="folder_name" not-null="true">
 		<type name="varchar" length="15"/>
+		<comment><![CDATA[Имя папки с авторским решением в файловой системе]]></comment>
 	</column>
 	<column name="compilator_id">
 		<type name="integer"/>
