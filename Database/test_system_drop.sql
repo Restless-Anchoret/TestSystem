@@ -1,0 +1,11 @@
+﻿drop table public.participation;
+drop table public.personal_data;
+drop table public.participation_result;
+drop table public.submission;
+drop table public.author_decision;
+drop table public.compilator;
+drop table public.competition_problem;
+drop table public.test_group;
+drop table public.problem;
+drop table public.competition;
+drop table public.user;
