@@ -10,9 +10,9 @@ import javax.ejb.LocalBean;
 @LocalBean
 public class DatabaseDelegateEJB /*implements DatabaseDelegate*/ {
 
-    @EJB
+    @EJB(beanName = "CompetitionFacade")
     private CompetitionFacadeLocal competitionFacade;
-    @EJB
+    @EJB(beanName = "ParticipationResultFacade")
     private ParticipationResultFacadeLocal participationResultFacade;
     
 //    @Override
