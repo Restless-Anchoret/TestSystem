@@ -2,6 +2,7 @@ package com.netcracker.businesslogic.application;
 
 import com.netcracker.businesslogic.support.DatabaseDelegateEJB;
 import com.netcracker.businesslogic.support.TestingFileSupplierImpl;
+import com.netcracker.businesslogic.users.RegistrationEJB;
 import com.netcracker.filesystem.supplier.FileSupplier;
 import com.netcracker.filesystem.supplier.StandardFileSupplier;
 import com.netcracker.testing.system.MultithreadTestingSystem;
@@ -27,13 +28,16 @@ public class ApplicationEJB {
     private FileSupplier fileSupplier;
     //private MonitorPool monitorPool;
     @EJB
-    private DatabaseDelegateEJB databaseDelegate;
+    private DatabaseDelegateEJB databaseDelegateEJB;
+    @EJB
+    private RegistrationEJB registrationEJB;
 
     @PostConstruct
     public void initApplication() {
+        //registrationEJB.checkAdminRegistration();
         fileSupplier = StandardFileSupplier.getDefault();
         //monitorPool = StandardMonitorPool.getDefault();
-        //monitorPool.setDatabaseDelegate(databaseDelegate);
+        //monitorPool.setDatabaseDelegate(databaseDelegateEJB);
         //FileSystemDelegate fileSystemDelegate = new FileSystemDelegateImpl(fileSupplier);
         //ResultsConservator conservator = new XmlResultsConservator(fileSystemDelegate);
         //monitorPool.setResultsConservator(conservator);
