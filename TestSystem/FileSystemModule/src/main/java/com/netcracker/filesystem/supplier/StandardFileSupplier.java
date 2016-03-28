@@ -11,11 +11,6 @@ import static java.nio.file.Files.deleteIfExists;
 
 public class StandardFileSupplier implements FileSupplier {
 
-    public StandardFileSupplier(Path get) {
-        pathFile = Paths.get(System.getProperty("user.dir"));
-        pathFile = get;
-
-    }
     private static final String FILE_SYSTEM = "file_system";
     private static final String PROBLEMS = "problems";
     private static final String TESTS = "tests";
@@ -43,14 +38,28 @@ public class StandardFileSupplier implements FileSupplier {
 
     }
 
+    private Path allFileInFolder(Path path, String nameFile) {
+        try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
+            for (Path entry : entries) {
+                String name = entry.getFileName().toString();
+                if (getNameFile(name).equals(nameFile)) {
+                    return entry;
+                } else {
+                    FileSystemLogging.logger.fine("Not Have This File");
+                }
+            }
+        } catch (IOException e) {
+            FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
+        }
+        return null;
+    }
 
-
-    public static String getNameFile(String filename) {
-        int index = filename.lastIndexOf('.');
+    public static String getNameFile(String fileName) {
+        int index = fileName.lastIndexOf('.');
         if (index == -1) {
-            return "";
+            return fileName;
         } else {
-            return filename.substring(index + 1);
+            return fileName.substring(0, index);
         }
     }
     private Path pathFile;
@@ -64,9 +73,16 @@ public class StandardFileSupplier implements FileSupplier {
 
     }
 
+    public StandardFileSupplier(Path get) {
+        pathFile = get;
+    }
+
     private void checkFileStructure() {
 
         try {
+            if (!Files.exists(pathFile)) {
+                Files.createDirectories(pathFile);
+            }
             Path path = Paths.get(pathFile.toString(), FILE_SYSTEM);
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
@@ -257,8 +273,21 @@ public class StandardFileSupplier implements FileSupplier {
 
     @Override
     public Path getAuthorDecisionCompileFile(String submisproblemFolder, String authorDecisionFolder) {
-        checkFileStructure();//много файлов
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        checkFileStructure();
+        Path pathSourceFile = getAuthorDecisionSourceFile(submisproblemFolder, authorDecisionFolder);
+        if (pathSourceFile != null) {
+            String sourceFile = getNameFile(pathSourceFile.getFileName().toString());
+            Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, submisproblemFolder, AUTOR_DECISIONS, authorDecisionFolder, BIN);
+            path = allFileInFolder(path, sourceFile);
+            if (path != null && !Files.exists(path)) {
+                return path;
+            } else {
+                FileSystemLogging.logger.fine("Not authorDecision bin File");
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -334,13 +363,19 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getSubmissionCompileFile(String submissionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, BIN);
-        path = nameFile(path);//не то, много файлов
-        if (path != null && !Files.exists(path)) {
-            return path;
+        Path pathSourceFile = getSubmissionSourceFile(submissionFolder);
+        if (pathSourceFile != null) {
+            String sourceFile = getNameFile(pathSourceFile.getFileName().toString());
+            Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, BIN);
+            path = allFileInFolder(path, sourceFile);
+            if (path != null && !Files.exists(path)) {
+                return path;
+            } else {
+                FileSystemLogging.logger.fine("Not Submission bin File");
+                return null;
+            }
         } else {
-            FileSystemLogging.logger.fine("Not Submission scr File");
-            return null;//доделать
+            return null;
         }
     }
 
