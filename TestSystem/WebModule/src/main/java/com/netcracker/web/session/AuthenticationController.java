@@ -1,7 +1,6 @@
 package com.netcracker.web.session;
 
 import com.netcracker.businesslogic.users.AuthenticationEJB;
-import com.netcracker.businesslogic.users.Role;
 import com.netcracker.database.entity.User;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -26,7 +25,7 @@ public class AuthenticationController implements Serializable {
         return controller;
     }
     
-    @EJB
+    @EJB(beanName = "AuthenticationEJB")
     private AuthenticationEJB authenticationEJB;
     
     public AuthenticationController() { }
@@ -48,9 +47,30 @@ public class AuthenticationController implements Serializable {
         return authenticationEJB.getCurrentUser() != null;
     }
     
-    public Role getCurrentUserRole() {
+    public boolean isAuthenticatedParticipant() {
         User user = authenticationEJB.getCurrentUser();
-        return (user != null ? Role.valueOf(user.getRole().toUpperCase()) : null);
+        return user != null && user.getRole().equals("participant");
+    }
+    
+    public boolean isAuthenticatedModerator() {
+        User user = authenticationEJB.getCurrentUser();
+        return user != null && user.getRole().equals("moderator");
+    }
+    
+    public boolean isAuthenticatedAdmin() {
+        User user = authenticationEJB.getCurrentUser();
+        return user != null && user.getRole().equals("admin");
+    }
+    
+    public boolean isAuthenticatedModeratorOrAdmin() {
+        User user = authenticationEJB.getCurrentUser();
+        return user != null && (user.getRole().equals("moderator") ||
+                user.getRole().equals("admin"));
+    }
+    
+    public String getCurrentUserRole() {
+        User user = authenticationEJB.getCurrentUser();
+        return (user != null ? user.getRole() : null);
     }
 
 }

@@ -30,11 +30,11 @@ insert into public.submission (competition_problem_id, user_id, compilator_id, s
 insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, folder_name, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', '3', 'runtime_error', 2, 434);
 insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, folder_name, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', '4', 'secutiry_viol', 1, 455);
 
-insert into public.participation (competition_id, user_id, registered, points, fine, place, solved_problems) values (1, 1, true, 1, 0, 1, 1);
-insert into public.participation (competition_id, user_id, registered, points, fine, place, solved_problems) values (1, 2, true, 0, 0, 2, 0);
-insert into public.participation (competition_id, user_id, registered, points, fine, place, solved_problems) values (2, 1, true, null, null, null, null);
+insert into public.participation (competition_id, user_id, registered, points, fine, place, solved_problems) values (1, 4, true, 1, 0, 1, 1);
+insert into public.participation (competition_id, user_id, registered, points, fine, place, solved_problems) values (1, 5, true, 0, 0, 2, 0);
+insert into public.participation (competition_id, user_id, registered, points, fine, place, solved_problems) values (2, 4, true, null, null, null, null);
 
-insert into public.participation_result (user_id, competition_problem_id, points, fine) values (1, 1, 1, 0);
-insert into public.participation_result (user_id, competition_problem_id, points, fine) values (1, 2, 0, 0);
-insert into public.participation_result (user_id, competition_problem_id, points, fine) values (2, 1, 0, 0);
-insert into public.participation_result (user_id, competition_problem_id, points, fine) values (2, 2, 0, 0);
+insert into public.participation_result (user_id, competition_problem_id, points, fine) values (4, 1, 1, 0);
+insert into public.participation_result (user_id, competition_problem_id, points, fine) values (4, 2, 0, 0);
+insert into public.participation_result (user_id, competition_problem_id, points, fine) values (5, 1, 0, 0);
+insert into public.participation_result (user_id, competition_problem_id, points, fine) values (5, 2, 0, 0);
