@@ -21,10 +21,10 @@ public class CompetitionInfo {
     private CompetitionPhase competitionStatus;
     private String competitionFolder;
 
-    public CompetitionInfo(int theDurationOfTheCompetition, int freezingDuration, CompetitionPhase competitionStatus, String competitionFolder) {
-        this.timeOfEnd = new Date();
-        this.timeOfFreezing = new Date();
-        this.timeOfBegin = new Date();
+    public CompetitionInfo(Date timeOfBegin, Date timeOfFreezing, Date timeOfEnd, int theDurationOfTheCompetition, int freezingDuration, CompetitionPhase competitionStatus, String competitionFolder) {
+        this.timeOfEnd = timeOfEnd;
+        this.timeOfFreezing = timeOfFreezing;
+        this.timeOfBegin = timeOfBegin;
         this.theDurationOfTheCompetition = theDurationOfTheCompetition;
         this.freezingDuration = freezingDuration;
         this.competitionStatus = competitionStatus;

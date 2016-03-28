@@ -13,11 +13,19 @@ import java.util.List;
  */
 public class TotalResultInfo {
 
+    private List<ProblemResultInfo> problemResultInfo;
     private int id;
     private int place;
-    List<ProblemResultInfo> problemResultInfo;
     private int points;
     private int fine;
+
+    public TotalResultInfo(List<ProblemResultInfo> problemResultInfo) {
+        this.problemResultInfo = problemResultInfo;
+    }
+
+    public List<ProblemResultInfo> getProblemResultInfo() {
+        return problemResultInfo;
+    }
 
     public int getPlace() {
         return place;

@@ -15,7 +15,7 @@ public interface ProblemResultInfo {
 
     int getFine();
 
-    int getUsedId();
+    int getUserId();
 
     int getProblemId();
 }

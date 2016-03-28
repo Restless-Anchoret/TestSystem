@@ -9,6 +9,7 @@ import com.netcracker.monitoring.conservator.ResultsConservator;
 import com.netcracker.monitoring.delegate.DatabaseDelegate;
 import com.netcracker.monitoring.rank.RankStrategy;
 import com.netcracker.monitoring.rank.StandardRankStrategy;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,13 +18,19 @@ import java.util.Map;
  */
 public class StandardMonitorPool implements MonitorPool {
 
-    Map<Integer, Monitor> allMonitors;
-    static MonitorPool poolOfDefaultMonitors;
+    private static MonitorPool poolOfDefaultMonitors;
 
-    
-    DatabaseDelegate delegate = null;
-    ResultsConservator conservator = null;
-    RankStrategy strategy = new StandardRankStrategy;
+    public static MonitorPool getDefault() {
+        if (poolOfDefaultMonitors == null) {
+            poolOfDefaultMonitors = new StandardMonitorPool();
+        }
+        return poolOfDefaultMonitors;
+    }
+    private Map<Integer, Monitor> allMonitors = new HashMap<>();
+
+    private DatabaseDelegate delegate = null;
+    private ResultsConservator conservator = null;
+    private RankStrategy strategy = (RankStrategy) new StandardRankStrategy();
 
     void setDelegate(DatabaseDelegate delegate) {
         this.delegate = delegate;
@@ -36,19 +43,18 @@ public class StandardMonitorPool implements MonitorPool {
     void setStrategy(RankStrategy strategy) {
         this.strategy = strategy;
     }
-    public static MonitorPool getDefault() {
-        if (poolOfDefaultMonitors == null) {
-            poolOfDefaultMonitors = new getDefault();
-        }
-        return poolOfDefaultMonitors;
-    }
 
     @Override
-    sychronized public Monitor getMonitor(int competitionId) {
-    //    if() then {};
-        StandardMonitor newStandardMonitor = new StandardMonitor(DatabaseDelegate delegate,ResultsConservator conservator,RankStrategy strategy);
-        startMonitoring();
-        allMonitors.put(competitionId, newStandardMonitor);
-        return newStandardMonitor;
+    
+    public synchronized Monitor getMonitor(int competitionId) {
+        Monitor monitor = allMonitors.get(competitionId);
+        if (monitor == null) {
+            return monitor;
+        } else {
+            Monitor newStandardMonitor = new StandardMonitor(competitionId, delegate, conservator, strategy);
+            newStandardMonitor.startMonitoring();
+            allMonitors.put(competitionId, newStandardMonitor);
+            return newStandardMonitor;
+        }
     }
 }

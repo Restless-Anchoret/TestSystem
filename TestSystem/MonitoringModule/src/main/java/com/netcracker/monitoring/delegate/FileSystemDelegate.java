@@ -13,5 +13,5 @@ import java.nio.file.Path;
  */
 public interface FileSystemDelegate {
 
-    Path getCompetitionVisibleResults(String competitionFolder);
+    Path getCompetitionVisibleResults(String competitionFolder, boolean checkExisting);
 }
