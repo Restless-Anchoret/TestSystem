@@ -66,7 +66,7 @@ public class RegistrationController {
         switch (registrationResult.getInfo()) {
             case SUCCESS:
                 authenticationEJB.tryAuthenticateUser(login, password);
-                return "main.xhtml";
+                return "competitions.xhtml";
             case LOGIN_ALREADY_EXISTS:
                 message = "Данный логин уже занят";
                 break;

@@ -45,7 +45,7 @@ public class LogInController {
         String message = null;
         switch (authenticationResult.getInfo()) {
             case SUCCESS:
-                return "main.xhtml";
+                return "competitions.xhtml";
             case INCORRECT_PASSWORD:
                 message = "Неверный пароль";
                 break;
