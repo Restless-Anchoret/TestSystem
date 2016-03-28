@@ -38,39 +38,14 @@ public class LogInController {
     public void setPassword(String password) {
         this.password = password;
     }
-
-//    public String getAdminLogin() {
-//        try {
-//            User user = userFacade.findByLogin("admin");
-//            if (user == null) {
-//                return "Null!";
-//            } else {
-//                return "Not null! {" + user.getLogin() + ", " + user.getId() + "}";
-//            }
-//        } catch (Throwable throwable) {
-//            return "Exception! {" + throwable.getMessage() + ", " + throwable.getClass().getName() +
-//                    ", " + throwable.toString() + ", " + throwable.getCause() + "}";
-//        }
-//    }
-    
-//    public String getSubmissionVerdicts() {
-//        List<Submission> list = submissionFacade.findByUserIdAndCompetitionProblemId(1, 1);
-//        String result = "{ ";
-//        for (Submission submission: list) {
-//            result += submission.getVerdict() + " ";
-//        }
-//        result += "}";
-//        return result;
-//    }
     
     public String doAuthentication() {
-//        AuthenticationEJB.Result authenticationResult = authenticationEJB
-//                .tryAuthenticateUser(login, password);
-        AuthenticationEJB.Result authenticationResult = new AuthenticationEJB.Result(null, AuthenticationEJB.Info.INCORRECT_PASSWORD);
+        AuthenticationEJB.Result authenticationResult = authenticationEJB
+                .tryAuthenticateUser(login, password);
         String message = null;
         switch (authenticationResult.getInfo()) {
             case SUCCESS:
-                return "index.xhtml";
+                return "main.xhtml";
             case INCORRECT_PASSWORD:
                 message = "Неверный пароль";
                 break;
