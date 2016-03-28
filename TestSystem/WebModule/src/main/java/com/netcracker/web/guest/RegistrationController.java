@@ -16,7 +16,7 @@ import javax.faces.context.FacesContext;
 @RequestScoped
 public class RegistrationController {
 
-    @EJB
+    @EJB(beanName = "RegistrationEJB")
     private RegistrationEJB registrationEJB;
     
     private String login;

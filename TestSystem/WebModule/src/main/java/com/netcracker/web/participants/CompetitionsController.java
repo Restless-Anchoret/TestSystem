@@ -15,7 +15,7 @@ public class CompetitionsController {
 
     @EJB(beanName = "CompetitionFacade")
     private CompetitionFacadeLocal competitionFacade;
-    @EJB
+    @EJB(beanName = "CompetitionEJB")
     private CompetitionEJB competitionEJB;
     
     public CompetitionsController() { }

@@ -25,7 +25,7 @@ public class AuthenticationController implements Serializable {
         return controller;
     }
     
-    @EJB
+    @EJB(beanName = "AuthenticationEJB")
     private AuthenticationEJB authenticationEJB;
     
     public AuthenticationController() { }

@@ -37,9 +37,9 @@ public class ApplicationEJB {
     private TestingSystem testingSystem;
     private FileSupplier fileSupplier;
     //private MonitorPool monitorPool;
-    @EJB
+    @EJB(beanName = "DatabaseDelegateEJB")
     private DatabaseDelegateEJB databaseDelegateEJB;
-    @EJB
+    @EJB(beanName = "RegistrationEJB")
     private RegistrationEJB registrationEJB;
 
     @PostConstruct
