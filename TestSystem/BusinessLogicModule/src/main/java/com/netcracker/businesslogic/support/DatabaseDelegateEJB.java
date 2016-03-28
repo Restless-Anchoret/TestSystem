@@ -1,7 +1,7 @@
 package com.netcracker.businesslogic.support;
 
-import com.netcracker.dal.CompetitionFacadeLocal;
-import com.netcracker.dal.ParticipationResultFacadeLocal;
+import com.netcracker.database.dal.CompetitionFacadeLocal;
+import com.netcracker.database.dal.ParticipationResultFacadeLocal;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;

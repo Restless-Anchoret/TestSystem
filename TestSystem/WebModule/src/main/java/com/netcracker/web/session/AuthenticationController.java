@@ -2,7 +2,7 @@ package com.netcracker.web.session;
 
 import com.netcracker.businesslogic.users.AuthenticationEJB;
 import com.netcracker.businesslogic.users.Role;
-import com.netcracker.entity.User;
+import com.netcracker.database.entity.User;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;

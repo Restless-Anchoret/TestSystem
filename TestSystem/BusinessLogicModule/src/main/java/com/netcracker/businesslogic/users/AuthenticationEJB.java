@@ -2,8 +2,8 @@ package com.netcracker.businesslogic.users;
 
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.businesslogic.support.HashCreator;
-import com.netcracker.dal.UserFacadeLocal;
-import com.netcracker.entity.User;
+import com.netcracker.database.dal.UserFacadeLocal;
+import com.netcracker.database.entity.User;
 import java.util.Date;
 import java.util.logging.Level;
 import javax.ejb.EJB;

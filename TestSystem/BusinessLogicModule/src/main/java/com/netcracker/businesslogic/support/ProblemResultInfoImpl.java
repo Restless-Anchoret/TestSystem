@@ -1,6 +1,6 @@
 package com.netcracker.businesslogic.support;
 
-import com.netcracker.entity.ParticipationResult;
+import com.netcracker.database.entity.ParticipationResult;
 import java.util.ArrayList;
 import java.util.List;
 
