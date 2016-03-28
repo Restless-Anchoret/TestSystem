@@ -29,7 +29,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<comment><![CDATA[Роль. Допустимые значения: "admin", "moderator", "participant"]]></comment>
 	</column>
 	<column name="registration_date" not-null="true">
-		<type name="date"/>
+		<type name="timestamp"/>
 		<comment><![CDATA[Дата регистрации]]></comment>
 	</column>
 	<column name="actual" not-null="true" default-value="true">
@@ -41,6 +41,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 	<constraint name="UN_user_login" type="uq-constr" factor="10" table="public.user">
 		<columns names="login" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="CH_user_role" type="ck-constr" table="public.user">
+			<expression><![CDATA[role='participant' or role='moderator' or role='admin']]></expression>
+		<comment><![CDATA[Ограничение на имя роли: "participant", "moderator", "admin"]]></comment>
 	</constraint>
 	<index name="IX_user_id" table="public.user"
 		 concurrent="false" unique="false" fast-update="false"
@@ -171,6 +175,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="UN_competition_folder_name" type="uq-constr" factor="10" table="public.competition">
 		<columns names="folder_name" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="CH_competition_registration_type" type="ck-constr" table="public.competition">
+			<expression><![CDATA[registration_type='public' or registration_type='moderation' or registration_type='closed']]></expression>
+		<comment><![CDATA[Ограничение на имя типа регистрации: "public", "moderation", "closed"]]></comment>
+	</constraint>
+	<constraint name="CH_competition_competition_interval" type="ck-constr" table="public.competition">
+			<expression><![CDATA[competition_interval>0]]></expression>
+		<comment><![CDATA[Ограничение на интервал соревнования: больше нуля]]></comment>
+	</constraint>
+	<constraint name="CH_competition_interval_frozen" type="ck-constr" table="public.competition">
+			<expression><![CDATA[interval_frozen>=0 and interval_frozen<=competition_interval]]></expression>
+		<comment><![CDATA[Ограничение на интервал заморозки: больше либо равен нулю, меньше либо равен интервалу соревнования]]></comment>
+	</constraint>
 	<index name="IX_competition_id" table="public.competition"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="0">
@@ -224,6 +240,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="UN_participation_personal_data_id" type="uq-constr" factor="10" table="public.participation">
 		<columns names="personal_data_id" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="CH_participation_points" type="ck-constr" table="public.participation">
+			<expression><![CDATA[points>=0]]></expression>
+		<comment><![CDATA[Ограничение на суммарное количество очков: больше либо равно нулю]]></comment>
+	</constraint>
+	<constraint name="CH_participation_fine" type="ck-constr" table="public.participation">
+			<expression><![CDATA[fine>=0]]></expression>
+		<comment><![CDATA[Ограничение на суммарный штраф: больше либо равно нулю]]></comment>
+	</constraint>
+	<constraint name="CH_participation_place" type="ck-constr" table="public.participation">
+			<expression><![CDATA[place>0]]></expression>
+		<comment><![CDATA[Ограничение на место: больше нуля]]></comment>
+	</constraint>
+	<constraint name="CH_participation_solved_problems" type="ck-constr" table="public.participation">
+			<expression><![CDATA[solved_problems>=0]]></expression>
+		<comment><![CDATA[Ограничение на количество решённых задач: больше либо равно нулю]]></comment>
+	</constraint>
 	<index name="IX_participation_competition_id" table="public.participation"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="0">
@@ -260,11 +292,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="time_limit" not-null="true" default-value="1000">
 		<type name="integer"/>
-		<comment><![CDATA[Ограничение по времени на задачу]]></comment>
+		<comment><![CDATA[Ограничение по времени на задачу в миллисекундах]]></comment>
 	</column>
 	<column name="memory_limit" not-null="true" default-value="64">
 		<type name="smallint"/>
-		<comment><![CDATA[Ограничение по памяти на задачу]]></comment>
+		<comment><![CDATA[Ограничение по памяти на задачу в мегабайтах]]></comment>
 	</column>
 	<column name="description_file_exists" not-null="true" default-value="false">
 		<type name="boolean"/>
@@ -286,6 +318,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 	<constraint name="UN_problem_name" type="uq-constr" factor="10" table="public.problem">
 		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="CH_problem_time_limit" type="ck-constr" table="public.problem">
+			<expression><![CDATA[time_limit>0]]></expression>
+		<comment><![CDATA[Ограничение по лимиту времени: больше нуля]]></comment>
+	</constraint>
+	<constraint name="CH_problem_memory_limit" type="ck-constr" table="public.problem">
+			<expression><![CDATA[memory_limit>0]]></expression>
+		<comment><![CDATA[Ограничение по лимиту памяти: больше нуля]]></comment>
 	</constraint>
 	<index name="IX_problem_id" table="public.problem"
 		 concurrent="false" unique="false" fast-update="false"
@@ -386,6 +426,22 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="UN_submission_folder_name" type="uq-constr" factor="10" table="public.submission">
 		<columns names="folder_name" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="CH_submission_wrong_test_number" type="ck-constr" table="public.submission">
+			<expression><![CDATA[wrong_test_number>0]]></expression>
+		<comment><![CDATA[Ограничение на номер первого неуспешного теста: больше нуля]]></comment>
+	</constraint>
+	<constraint name="CH_submission_decision_time" type="ck-constr" table="public.submission">
+			<expression><![CDATA[decision_time>=0]]></expression>
+		<comment><![CDATA[Ограничение на время решения: больше либо равно нулю]]></comment>
+	</constraint>
+	<constraint name="CH_submission_decision_memory" type="ck-constr" table="public.submission">
+			<expression><![CDATA[decision_memory>=0]]></expression>
+		<comment><![CDATA[Ограничение на затраченную память: больше либо равно нулю]]></comment>
+	</constraint>
+	<constraint name="CH_submission_points" type="ck-constr" table="public.submission">
+			<expression><![CDATA[points>=0]]></expression>
+		<comment><![CDATA[Ограничение на количество очков за посылку: больше либо равно нулю]]></comment>
+	</constraint>
 	<index name="IX_submission_competition_problem_id" table="public.submission"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="0">
@@ -444,6 +500,18 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<constraint name="PK_test_group_id" type="pk-constr" factor="10" table="public.test_group">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="CH_test_group_tests_quantity" type="ck-constr" table="public.test_group">
+			<expression><![CDATA[tests_quantity>=0]]></expression>
+		<comment><![CDATA[Ограничение на количество тестов в группе: больше либо равно нулю]]></comment>
+	</constraint>
+	<constraint name="CH_test_group_test_group_type" type="ck-constr" table="public.test_group">
+			<expression><![CDATA[test_group_type='samples' or test_group_type='pretests' or test_group_type='tests_1' or test_group_type='tests_2' or test_group_type='tests_3' or test_group_type='tests_4' or test_group_type='tests_5' or test_group_type='tests_6' or test_group_type='tests_7' or test_group_type='tests_8']]></expression>
+		<comment><![CDATA[Ограничение на имя типа группы тестов]]></comment>
+	</constraint>
+	<constraint name="CH_test_group_points_for_test" type="ck-constr" table="public.test_group">
+			<expression><![CDATA[points_for_test>=0]]></expression>
+		<comment><![CDATA[Ограничение на количество очков за тест: больше либо равно нулю]]></comment>
+	</constraint>
 	<index name="IX_test_group_problem_id" table="public.test_group"
 		 concurrent="false" unique="false" fast-update="false"
 		 index-type="btree" factor="0">
@@ -478,6 +546,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 	<constraint name="UN_participation_result_user_id_competition_problem_id" type="uq-constr" factor="100" table="public.participation_result">
 		<columns names="user_id,competition_problem_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="CH_participation_result_points" type="ck-constr" table="public.participation_result">
+			<expression><![CDATA[points>=0]]></expression>
+		<comment><![CDATA[Ограничение на количество очков за задачу: больше либо равно нулю]]></comment>
+	</constraint>
+	<constraint name="CH_participation_result_fine" type="ck-constr" table="public.participation_result">
+			<expression><![CDATA[fine>=0]]></expression>
+		<comment><![CDATA[Ограничение на штраф за задачу: больше либо равно нулю]]></comment>
 	</constraint>
 	<index name="IX_participation_result_user_id" table="public.participation_result"
 		 concurrent="false" unique="false" fast-update="false"

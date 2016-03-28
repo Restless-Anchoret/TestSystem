@@ -21,10 +21,11 @@ CREATE TABLE public.user(
 	login varchar(30) NOT NULL,
 	password_hash varchar(100) NOT NULL,
 	role varchar(15) NOT NULL,
-	registration_date date NOT NULL,
+	registration_date timestamp NOT NULL,
 	actual boolean NOT NULL DEFAULT true,
 	CONSTRAINT "PK_user_id" PRIMARY KEY (id),
-	CONSTRAINT "UN_user_login" UNIQUE (login)
+	CONSTRAINT "UN_user_login" UNIQUE (login),
+	CONSTRAINT "CH_user_role" CHECK (role='participant' or role='moderator' or role='admin')
 
 );
 -- ddl-end --
@@ -54,6 +55,8 @@ COMMENT ON COLUMN public.user.role IS 'Роль. Допустимые значе
 COMMENT ON COLUMN public.user.registration_date IS 'Дата регистрации';
 -- ddl-end --
 COMMENT ON COLUMN public.user.actual IS 'Обозначает, разрешено ли пользователю заходить в систему';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_user_role" ON public.user IS 'Ограничение на имя роли: "participant", "moderator", "admin"';
 -- ddl-end --
 -- ddl-end --
 
@@ -114,7 +117,10 @@ CREATE TABLE public.competition(
 	interval_frozen integer DEFAULT null,
 	CONSTRAINT "PK_competition_id" PRIMARY KEY (id),
 	CONSTRAINT "UN_competition_name" UNIQUE (name),
-	CONSTRAINT "UN_competition_folder_name" UNIQUE (folder_name)
+	CONSTRAINT "UN_competition_folder_name" UNIQUE (folder_name),
+	CONSTRAINT "CH_competition_registration_type" CHECK (registration_type='public' or registration_type='moderation' or registration_type='closed'),
+	CONSTRAINT "CH_competition_competition_interval" CHECK (competition_interval>0),
+	CONSTRAINT "CH_competition_interval_frozen" CHECK (interval_frozen>=0 and interval_frozen<=competition_interval)
 
 );
 -- ddl-end --
@@ -153,6 +159,12 @@ COMMENT ON COLUMN public.competition.competition_interval IS 'Длительно
 -- ddl-end --
 COMMENT ON COLUMN public.competition.interval_frozen IS 'Длительность заморозки (в минутах)';
 -- ddl-end --
+COMMENT ON CONSTRAINT "CH_competition_registration_type" ON public.competition IS 'Ограничение на имя типа регистрации: "public", "moderation", "closed"';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_competition_competition_interval" ON public.competition IS 'Ограничение на интервал соревнования: больше нуля';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_competition_interval_frozen" ON public.competition IS 'Ограничение на интервал заморозки: больше либо равен нулю, меньше либо равен интервалу соревнования';
+-- ddl-end --
 -- ddl-end --
 
 -- object: public.participation | type: TABLE --
@@ -168,7 +180,11 @@ CREATE TABLE public.participation(
 	solved_problems smallint DEFAULT null,
 	CONSTRAINT "PK_participation_id" PRIMARY KEY (id),
 	CONSTRAINT "UN_participation_competition_id_user_id" UNIQUE (competition_id,user_id),
-	CONSTRAINT "UN_participation_personal_data_id" UNIQUE (personal_data_id)
+	CONSTRAINT "UN_participation_personal_data_id" UNIQUE (personal_data_id),
+	CONSTRAINT "CH_participation_points" CHECK (points>=0),
+	CONSTRAINT "CH_participation_fine" CHECK (fine>=0),
+	CONSTRAINT "CH_participation_place" CHECK (place>0),
+	CONSTRAINT "CH_participation_solved_problems" CHECK (solved_problems>=0)
 
 );
 -- ddl-end --
@@ -199,6 +215,14 @@ COMMENT ON COLUMN public.participation.place IS 'Место участника �
 -- ddl-end --
 COMMENT ON COLUMN public.participation.solved_problems IS 'Количество решённых участником задач в течение соревнования';
 -- ddl-end --
+COMMENT ON CONSTRAINT "CH_participation_points" ON public.participation IS 'Ограничение на суммарное количество очков: больше либо равно нулю';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_participation_fine" ON public.participation IS 'Ограничение на суммарный штраф: больше либо равно нулю';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_participation_place" ON public.participation IS 'Ограничение на место: больше нуля';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_participation_solved_problems" ON public.participation IS 'Ограничение на количество решённых задач: больше либо равно нулю';
+-- ddl-end --
 -- ddl-end --
 
 -- object: public.problem | type: TABLE --
@@ -214,7 +238,9 @@ CREATE TABLE public.problem(
 	folder_name varchar(20) NOT NULL,
 	CONSTRAINT "PK_problem_id" PRIMARY KEY (id),
 	CONSTRAINT "UN_problem_problem_folder_path" UNIQUE (folder_name),
-	CONSTRAINT "UN_problem_name" UNIQUE (name)
+	CONSTRAINT "UN_problem_name" UNIQUE (name),
+	CONSTRAINT "CH_problem_time_limit" CHECK (time_limit>0),
+	CONSTRAINT "CH_problem_memory_limit" CHECK (memory_limit>0)
 
 );
 -- ddl-end --
@@ -233,15 +259,19 @@ COMMENT ON COLUMN public.problem.name IS 'Название задачи';
 -- ddl-end --
 COMMENT ON COLUMN public.problem.checker_type IS 'Тип чекера. Допустимые значения: "match", "special"';
 -- ddl-end --
-COMMENT ON COLUMN public.problem.time_limit IS 'Ограничение по времени на задачу';
+COMMENT ON COLUMN public.problem.time_limit IS 'Ограничение по времени на задачу в миллисекундах';
 -- ddl-end --
-COMMENT ON COLUMN public.problem.memory_limit IS 'Ограничение по памяти на задачу';
+COMMENT ON COLUMN public.problem.memory_limit IS 'Ограничение по памяти на задачу в мегабайтах';
 -- ddl-end --
 COMMENT ON COLUMN public.problem.description_file_exists IS 'Обозначает, присутствует ли в файловой системе условие задачи';
 -- ddl-end --
 COMMENT ON COLUMN public.problem.validated IS 'Обозначает, считается ли данная задача провалидированной';
 -- ddl-end --
 COMMENT ON COLUMN public.problem.folder_name IS 'Имя папки с данной задачей';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_problem_time_limit" ON public.problem IS 'Ограничение по лимиту времени: больше нуля';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_problem_memory_limit" ON public.problem IS 'Ограничение по лимиту памяти: больше нуля';
 -- ddl-end --
 -- ddl-end --
 
@@ -292,7 +322,11 @@ CREATE TABLE public.submission(
 	decision_memory integer DEFAULT null,
 	points smallint DEFAULT null,
 	CONSTRAINT "PK_submission_id" PRIMARY KEY (id),
-	CONSTRAINT "UN_submission_folder_name" UNIQUE (folder_name)
+	CONSTRAINT "UN_submission_folder_name" UNIQUE (folder_name),
+	CONSTRAINT "CH_submission_wrong_test_number" CHECK (wrong_test_number>0),
+	CONSTRAINT "CH_submission_decision_time" CHECK (decision_time>=0),
+	CONSTRAINT "CH_submission_decision_memory" CHECK (decision_memory>=0),
+	CONSTRAINT "CH_submission_points" CHECK (points>=0)
 
 );
 -- ddl-end --
@@ -327,6 +361,14 @@ COMMENT ON COLUMN public.submission.decision_memory IS 'Максимальная
 -- ddl-end --
 COMMENT ON COLUMN public.submission.points IS 'Очки за посылку';
 -- ddl-end --
+COMMENT ON CONSTRAINT "CH_submission_wrong_test_number" ON public.submission IS 'Ограничение на номер первого неуспешного теста: больше нуля';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_submission_decision_time" ON public.submission IS 'Ограничение на время решения: больше либо равно нулю';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_submission_decision_memory" ON public.submission IS 'Ограничение на затраченную память: больше либо равно нулю';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_submission_points" ON public.submission IS 'Ограничение на количество очков за посылку: больше либо равно нулю';
+-- ddl-end --
 -- ddl-end --
 
 -- object: public.compilator | type: TABLE --
@@ -349,7 +391,10 @@ CREATE TABLE public.test_group(
 	test_group_type varchar(10) NOT NULL,
 	tests_quantity smallint NOT NULL,
 	points_for_test smallint NOT NULL,
-	CONSTRAINT "PK_test_group_id" PRIMARY KEY (id)
+	CONSTRAINT "PK_test_group_id" PRIMARY KEY (id),
+	CONSTRAINT "CH_test_group_tests_quantity" CHECK (tests_quantity>=0),
+	CONSTRAINT "CH_test_group_test_group_type" CHECK (test_group_type='samples' or test_group_type='pretests' or test_group_type='tests_1' or test_group_type='tests_2' or test_group_type='tests_3' or test_group_type='tests_4' or test_group_type='tests_5' or test_group_type='tests_6' or test_group_type='tests_7' or test_group_type='tests_8'),
+	CONSTRAINT "CH_test_group_points_for_test" CHECK (points_for_test>=0)
 
 );
 -- ddl-end --
@@ -368,6 +413,12 @@ COMMENT ON COLUMN public.test_group.tests_quantity IS 'Количество те
 -- ddl-end --
 COMMENT ON COLUMN public.test_group.points_for_test IS 'Количество очков за тест из данной группы';
 -- ddl-end --
+COMMENT ON CONSTRAINT "CH_test_group_tests_quantity" ON public.test_group IS 'Ограничение на количество тестов в группе: больше либо равно нулю';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_test_group_test_group_type" ON public.test_group IS 'Ограничение на имя типа группы тестов';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_test_group_points_for_test" ON public.test_group IS 'Ограничение на количество очков за тест: больше либо равно нулю';
+-- ddl-end --
 -- ddl-end --
 
 -- object: public.participation_result | type: TABLE --
@@ -378,7 +429,9 @@ CREATE TABLE public.participation_result(
 	points smallint NOT NULL DEFAULT 0,
 	fine integer NOT NULL DEFAULT 0,
 	CONSTRAINT "PK_participation_result" PRIMARY KEY (id),
-	CONSTRAINT "UN_participation_result_user_id_competition_problem_id" UNIQUE (user_id,competition_problem_id)
+	CONSTRAINT "UN_participation_result_user_id_competition_problem_id" UNIQUE (user_id,competition_problem_id),
+	CONSTRAINT "CH_participation_result_points" CHECK (points>=0),
+	CONSTRAINT "CH_participation_result_fine" CHECK (fine>=0)
 
 );
 -- ddl-end --
@@ -402,6 +455,10 @@ CREATE INDEX "IX_participation_result_competition_problem_id" ON public.particip
 COMMENT ON COLUMN public.participation_result.points IS 'Очки за задачу';
 -- ddl-end --
 COMMENT ON COLUMN public.participation_result.fine IS 'Штраф за задачу';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_participation_result_points" ON public.participation_result IS 'Ограничение на количество очков за задачу: больше либо равно нулю';
+-- ddl-end --
+COMMENT ON CONSTRAINT "CH_participation_result_fine" ON public.participation_result IS 'Ограничение на штраф за задачу: больше либо равно нулю';
 -- ddl-end --
 -- ddl-end --
 

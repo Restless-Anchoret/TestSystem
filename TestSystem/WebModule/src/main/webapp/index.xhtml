@@ -11,14 +11,7 @@
         Hello from Facelets
         <h:form>
             <p:panel header="Добавить">
-                <p:panelGrid columns="2">
-                    <h:outputText  value = "Логин:"/>
-                    <p:inputText id = "login" value="#{testController.login}" />
-            
-                    <h:outputText  value = "Пароль:" />
-                    <p:password id = "password" value="#{testController.password}" />
-                </p:panelGrid>
-                <p:commandButton id="add" value="Добавить" actionListener="#{testController.addUser}" ajax="false" />            
+                <p:link id="add" value="Тесты" outcome="tests.xhtml" />            
             </p:panel>
         </h:form>
     </h:body>
