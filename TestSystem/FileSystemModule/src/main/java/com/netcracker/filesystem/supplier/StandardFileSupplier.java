@@ -15,7 +15,7 @@ public class StandardFileSupplier implements FileSupplier {
     private static final String PROBLEMS = "problems";
     private static final String TESTS = "tests";
     private static final String CHECKER = "checker";
-    private static final String AUTOR_DECISIONS = "autor_decisions";
+    private static final String AUTHOR_DECISIONS = "author_decisions";
     private static final String SUBMISSIONS = "submissions";
     private static final String COMPETITIONS = "competitions";
     private static final String TEMP = "temp";
@@ -24,6 +24,8 @@ public class StandardFileSupplier implements FileSupplier {
     private static final String SRC = "src";
     private static final String ANSWER = "answer.txt";
     private static final String INPUT = "input.txt";
+    private static final String VISIBLE_RESULTS = "visible_results.xml";
+    private static final String STATEMENT = "statement.pdf";
 
     private Path nameFile(Path path) {
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
@@ -33,9 +35,7 @@ public class StandardFileSupplier implements FileSupplier {
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-
         return null;
-
     }
 
     private Path allFileInFolder(Path path, String nameFile) {
@@ -70,7 +70,6 @@ public class StandardFileSupplier implements FileSupplier {
             fileSupplier = new StandardFileSupplier(Paths.get(System.getProperty("user.dir")));
         }
         return fileSupplier;
-
     }
 
     public StandardFileSupplier(Path get) {
@@ -115,7 +114,6 @@ public class StandardFileSupplier implements FileSupplier {
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-
     }
 
     @Override
@@ -129,16 +127,15 @@ public class StandardFileSupplier implements FileSupplier {
                 Files.createDirectory(path);
                 path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, CHECKER);
                 Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS);
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTHOR_DECISIONS);
                 Files.createDirectory(path);
+                return true;
 
-            } else {
-                return false;
             }
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -156,7 +153,7 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getProblemStatement(String problemFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, "statement.pdf");
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, STATEMENT);
         if (Files.exists(path)) {
             return path;
         } else {
@@ -204,27 +201,26 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public boolean addAuthorDecisionFolder(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder);
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTHOR_DECISIONS, authorDecisionFolder);
         try {
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder, BIN);
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTHOR_DECISIONS, authorDecisionFolder, BIN);
                 Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder, SRC);
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTHOR_DECISIONS, authorDecisionFolder, SRC);
                 Files.createDirectory(path);
-            } else {
-                return false;
+                return true;
             }
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-        return true;
+        return false;
     }
 
     @Override
     public Path getAuthorDecisionFolder(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder);
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTHOR_DECISIONS, authorDecisionFolder);
         if (Files.exists(path)) {
             return path;
         } else {
@@ -237,11 +233,11 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getAuthorDecisionSourceFolder(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder, SRC);
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTHOR_DECISIONS, authorDecisionFolder, SRC);
         if (Files.exists(path)) {
             return path;
         } else {
-            FileSystemLogging.logger.fine("Not autorDecision Folder");
+            FileSystemLogging.logger.fine("Not authorDecision Folder");
             return null;
         }
     }
@@ -249,7 +245,7 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getAuthorDecisionSourceFile(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder, SRC);
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTHOR_DECISIONS, authorDecisionFolder, SRC);
         path = nameFile(path);
         if (path != null && Files.exists(path)) {
             return path;
@@ -260,9 +256,9 @@ public class StandardFileSupplier implements FileSupplier {
     }
 
     @Override
-    public Path getAuthorDecisionCompileFolder(String submiproblemFolder, String authorDecisionFolder) {
+    public Path getAuthorDecisionCompileFolder(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, submiproblemFolder, AUTOR_DECISIONS, authorDecisionFolder, BIN);
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTHOR_DECISIONS, authorDecisionFolder, BIN);
         if (Files.exists(path)) {
             return path;
         } else {
@@ -277,9 +273,9 @@ public class StandardFileSupplier implements FileSupplier {
         Path pathSourceFile = getAuthorDecisionSourceFile(submisproblemFolder, authorDecisionFolder);
         if (pathSourceFile != null) {
             String sourceFile = getNameFile(pathSourceFile.getFileName().toString());
-            Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, submisproblemFolder, AUTOR_DECISIONS, authorDecisionFolder, BIN);
+            Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, submisproblemFolder, AUTHOR_DECISIONS, authorDecisionFolder, BIN);
             path = allFileInFolder(path, sourceFile);
-            if (path != null && !Files.exists(path)) {
+            if (path != null && Files.exists(path)) {
                 return path;
             } else {
                 FileSystemLogging.logger.fine("Not authorDecision bin File");
@@ -301,13 +297,12 @@ public class StandardFileSupplier implements FileSupplier {
                 Files.createDirectory(path);
                 path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, SRC);
                 Files.createDirectory(path);
-            } else {
-                return false;
+                return true;
             }
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -340,7 +335,7 @@ public class StandardFileSupplier implements FileSupplier {
         Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, SRC);
         path = nameFile(path);
 
-        if (path != null && !Files.exists(path)) {
+        if (path != null && Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Submission scr File");
@@ -368,7 +363,7 @@ public class StandardFileSupplier implements FileSupplier {
             String sourceFile = getNameFile(pathSourceFile.getFileName().toString());
             Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, BIN);
             path = allFileInFolder(path, sourceFile);
-            if (path != null && !Files.exists(path)) {
+            if (path != null && Files.exists(path)) {
                 return path;
             } else {
                 FileSystemLogging.logger.fine("Not Submission bin File");
@@ -386,37 +381,28 @@ public class StandardFileSupplier implements FileSupplier {
         try {
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
-            } else {
-                return false;
+                return true;
             }
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
 
-        return true;
+        return false;
     }
 
     @Override
     public Path getCompetitionVisibleResults(String competitionFolder, boolean checkExisting) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, COMPETITIONS, competitionFolder, "visible_results.xml");
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, COMPETITIONS, competitionFolder, VISIBLE_RESULTS);
         if (!checkExisting) {
             return path;
+        } else if (!Files.exists(path)) {
+            return path;
         } else {
-            try {
-                if (Files.exists(path)) {
-                    Files.createDirectory(path);
-                } else {
-                    FileSystemLogging.logger.fine("Not Submission scr File");
-                    return null;
-                }
-
-            } catch (IOException e) {
-                FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
-            }
-
+            FileSystemLogging.logger.fine("Not Submission scr File");
+            return null;
         }
-        return null;
+
     }
 
     @Override
@@ -439,11 +425,7 @@ public class StandardFileSupplier implements FileSupplier {
         checkFileStructure();
 
         try {
-            if (Files.exists(path)) {
-                Files.deleteIfExists(path);
-            } else {
-                FileSystemLogging.logger.fine("Not Temp File");
-            }
+            Files.deleteIfExists(path);
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
@@ -468,7 +450,7 @@ public class StandardFileSupplier implements FileSupplier {
     public Path getConfigurationFolder() {
         checkFileStructure();
         Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, CONFIG);
-        if (!Files.exists(path)) {
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Submission Folder");
