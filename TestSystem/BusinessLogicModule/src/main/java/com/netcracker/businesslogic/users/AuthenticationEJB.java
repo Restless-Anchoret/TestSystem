@@ -27,15 +27,20 @@ public class AuthenticationEJB {
         try {
             User user = userFacade.findByLogin(login);
             if (user == null) {
-                return new Result(null, Info.LOGIN_DOES_NOT_EXIST);
+                return new Result(null, Info.REFUSE);
             }
             Date registrationDate = user.getRegistrationDate();
             String hash = HashCreator.getHash(password, registrationDate);
+//            BusinessLogicLogging.logger.info("Login: " + login);
+//            BusinessLogicLogging.logger.info("Password: " + password);
+//            BusinessLogicLogging.logger.info("Date: " + registrationDate.toString());
+//            BusinessLogicLogging.logger.info("Long: " + registrationDate.getTime());
+//            BusinessLogicLogging.logger.info("Hash: " + hash);
             if (hash.equals(user.getPasswordHash())) {
                 currentUser = user;
                 return new Result(currentUser, Info.SUCCESS);
             } else {
-                return new Result(null, Info.INCORRECT_PASSWORD);
+                return new Result(null, Info.REFUSE);
             }
         } catch (Exception exception) {
             BusinessLogicLogging.logger.log(Level.FINE, null, exception);
@@ -49,8 +54,7 @@ public class AuthenticationEJB {
     
     public static enum Info {
         SUCCESS,
-        LOGIN_DOES_NOT_EXIST,
-        INCORRECT_PASSWORD,
+        REFUSE,
         FAIL
     }
     
