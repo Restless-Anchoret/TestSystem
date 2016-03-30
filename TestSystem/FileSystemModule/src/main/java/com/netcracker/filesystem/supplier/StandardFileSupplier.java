@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.netcracker.filesystem.supplier;
 
 import java.io.IOException;
@@ -11,20 +6,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import com.netcracker.filesystem.logging.FileSystemLogging;
-import java.io.File;
 import java.nio.file.DirectoryStream;
-import static java.nio.file.Files.delete;
+import static java.nio.file.Files.deleteIfExists;
 
-/**
- *
- * @author Администратор
- */
 public class StandardFileSupplier implements FileSupplier {
 
-    StandardFileSupplier(Path get) {
-        pathFile = Paths.get(System.getProperty("user.dir"));
-
-    }
+    private static final String FILE_SYSTEM = "file_system";
+    private static final String PROBLEMS = "problems";
+    private static final String TESTS = "tests";
+    private static final String CHECKER = "checker";
+    private static final String AUTOR_DECISIONS = "autor_decisions";
+    private static final String SUBMISSIONS = "submissions";
+    private static final String COMPETITIONS = "competitions";
+    private static final String TEMP = "temp";
+    private static final String CONFIG = "config";
+    private static final String BIN = "bin";
+    private static final String SRC = "src";
+    private static final String ANSWER = "answer.txt";
+    private static final String INPUT = "input.txt";
 
     private Path nameFile(Path path) {
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
@@ -36,46 +35,78 @@ public class StandardFileSupplier implements FileSupplier {
         }
 
         return null;
+
     }
 
+    private Path allFileInFolder(Path path, String nameFile) {
+        try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
+            for (Path entry : entries) {
+                String name = entry.getFileName().toString();
+                if (getNameFile(name).equals(nameFile)) {
+                    return entry;
+                } else {
+                    FileSystemLogging.logger.fine("Not Have This File");
+                }
+            }
+        } catch (IOException e) {
+            FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
+        }
+        return null;
+    }
+
+    public static String getNameFile(String fileName) {
+        int index = fileName.lastIndexOf('.');
+        if (index == -1) {
+            return fileName;
+        } else {
+            return fileName.substring(0, index);
+        }
+    }
     private Path pathFile;
     private static FileSupplier fileSupplier = null;
 
     public static FileSupplier getDefault() {
         if (fileSupplier == null) {
-            return new StandardFileSupplier(Paths.get(System.getProperty("user.dir")));
-        } else {
-            return fileSupplier;
+            fileSupplier = new StandardFileSupplier(Paths.get(System.getProperty("user.dir")));
         }
+        return fileSupplier;
+
+    }
+
+    public StandardFileSupplier(Path get) {
+        pathFile = get;
     }
 
     private void checkFileStructure() {
 
         try {
-            Path path = Paths.get(pathFile.toString(), "file_system");
+            if (!Files.exists(pathFile)) {
+                Files.createDirectories(pathFile);
+            }
+            Path path = Paths.get(pathFile.toString(), FILE_SYSTEM);
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
             }
-            path = Paths.get(pathFile.toString(), "file_system", "problems");
+            path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS);
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
             }
-            path = Paths.get(pathFile.toString(), "file_system", "submissions");
+            path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS);
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
             }
-            path = Paths.get(pathFile.toString(), "file_system", "competitions");
+            path = Paths.get(pathFile.toString(), FILE_SYSTEM, COMPETITIONS);
 
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
             }
 
-            path = Paths.get(pathFile.toString(), "file_system", "temp");
+            path = Paths.get(pathFile.toString(), FILE_SYSTEM, TEMP);
 
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
             }
-            path = Paths.get(pathFile.toString(), "file_system", "config");
+            path = Paths.get(pathFile.toString(), FILE_SYSTEM, CONFIG);
 
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
@@ -90,28 +121,31 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public boolean addProblemFolder(String problemFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder);
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder);
         try {
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "tests");
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, TESTS);
                 Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "checker");
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, CHECKER);
                 Files.createDirectory(path);
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS);
+                Files.createDirectory(path);
+
             } else {
                 return false;
             }
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
     public Path getProblemFolder(String problemFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder);
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Folder");
@@ -122,8 +156,8 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getProblemStatement(String problemFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "statement.pdf");
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, "statement.pdf");
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not File Statement ");
@@ -134,8 +168,8 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getProblemCheckerFolder(String problemFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "checker");
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, CHECKER);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not checker Folder");
@@ -146,8 +180,8 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getTestInputFile(String problemFolder, String testGroupType, int testNumber) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "tests", testGroupType, Integer.toString(testNumber), "input.txt");
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, TESTS, testGroupType, Integer.toString(testNumber), INPUT);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not input File");
@@ -158,8 +192,8 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getTestAnswerFile(String problemFolder, String testGroupType, int testNumber) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "tests", testGroupType, Integer.toString(testNumber), "answer.txt");
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, TESTS, testGroupType, Integer.toString(testNumber), ANSWER);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not answer File");
@@ -170,13 +204,13 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public boolean addAuthorDecisionFolder(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, authorDecisionFolder);
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder);
         try {
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "author_decisions", authorDecisionFolder, "bin");
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder, BIN);
                 Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "author_decisions", authorDecisionFolder, "scr");
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder, SRC);
                 Files.createDirectory(path);
             } else {
                 return false;
@@ -184,14 +218,14 @@ public class StandardFileSupplier implements FileSupplier {
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
     public Path getAuthorDecisionFolder(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "author_decisions", authorDecisionFolder);
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not autorDecision Folder");
@@ -203,8 +237,8 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getAuthorDecisionSourceFolder(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "author_decisions", authorDecisionFolder, "scr");
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder, SRC);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not autorDecision Folder");
@@ -215,9 +249,9 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getAuthorDecisionSourceFile(String problemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", problemFolder, "author_decisions", authorDecisionFolder, "scr");
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, AUTOR_DECISIONS, authorDecisionFolder, SRC);
         path = nameFile(path);
-        if (!Files.exists(path)) {
+        if (path != null && Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Submission scr File");
@@ -226,10 +260,10 @@ public class StandardFileSupplier implements FileSupplier {
     }
 
     @Override
-    public Path getAuthorDecisionCompileFolder(String submiproblemFolder, String authorDecisionFolderssionFolder) {
+    public Path getAuthorDecisionCompileFolder(String submiproblemFolder, String authorDecisionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "problems", submiproblemFolder, "author_decisions", authorDecisionFolderssionFolder, "bin");
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, submiproblemFolder, AUTOR_DECISIONS, authorDecisionFolder, BIN);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not autorDecision Folder");
@@ -238,21 +272,34 @@ public class StandardFileSupplier implements FileSupplier {
     }
 
     @Override
-    public Path getAuthorDecisionCompileFile(String submisproblemFolder, String authorDecisionFoldersionFolder) {
-        checkFileStructure();//много файлов
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Path getAuthorDecisionCompileFile(String submisproblemFolder, String authorDecisionFolder) {
+        checkFileStructure();
+        Path pathSourceFile = getAuthorDecisionSourceFile(submisproblemFolder, authorDecisionFolder);
+        if (pathSourceFile != null) {
+            String sourceFile = getNameFile(pathSourceFile.getFileName().toString());
+            Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, submisproblemFolder, AUTOR_DECISIONS, authorDecisionFolder, BIN);
+            path = allFileInFolder(path, sourceFile);
+            if (path != null && !Files.exists(path)) {
+                return path;
+            } else {
+                FileSystemLogging.logger.fine("Not authorDecision bin File");
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean addSubmissionFolder(String submissionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "submissions", submissionFolder);
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder);
         try {
             if (!Files.exists(path)) {
                 Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), "file_system", "submissions", submissionFolder, "bin");
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, BIN);
                 Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), "file_system", "submissions", submissionFolder, "src");
+                path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, SRC);
                 Files.createDirectory(path);
             } else {
                 return false;
@@ -260,14 +307,14 @@ public class StandardFileSupplier implements FileSupplier {
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
     public Path getSubmissionFolder(String submissionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "submissions", submissionFolder);
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Submission Folder");
@@ -278,8 +325,8 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getSubmissionSourceFolder(String submissionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "submissions", submissionFolder, "src");
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, SRC);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Submission Folder");
@@ -290,10 +337,10 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getSubmissionSourceFile(String submissionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "submissions", submissionFolder, "src");
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, SRC);
         path = nameFile(path);
 
-        if (!Files.exists(path)) {
+        if (path != null && !Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Submission scr File");
@@ -304,8 +351,8 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getSubmissionCompileFolder(String submissionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "submissions", submissionFolder, "bin");
-        if (!Files.exists(path)) {
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, BIN);
+        if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Submission Folder");
@@ -316,25 +363,28 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getSubmissionCompileFile(String submissionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "submissions", submissionFolder, "bin");
-        path = nameFile(path);//не то, много файлов
-
-        if (!Files.exists(path)) {
-            return path;
+        Path pathSourceFile = getSubmissionSourceFile(submissionFolder);
+        if (pathSourceFile != null) {
+            String sourceFile = getNameFile(pathSourceFile.getFileName().toString());
+            Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, SUBMISSIONS, submissionFolder, BIN);
+            path = allFileInFolder(path, sourceFile);
+            if (path != null && !Files.exists(path)) {
+                return path;
+            } else {
+                FileSystemLogging.logger.fine("Not Submission bin File");
+                return null;
+            }
         } else {
-            FileSystemLogging.logger.fine("Not Submission scr File");
-            return null;//доделать
+            return null;
         }
     }
 
     @Override
     public boolean addCompetitionFolder(String competitionFolder) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "competitions");
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, COMPETITIONS, competitionFolder);
         try {
             if (!Files.exists(path)) {
-                Files.createDirectory(path);
-                path = Paths.get(pathFile.toString(), "file_system", "competitions", competitionFolder);
                 Files.createDirectory(path);
             } else {
                 return false;
@@ -343,18 +393,18 @@ public class StandardFileSupplier implements FileSupplier {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return true;
     }
 
     @Override
     public Path getCompetitionVisibleResults(String competitionFolder, boolean checkExisting) {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "competitions", competitionFolder, "visible_results.xml");
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, COMPETITIONS, competitionFolder, "visible_results.xml");
         if (!checkExisting) {
             return path;
         } else {
             try {
-                if (!Files.exists(path)) {
+                if (Files.exists(path)) {
                     Files.createDirectory(path);
                 } else {
                     FileSystemLogging.logger.fine("Not Submission scr File");
@@ -365,14 +415,14 @@ public class StandardFileSupplier implements FileSupplier {
                 FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
             }
 
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+        return null;
     }
 
     @Override
     public Path getTempFile() {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "temp");
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, TEMP);
 
         try {
             path = Files.createTempFile(path, null, ".txt");
@@ -380,8 +430,8 @@ public class StandardFileSupplier implements FileSupplier {
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
-
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        FileSystemLogging.logger.fine("Not Temp  File");
+        return null;
     }
 
     @Override
@@ -390,7 +440,7 @@ public class StandardFileSupplier implements FileSupplier {
 
         try {
             if (Files.exists(path)) {
-                Files.delete(path);
+                Files.deleteIfExists(path);
             } else {
                 FileSystemLogging.logger.fine("Not Temp File");
             }
@@ -398,16 +448,15 @@ public class StandardFileSupplier implements FileSupplier {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
         }
 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void deleteAllTempFiles() {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "temp");
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, TEMP);
         try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
             for (Path entry : entries) {
-                delete(entry);
+                deleteIfExists(entry);
             }
         } catch (IOException e) {
             FileSystemLogging.logger.log(Level.FINE, "IOException while creating folders", e);
@@ -418,7 +467,7 @@ public class StandardFileSupplier implements FileSupplier {
     @Override
     public Path getConfigurationFolder() {
         checkFileStructure();
-        Path path = Paths.get(pathFile.toString(), "file_system", "config");
+        Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, CONFIG);
         if (!Files.exists(path)) {
             return path;
         } else {

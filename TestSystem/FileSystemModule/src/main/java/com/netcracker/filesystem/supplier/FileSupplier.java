@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.netcracker.filesystem.supplier;
 
 import java.nio.file.Path;
 
-/**
- *
- * @author Администратор
- */
 
 public interface FileSupplier {
     
@@ -27,8 +19,8 @@ boolean addAuthorDecisionFolder(String problemFolder, String authorDecisionFolde
 Path getAuthorDecisionFolder(String problemFolder, String authorDecisionFolder);
 Path getAuthorDecisionSourceFolder(String problemFolder, String authorDecisionFolder);
 Path getAuthorDecisionSourceFile(String problemFolder, String authorDecisionFolder);
-Path getAuthorDecisionCompileFolder(String submiproblemFolder, String authorDecisionFolderssionFolder);
-Path getAuthorDecisionCompileFile(String submisproblemFolder, String authorDecisionFoldersionFolder);
+Path getAuthorDecisionCompileFolder(String submiproblemFolder, String authorDecisionFolder);
+Path getAuthorDecisionCompileFile(String submisproblemFolder, String authorDecisionFolder);
 
 boolean addSubmissionFolder(String submissionFolder);
 Path getSubmissionFolder(String submissionFolder);

@@ -11,13 +11,12 @@ import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.print.attribute.standard.Severity;
 
 @Named
 @RequestScoped
 public class RegistrationController {
 
-    @EJB
+    @EJB(beanName = "RegistrationEJB")
     private RegistrationEJB registrationEJB;
     
     private String login;
@@ -61,14 +60,13 @@ public class RegistrationController {
             addMessage("Пароли не совпадают");
             return null;
         }
-        //RegistrationEJB.Result registrationResult = registrationEJB
-        //        .tryRegistrateActual(login, password, Role.PARTICIPANT);
-        RegistrationEJB.Result registrationResult = new RegistrationEJB.Result(null, RegistrationEJB.Info.UNSUITABLE_LOGIN);
+        RegistrationEJB.Result registrationResult = registrationEJB
+                .tryRegistrateActual(login, password, Role.PARTICIPANT);
         String message = null;
         switch (registrationResult.getInfo()) {
             case SUCCESS:
-                //authenticationEJB.tryAuthenticateUser(login, password);
-                return "index.xhtml";
+                authenticationEJB.tryAuthenticateUser(login, password);
+                return "competitions.xhtml";
             case LOGIN_ALREADY_EXISTS:
                 message = "Данный логин уже занят";
                 break;

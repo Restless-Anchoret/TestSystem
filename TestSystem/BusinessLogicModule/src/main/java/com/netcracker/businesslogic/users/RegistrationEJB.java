@@ -6,7 +6,6 @@ import com.netcracker.database.dal.UserFacadeLocal;
 import com.netcracker.database.entity.User;
 import java.util.Date;
 import java.util.logging.Level;
-import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
@@ -15,23 +14,26 @@ import javax.ejb.LocalBean;
 @LocalBean
 public class RegistrationEJB {
     
-    @Resource(name = "adminDefaultLogin")
-    private String adminDefaultLogin;
-    @Resource(name = "adminDefaultPassword")
-    private String adminDefaultPassword;
     @EJB(beanName = "UserFacade")
     private UserFacadeLocal userFacade;
     
-//    public void checkAdminRegistration() {
-//        User user = userFacade.getAdmin();
-//        if (user == null) {
-//            Result adminRegistrationResult = tryRegistrateActual(adminDefaultLogin,
-//                    adminDefaultPassword, Role.ADMIN);
-//            String message = "Trying to registrate admin. Result: " +
-//                    adminRegistrationResult.getInfo().toString();
-//            BusinessLogicLogging.logger.info(message);
-//        }
-//    }
+    public void checkAdminRegistration(String adminDefaultLogin, String adminDefaultPassword) {
+        User user = null;
+        try {
+            user = userFacade.getAdmin();
+        } catch (Exception exception) {
+            BusinessLogicLogging.logger.log(Level.FINE, null, exception);
+            return;
+        }
+        if (user == null) {
+            Result adminRegistrationResult = tryRegistrateActual(adminDefaultLogin,
+                    adminDefaultPassword, Role.ADMIN);
+            String message = "Trying to registrate admin. Result: " +
+                    adminRegistrationResult.getInfo().toString();
+            BusinessLogicLogging.logger.info(message);
+            return;
+        }
+    }
     
     public Result tryRegistrateActual(String login, String password, Role role) {
         return tryRegistrate(login, password, role, true);
