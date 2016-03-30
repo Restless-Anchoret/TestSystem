@@ -31,7 +31,6 @@ public class RegistrationEJB {
             String message = "Trying to registrate admin. Result: " +
                     adminRegistrationResult.getInfo().toString();
             BusinessLogicLogging.logger.info(message);
-            return;
         }
     }
     
