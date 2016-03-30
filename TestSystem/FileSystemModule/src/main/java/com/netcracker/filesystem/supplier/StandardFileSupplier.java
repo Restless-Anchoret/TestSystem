@@ -396,7 +396,7 @@ public class StandardFileSupplier implements FileSupplier {
         Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, COMPETITIONS, competitionFolder, VISIBLE_RESULTS);
         if (!checkExisting) {
             return path;
-        } else if (!Files.exists(path)) {
+        } else if (Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.fine("Not Submission scr File");

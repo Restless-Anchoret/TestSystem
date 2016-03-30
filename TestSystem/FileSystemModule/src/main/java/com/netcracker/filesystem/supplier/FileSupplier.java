@@ -1,4 +1,3 @@
-÷÷
 package com.netcracker.filesystem.supplier;
 
 import java.nio.file.Path;
