@@ -30,7 +30,7 @@ public class XmlResultsConservator implements ResultsConservator {
     public List<TotalResultInfo> getVisibleResults(String competitionFolder) {
         try {
 
-            File file = new File(competitionFolder + "//" + "results.xml");
+            File file = new File(competitionFolder + "//" + "visible_results.xml");
             JAXBContext jaxbContext = JAXBContext.newInstance(Results.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             Results results = (Results) jaxbUnmarshaller.unmarshal(file);
@@ -46,7 +46,7 @@ public class XmlResultsConservator implements ResultsConservator {
         try {
             Results t = new Results();
             t.setTotalResult(results);
-            File file = new File("conserved_files//" + competitionFolder + "//" + "results.xml");
+            File file = new File("conserved_files//" + competitionFolder + "//" + "visible_results.xml");
             file.getParentFile().mkdirs();
             JAXBContext jaxbContext = JAXBContext.newInstance(Results.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
