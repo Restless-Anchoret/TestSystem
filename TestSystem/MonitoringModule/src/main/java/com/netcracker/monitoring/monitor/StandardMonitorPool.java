@@ -32,15 +32,15 @@ public class StandardMonitorPool implements MonitorPool {
     private ResultsConservator conservator = null;
     private RankStrategy strategy = (RankStrategy) new StandardRankStrategy();
 
-    void setDelegate(DatabaseDelegate delegate) {
+    public void setDelegate(DatabaseDelegate delegate) {
         this.delegate = delegate;
     }
 
-    void setConservator(ResultsConservator conservator) {
+    public void setConservator(ResultsConservator conservator) {
         this.conservator = conservator;
     }
 
-    void setStrategy(RankStrategy strategy) {
+    public void setStrategy(RankStrategy strategy) {
         this.strategy = strategy;
     }
 
