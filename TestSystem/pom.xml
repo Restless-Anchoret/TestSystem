@@ -12,10 +12,7 @@
         <module>DatabaseModule</module>
         <module>TestingModule</module>
         <module>FileSystemModule</module>
-
         <module>MonitoringModule</module>
-
         <module>BusinessLogicModule</module>
-
     </modules>
 </project>
