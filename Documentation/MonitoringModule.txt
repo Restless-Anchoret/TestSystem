@@ -4,7 +4,7 @@ ProblemResultInfo
 
 short getPoints();
 int getFine();
-int getUsedId();
+int getUserId();
 int getProblemId();
 
 

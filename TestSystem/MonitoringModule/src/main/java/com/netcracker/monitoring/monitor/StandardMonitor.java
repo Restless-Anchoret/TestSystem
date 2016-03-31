@@ -16,10 +16,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -81,7 +84,10 @@ public class StandardMonitor implements Monitor {
         public List<TotalResultInfo> call() {
             List<TotalResultInfo> nowActualResults = actualResults;
             conservator.persistVisibleResults(competitionFolder, nowActualResults);
-            executor.shutdown();
+            if (executor != null) {
+                executor.shutdown();
+
+            }
             return conservator.getVisibleResults(competitionFolder);
         }
 
@@ -111,15 +117,18 @@ public class StandardMonitor implements Monitor {
                 return;
             }
             if (savesOfVisibleResults != null) {
-                //Получить сохранённые видимые результаты из объекта типа ScheduledFuture<List<TotalResultInfo>>;
-                //this.visibleResults = savesOfVisibleResults.get(); //Я не уверен что делаю это правильно             
+                try {
+                    //Получить сохранённые видимые результаты из объекта типа ScheduledFuture<List<TotalResultInfo>>;
+                    this.visibleResults = savesOfVisibleResults.get(); //Я не уверен что делаю это правильно             
+                } catch (Exception ex) {
+                    Logger.getLogger(StandardMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 List<TotalResultInfo> tmpVisibleResults = conservator.getVisibleResults(competitionFolder);
                 if (tmpVisibleResults != null) {
                     this.visibleResults = tmpVisibleResults;
                 } else {
-                    ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-                    VisibleResultsSavingTask task = new VisibleResultsSavingTask(service);
+                    VisibleResultsSavingTask task = new VisibleResultsSavingTask(null);
                     this.visibleResults = task.call();
                 }
             }

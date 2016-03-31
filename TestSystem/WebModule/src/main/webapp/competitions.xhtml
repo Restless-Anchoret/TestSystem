@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="main_template.xhtml">
+        <ui:define name="title">Соревнования</ui:define>
+        <ui:define name="content">
+            <h1>Соревнования</h1>
+            <h:dataTable value="#{competitionsController.competitionsList}" var="competition" border="1">
+                <h:column>
+                    <f:facet name="header">Тип</f:facet>
+                    <h:outputText value="#{competitionsController.getTypeDescription(competition)}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Название</f:facet>
+                    <h:outputText value="#{competition.name}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Начало</f:facet>
+                    <h:outputText value="#{competition.competitionStart}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Длительность</f:facet>
+                    <h:outputText value="#{competition.competitionInterval}"/>
+                </h:column>
+            </h:dataTable>
+        </ui:define>
+    </ui:composition>
+</html>

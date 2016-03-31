@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar xmlns = "http://java.sun.com/xml/ns/javaee" 
+         version = "3.1"
+         xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation = "http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd">
+    <enterprise-beans>
+        <session>
+            <ejb-name>ApplicationEJB</ejb-name>
+            <env-entry>
+                <env-entry-name>adminDefaultLogin</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>admin</env-entry-value>
+            </env-entry>
+            <env-entry>
+                <env-entry-name>adminDefaultPassword</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>password943</env-entry-value>
+            </env-entry>
+            <env-entry>
+                <env-entry-name>fileSystemPath</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>D:\Dropbox\University\NetCracker (project)</env-entry-value>
+            </env-entry>
+            <env-entry>
+                <env-entry-name>testingSystemThreads</env-entry-name>
+                <env-entry-type>java.lang.Integer</env-entry-type>
+                <env-entry-value>10</env-entry-value>
+            </env-entry>
+        </session>
+    </enterprise-beans>
+</ejb-jar>
