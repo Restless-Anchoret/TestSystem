@@ -46,11 +46,8 @@ public class LogInController {
         switch (authenticationResult.getInfo()) {
             case SUCCESS:
                 return "competitions.xhtml";
-            case INCORRECT_PASSWORD:
-                message = "Неверный пароль";
-                break;
-            case LOGIN_DOES_NOT_EXIST:
-                message = "Данный логин не зарегистрирован";
+            case REFUSE:
+                message = "Неверные комбинация логина и пароля";
                 break;
             case FAIL:
                 message = "Ошибка при аутентификации";
