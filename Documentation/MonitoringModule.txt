@@ -4,7 +4,7 @@ ProblemResultInfo
 
 short getPoints();
 int getFine();
-int getUsedId();
+int getUserId();
 int getProblemId();
 
 
@@ -77,7 +77,7 @@ MonitorPool
 
 Интерфейс, описывающий взаимодействие с пулом мониторов по соревнованиям. Содержит единственный метод:
 
-sychronized Monitor getMonitor(int competitionId);
+synchronized Monitor getMonitor(int competitionId);
 
 Метод должен проверять, имеется ли уже монитор по данному соревнованию, затем, если не имеется, создавать его и возвращать.
 
@@ -87,10 +87,10 @@ Monitor
 
 Интерфейс, описывающий доступ к текущим и видимым результатам некоторого соревнования. Содержит следующие методы:
 
-sychronized void startMonitoring();
-sychronized List<TotalResultInfo> getActualResults();
-sychronized List<TotalResultInfo> getVisibleResults();
-sychronized void setRankStrategy(RankStrategy strategy);
+synchronized void startMonitoring();
+synchronized List<TotalResultInfo> getActualResults();
+synchronized List<TotalResultInfo> getVisibleResults();
+synchronized void setRankStrategy(RankStrategy strategy);
 
 Первый метод производит всю необходимую инициализацию объекта и запускает, если нужно, некоторые потоки. Второй и третий методы должны возвращать, соответственно, текущие и видимые результаты, либо null, если по прошествии некоторого промежутка времени результат не был получен. Последний метод позволяет менять стратегию ранжирования результатов.
 
@@ -114,7 +114,8 @@ StandardMonitor
 
 Метод startMonitoring() должен быть вызван до первого использования объекта. В нём сначала заполняется поле с именем папки соревнования посредством обращения к объекту типа DatabaseDelegate. Затем вызывается закрытый метод updateResults().
 
-Метод getActualResults() вначале вызывает метод updateResults(), а затем возвращает содержимое ссылки на текущие результатые, обёрнутое в немодифицируемую коллекцию. Метод getVisibleResults() вначале вызывает метод updateResults(), а затем возвращает содержимое ссылки на видимые результаты, обёрнутое в немодифицируемую коллекцию.
+Метод getActualResults() вначале вызывает метод updateResults(), а затем возвращает содержимое ссылки на текущие результатые, обёрнутое в немодифицируемую коллекцию. 
+Метод getVisibleResults() вначале вызывает метод updateResults(), а затем возвращает содержимое ссылки на видимые результаты, обёрнутое в немодифицируемую коллекцию.
 
 Метод setRankStrategy(RankStrategy strategy) устанавливает в монитор новую стратегию ранжирования.
 
