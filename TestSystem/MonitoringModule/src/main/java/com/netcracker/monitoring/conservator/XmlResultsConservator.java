@@ -7,6 +7,7 @@ package com.netcracker.monitoring.conservator;
 
 import com.netcracker.monitoring.info.Results;
 import com.netcracker.monitoring.info.TotalResultInfo;
+import com.netcracker.monitoring.logging.MonitoringLogging;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ import javax.xml.bind.Unmarshaller;
  */
 public class XmlResultsConservator implements ResultsConservator {
 
-    public static final Logger logger = Logger.getLogger("monitoring");
+    public static final Logger logger = MonitoringLogging.logger;
 
     @Override
     public List<TotalResultInfo> getVisibleResults(String competitionFolder) {

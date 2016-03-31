@@ -10,8 +10,8 @@ import com.netcracker.monitoring.delegate.DatabaseDelegate;
 import com.netcracker.monitoring.info.CompetitionPhase;
 import com.netcracker.monitoring.info.ProblemResultInfo;
 import com.netcracker.monitoring.info.TotalResultInfo;
+import com.netcracker.monitoring.logging.MonitoringLogging;
 import com.netcracker.monitoring.rank.RankStrategy;
-import com.netcracker.monitoring.rank.StandardRankStrategy;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +29,9 @@ import java.util.logging.Logger;
  * @author Магистраж
  */
 public class StandardMonitor implements Monitor {
+
+
+    public static final Logger logger = MonitoringLogging.logger;
 
     private static final long DELAY = 30000;
     private int competitionId;
@@ -118,10 +121,9 @@ public class StandardMonitor implements Monitor {
             }
             if (savesOfVisibleResults != null) {
                 try {
-                    //Получить сохранённые видимые результаты из объекта типа ScheduledFuture<List<TotalResultInfo>>;
-                    this.visibleResults = savesOfVisibleResults.get(); //Я не уверен что делаю это правильно             
-                } catch (Exception ex) {
-                    Logger.getLogger(StandardMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                    this.visibleResults = savesOfVisibleResults.get();
+                } catch (InterruptedException | ExecutionException ex) {
+                      logger.log(Level.SEVERE, "some errors occured during getting results: {0}", ex.toString());
                 }
             } else {
                 List<TotalResultInfo> tmpVisibleResults = conservator.getVisibleResults(competitionFolder);
