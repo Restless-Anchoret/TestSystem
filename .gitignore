@@ -18,6 +18,7 @@ hs_err_pid*
 /TestSystem/EarModule/target/
 /TestSystem/TestingModule/src/main/java/com/netcracker/testingmodule/temp/
 /TestSystem/TestingModule/file_system/
+/TestSystem/MonitoringModule/target/
 /TestSystem/BusinessLogicModule/target
 /TestSystem/EarModule/nb-configuration.xml
 /TestSystem/BusinessLogicModule/nb-configuration.xml

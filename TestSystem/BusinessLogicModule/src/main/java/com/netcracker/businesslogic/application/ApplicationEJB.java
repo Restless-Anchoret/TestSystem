@@ -2,10 +2,14 @@ package com.netcracker.businesslogic.application;
 
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.businesslogic.support.DatabaseDelegateEJB;
+import com.netcracker.businesslogic.support.FileSystemDelegateImpl;
 import com.netcracker.businesslogic.support.TestingFileSupplierImpl;
 import com.netcracker.businesslogic.users.RegistrationEJB;
 import com.netcracker.filesystem.supplier.FileSupplier;
 import com.netcracker.filesystem.supplier.StandardFileSupplier;
+import com.netcracker.monitoring.delegate.FileSystemDelegate;
+import com.netcracker.monitoring.monitor.MonitorPool;
+import com.netcracker.monitoring.monitor.StandardMonitorPool;
 import com.netcracker.testing.system.MultithreadTestingSystem;
 import com.netcracker.testing.system.TestingSystem;
 import java.nio.file.Paths;
@@ -36,7 +40,8 @@ public class ApplicationEJB {
     
     private TestingSystem testingSystem;
     private FileSupplier fileSupplier;
-    //private MonitorPool monitorPool;
+    private MonitorPool monitorPool;
+    
     @EJB(beanName = "DatabaseDelegateEJB")
     private DatabaseDelegateEJB databaseDelegateEJB;
     @EJB(beanName = "RegistrationEJB")
@@ -47,9 +52,9 @@ public class ApplicationEJB {
         checkResources();
         registrationEJB.checkAdminRegistration(adminDefaultLogin, adminDefaultPassword);
         fileSupplier = new StandardFileSupplier(Paths.get(fileSystemPath));
-        //monitorPool = StandardMonitorPool.getDefault();
-        //monitorPool.setDatabaseDelegate(databaseDelegateEJB);
-        //FileSystemDelegate fileSystemDelegate = new FileSystemDelegateImpl(fileSupplier);
+        monitorPool = StandardMonitorPool.getDefault();
+        //monitorPool.setDelegate(databaseDelegateEJB);
+        FileSystemDelegate fileSystemDelegate = new FileSystemDelegateImpl(fileSupplier);
         //ResultsConservator conservator = new XmlResultsConservator(fileSystemDelegate);
         //monitorPool.setResultsConservator(conservator);
         testingSystem = new MultithreadTestingSystem(testingSystemThreads,
@@ -89,8 +94,8 @@ public class ApplicationEJB {
         return fileSupplier;
     }
     
-//    public MonitorPool getMonitorPool() {
-//        return monitorPool;
-//    }
+    public MonitorPool getMonitorPool() {
+        return monitorPool;
+    }
     
 }
