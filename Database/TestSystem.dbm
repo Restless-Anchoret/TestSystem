@@ -24,6 +24,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="varchar" length="100"/>
 		<comment><![CDATA[Хэш пароля]]></comment>
 	</column>
+	<column name="hash_salt" not-null="true">
+		<type name="varchar" length="40"/>
+		<comment><![CDATA[Байты соли, добавленной в хэш пароля]]></comment>
+	</column>
 	<column name="role" not-null="true">
 		<type name="varchar" length="15"/>
 		<comment><![CDATA[Роль. Допустимые значения: "admin", "moderator", "participant"]]></comment>
