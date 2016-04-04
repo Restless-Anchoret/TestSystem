@@ -3,7 +3,9 @@ package com.netcracker.web.participants;
 import com.netcracker.businesslogic.holding.CompetitionEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
 import com.netcracker.database.entity.Competition;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -28,10 +30,6 @@ public class CompetitionsController {
         }
     }
     
-//    public String getCompetitionPhase(Competition competition) {
-//        
-//    }
-    
     public String getTypeDescription(Competition competition) {
         if (competition.getHoldCompetition()) {
             return "Соревнование";
@@ -39,5 +37,13 @@ public class CompetitionsController {
             return "Тренировка";
         }
     }
-
+    
+    public String getDateCompetition(Competition competition) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        return format.format(competition.getCompetitionStart());
+    }
+    
+    public boolean isStartedCompetiotion(Competition competition) {
+        return competition.getCompetitionStart().compareTo(new Date()) < 0;
+    }
 }

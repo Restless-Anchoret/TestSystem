@@ -72,7 +72,7 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
     }
 
     @Override
-    public List<Competition> findAllTranings(int[] range) {
+    public List<Competition> findAllTrainings(int[] range) {
         return findByHoldCompetitions(false, range);
     }
 
@@ -87,7 +87,7 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
     }
 
     @Override
-    public void finishedCompetition(Competition competition, List<ParticipationResult> participationResults) {
+    public void finishCompetition(Competition competition, List<ParticipationResult> participationResults) {
         em.merge(competition).setFinished(true);
         for (ParticipationResult participationResult: participationResults)
             em.merge(participationResult);

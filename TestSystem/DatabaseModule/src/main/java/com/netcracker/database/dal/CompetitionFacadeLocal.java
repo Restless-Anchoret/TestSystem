@@ -30,11 +30,11 @@ public interface CompetitionFacadeLocal {
     
     List<ParticipationResult> createNullsResults(Competition competition);
     
-    List<Competition> findAllTranings(int[] range);
+    List<Competition> findAllTrainings(int[] range);
     
     List<Competition> findVisibleTranings(int[] range);
 
-    void finishedCompetition(Competition competition, List<ParticipationResult> participationResults);
+    void finishCompetition(Competition competition, List<ParticipationResult> participationResults);
     
     void registrationNewParticipation(Competition competition, User user, PersonalData personalData);
     

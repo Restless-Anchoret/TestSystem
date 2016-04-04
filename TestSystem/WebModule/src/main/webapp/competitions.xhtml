@@ -3,29 +3,39 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
     <ui:composition template="main_template.xhtml">
         <ui:define name="title">Соревнования</ui:define>
         <ui:define name="content">
-            <h1>Соревнования</h1>
-            <h:dataTable value="#{competitionsController.competitionsList}" var="competition" border="1">
-                <h:column>
-                    <f:facet name="header">Тип</f:facet>
-                    <h:outputText value="#{competitionsController.getTypeDescription(competition)}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Название</f:facet>
-                    <h:outputText value="#{competition.name}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Начало</f:facet>
-                    <h:outputText value="#{competition.competitionStart}"/>
-                </h:column>
-                <h:column>
-                    <f:facet name="header">Длительность</f:facet>
-                    <h:outputText value="#{competition.competitionInterval}"/>
-                </h:column>
-            </h:dataTable>
+            <h:form>
+                <p:dataTable var="competition" value="#{competitionsController.competitionsList}"
+                             rows="10" paginator="true" id="competitions"
+                             paginatorTemplate="{PageLinks}"
+                             emptyMessage="Соревнований пока нет, зайдите позже.">
+                    <f:facet name="header">
+                        Соревнования
+                    </f:facet>
+                    <p:column headerText="Название">
+                        <h:outputText value="#{competition.name}" />
+                        <br/>
+                        <p:link rendered="#{competitionsController.isStartedCompetiotion(competition)}"
+                                value="Войти"
+                                outcome="competition_problems">
+                            <f:param name="competitionId" value="#{competition.id}"/>
+                        </p:link>
+                    </p:column>
+                    <p:column headerText="Тип">
+                        <h:outputText value="#{competitionsController.getTypeDescription(competition)}" />
+                    </p:column>
+                    <p:column headerText="Начало">
+                        <h:outputText value="#{competitionsController.getDateCompetition(competition)}" />
+                    </p:column>
+                    <p:column headerText="Длительность">
+                        <h:outputText value="#{competition.competitionInterval}" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
         </ui:define>
     </ui:composition>
 </html>
