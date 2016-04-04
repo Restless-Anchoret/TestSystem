@@ -49,6 +49,11 @@ public class User implements Serializable {
     private String passwordHash;
     @Basic(optional = false)
     @NotNull
+    @Size(min = 1, max = 40)
+    @Column(name = "hash_salt")
+    private String hashSalt;
+    @Basic(optional = false)
+    @NotNull
     @Size(min = 1, max = 15)
     @Column(name = "role")
     private String role;
@@ -106,6 +111,14 @@ public class User implements Serializable {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public String getHashSalt() {
+        return hashSalt;
+    }
+
+    public void setHashSalt(String hashSalt) {
+        this.hashSalt = hashSalt;
     }
 
     public String getRole() {
