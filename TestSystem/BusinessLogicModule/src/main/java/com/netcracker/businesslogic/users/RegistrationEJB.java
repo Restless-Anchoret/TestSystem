@@ -61,7 +61,7 @@ public class RegistrationEJB {
             User user = new User();
             user.setLogin(login);
             user.setPasswordHash(hashCreatingResult.getPasswordHashString());
-            //user.setHashSalt(hashCreatingResult.getSaltString());
+            user.setHashSalt(hashCreatingResult.getSaltString());
             user.setRole(role.name().toLowerCase());
             user.setRegistrationDate(registrationDate);
             user.setActual(actual);

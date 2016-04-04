@@ -4,7 +4,6 @@ import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.businesslogic.support.HashCreator;
 import com.netcracker.database.dal.UserFacadeLocal;
 import com.netcracker.database.entity.User;
-import java.util.Date;
 import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
@@ -31,8 +30,8 @@ public class AuthenticationEJB {
             }
             //Date registrationDate = user.getRegistrationDate();
             //String hash = HashCreator.getHash(password, registrationDate);
-            //String hashSalt = user.getHashSalt();
-            String hashSalt = "1b37f7e2b0011a2560be2bca20ba1139d94e5b75";
+            String hashSalt = user.getHashSalt();
+            //String hashSalt = "1b37f7e2b0011a2560be2bca20ba1139d94e5b75";
             HashCreator hashCreator = HashCreator.getDefault();
             HashCreator.Result hashCreatingResult = hashCreator.getHash(password, hashSalt);
             String hash = hashCreatingResult.getPasswordHashString();
