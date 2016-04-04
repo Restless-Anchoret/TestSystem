@@ -5,11 +5,11 @@
  */
 package com.netcracker.monitoring.conservator;
 
+import com.netcracker.monitoring.delegate.FileSystemDelegate;
 import com.netcracker.monitoring.info.Results;
 import com.netcracker.monitoring.info.TotalResultInfo;
 import com.netcracker.monitoring.logging.MonitoringLogging;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,11 +26,17 @@ public class XmlResultsConservator implements ResultsConservator {
 
     public static final Logger logger = MonitoringLogging.logger;
 
+    private FileSystemDelegate fileSystemDelegate;
+
+    public XmlResultsConservator(FileSystemDelegate fileSystemDelegate) {
+        this.fileSystemDelegate = fileSystemDelegate;
+    }
+
     @Override
     public List<TotalResultInfo> getVisibleResults(String competitionFolder) {
         try {
-
-            File file = new File(competitionFolder + "//" + "visible_results.xml");
+            File file = (fileSystemDelegate.getCompetitionVisibleResults(competitionFolder, true).toFile());
+            //File file = new File(competitionFolder + "//" + "visible_results.xml");
             JAXBContext jaxbContext = JAXBContext.newInstance(Results.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             Results results = (Results) jaxbUnmarshaller.unmarshal(file);
@@ -38,7 +44,7 @@ public class XmlResultsConservator implements ResultsConservator {
         } catch (JAXBException e) {
             logger.log(Level.SEVERE, "some errors occured during unmarshalling: {0}", e.toString());
         }
-        return new ArrayList<>();
+        return null;
     }
 
     @Override
@@ -46,7 +52,8 @@ public class XmlResultsConservator implements ResultsConservator {
         try {
             Results t = new Results();
             t.setTotalResult(results);
-            File file = new File("conserved_files//" + competitionFolder + "//" + "visible_results.xml");
+            File file = (fileSystemDelegate.getCompetitionVisibleResults(competitionFolder, true).toFile());
+            //File file = new File(competitionFolder + "//" + "visible_results.xml");
             file.getParentFile().mkdirs();
             JAXBContext jaxbContext = JAXBContext.newInstance(Results.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();

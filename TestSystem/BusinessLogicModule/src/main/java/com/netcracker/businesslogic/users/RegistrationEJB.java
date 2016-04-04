@@ -56,10 +56,12 @@ public class RegistrationEJB {
                 return new Result(null, Info.LOGIN_ALREADY_EXISTS);
             }
             Date registrationDate = new Date();
-            String hash = HashCreator.getHash(password, registrationDate);
+            HashCreator hashCreator = HashCreator.getDefault();
+            HashCreator.Result hashCreatingResult = hashCreator.getHash(password);
             User user = new User();
             user.setLogin(login);
-            user.setPasswordHash(hash);
+            user.setPasswordHash(hashCreatingResult.getPasswordHashString());
+            //user.setHashSalt(hashCreatingResult.getSaltString());
             user.setRole(role.name().toLowerCase());
             user.setRegistrationDate(registrationDate);
             user.setActual(actual);

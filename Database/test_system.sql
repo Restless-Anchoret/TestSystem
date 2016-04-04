@@ -20,6 +20,7 @@ CREATE TABLE public.user(
 	id serial NOT NULL,
 	login varchar(30) NOT NULL,
 	password_hash varchar(100) NOT NULL,
+	hash_salt varchar(40) NOT NULL,
 	role varchar(15) NOT NULL,
 	registration_date timestamp NOT NULL,
 	actual boolean NOT NULL DEFAULT true,
@@ -49,6 +50,8 @@ CREATE INDEX "IX_user_login" ON public.user
 COMMENT ON COLUMN public.user.login IS 'Логин';
 -- ddl-end --
 COMMENT ON COLUMN public.user.password_hash IS 'Хэш пароля';
+-- ddl-end --
+COMMENT ON COLUMN public.user.hash_salt IS 'Байты соли, добавленной в хэш пароля';
 -- ddl-end --
 COMMENT ON COLUMN public.user.role IS 'Роль. Допустимые значения: "admin", "moderator", "participant"';
 -- ddl-end --
