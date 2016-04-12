@@ -1,10 +1,14 @@
 package com.netcracker.businesslogic.support;
 
+import com.netcracker.businesslogic.holding.CompetitionEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
 import com.netcracker.database.dal.ParticipationResultFacadeLocal;
+import com.netcracker.database.entity.Competition;
+import com.netcracker.database.entity.ParticipationResult;
 import com.netcracker.monitoring.delegate.DatabaseDelegate;
 import com.netcracker.monitoring.info.CompetitionInfo;
 import com.netcracker.monitoring.info.ProblemResultInfo;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -18,15 +22,30 @@ public class DatabaseDelegateEJB implements DatabaseDelegate {
     private CompetitionFacadeLocal competitionFacade;
     @EJB(beanName = "ParticipationResultFacade")
     private ParticipationResultFacadeLocal participationResultFacade;
+    @EJB(beanName = "CompetitionEJB")
+    private CompetitionEJB competitionEJB;
     
     @Override
     public List<ProblemResultInfo> getProblemResultInfos(int competitionId) {
-        return null;
+        List<ParticipationResult> participationResults = participationResultFacade.findByCompetitionId(competitionId);
+        List<ProblemResultInfo> problemResultInfos = new ArrayList<>();
+        for (ParticipationResult result: participationResults) {
+            problemResultInfos.add(new ProblemResultInfo(result.getPoints(), result.getFine(),
+                    result.getUserId().getId(), result.getCompetitionProblemId().getId()));
+        }
+        return problemResultInfos;
     }
     
     @Override
     public CompetitionInfo getCompetitionInfo(int competitionId) {
-        return null;
+        Competition competition = competitionFacade.find(competitionId);
+        return new CompetitionInfo(competition.getCompetitionStart(),
+                competitionEJB.getCompetitionFrozenStart(competition),
+                competitionEJB.getCompetitionEnd(competition),
+                competition.getCompetitionInterval(),
+                competition.getIntervalFrozen(),
+                competitionEJB.getCompetitionPhase(competition),
+                competition.getFolderName());
     }
     
 }

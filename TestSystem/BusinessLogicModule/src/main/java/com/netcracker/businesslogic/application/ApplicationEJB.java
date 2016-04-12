@@ -7,6 +7,8 @@ import com.netcracker.businesslogic.support.TestingFileSupplierImpl;
 import com.netcracker.businesslogic.users.RegistrationEJB;
 import com.netcracker.filesystem.supplier.FileSupplier;
 import com.netcracker.filesystem.supplier.StandardFileSupplier;
+import com.netcracker.monitoring.conservator.ResultsConservator;
+import com.netcracker.monitoring.conservator.XmlResultsConservator;
 import com.netcracker.monitoring.delegate.FileSystemDelegate;
 import com.netcracker.monitoring.monitor.MonitorPool;
 import com.netcracker.monitoring.monitor.StandardMonitorPool;
@@ -53,10 +55,10 @@ public class ApplicationEJB {
         registrationEJB.checkAdminRegistration(adminDefaultLogin, adminDefaultPassword);
         fileSupplier = new StandardFileSupplier(Paths.get(fileSystemPath));
         monitorPool = StandardMonitorPool.getDefault();
-        //monitorPool.setDelegate(databaseDelegateEJB);
+        monitorPool.setDatabaseDelegate(databaseDelegateEJB);
         FileSystemDelegate fileSystemDelegate = new FileSystemDelegateImpl(fileSupplier);
-        //ResultsConservator conservator = new XmlResultsConservator(fileSystemDelegate);
-        //monitorPool.setResultsConservator(conservator);
+        ResultsConservator conservator = new XmlResultsConservator(fileSystemDelegate);
+        monitorPool.setResultsConservator(conservator);
         testingSystem = new MultithreadTestingSystem(testingSystemThreads,
                 new TestingFileSupplierImpl(fileSupplier));
         testingSystem.start();
