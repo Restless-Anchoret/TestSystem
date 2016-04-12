@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.netcracker.monitoring.conservator;
 
 import com.netcracker.monitoring.delegate.FileSystemDelegate;
@@ -10,21 +5,15 @@ import com.netcracker.monitoring.info.Results;
 import com.netcracker.monitoring.info.TotalResultInfo;
 import com.netcracker.monitoring.logging.MonitoringLogging;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-/**
- *
- * @author Магистраж
- */
 public class XmlResultsConservator implements ResultsConservator {
-
-    public static final Logger logger = MonitoringLogging.logger;
 
     private FileSystemDelegate fileSystemDelegate;
 
@@ -35,35 +24,34 @@ public class XmlResultsConservator implements ResultsConservator {
     @Override
     public List<TotalResultInfo> getVisibleResults(String competitionFolder) {
         try {
-            File file = (fileSystemDelegate.getCompetitionVisibleResults(competitionFolder, true).toFile());
-            //File file = new File(competitionFolder + "//" + "visible_results.xml");
+            Path path = fileSystemDelegate.getCompetitionVisibleResults(competitionFolder, true);
+            if (path == null) {
+                return null;
+            }
             JAXBContext jaxbContext = JAXBContext.newInstance(Results.class);
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            Results results = (Results) jaxbUnmarshaller.unmarshal(file);
+            Results results = (Results) jaxbUnmarshaller.unmarshal(path.toFile());
             return results.getTotalResult();
-        } catch (JAXBException e) {
-            logger.log(Level.SEVERE, "some errors occured during unmarshalling: {0}", e.toString());
+        } catch (JAXBException exception) {
+            MonitoringLogging.logger.log(Level.FINE, "JAXBException while unmarshalling", exception);
+            return null;
         }
-        return null;
     }
 
     @Override
     public boolean persistVisibleResults(String competitionFolder, List<TotalResultInfo> results) {
         try {
-            Results t = new Results();
-            t.setTotalResult(results);
-            File file = (fileSystemDelegate.getCompetitionVisibleResults(competitionFolder, true).toFile());
-            //File file = new File(competitionFolder + "//" + "visible_results.xml");
-            file.getParentFile().mkdirs();
+            Results resultsWrap = new Results(results);
+            File file = (fileSystemDelegate.getCompetitionVisibleResults(competitionFolder, false).toFile());
             JAXBContext jaxbContext = JAXBContext.newInstance(Results.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            jaxbMarshaller.marshal(t, file);
+            jaxbMarshaller.marshal(resultsWrap, file);
             return true;
-        } catch (JAXBException jAXBException) {
-            logger.log(Level.SEVERE, "some errors occured during marshalling: {0}", jAXBException.toString());
+        } catch (JAXBException exception) {
+            MonitoringLogging.logger.log(Level.FINE, "JAXBException while marshalling", exception);
+            return false;
         }
-        return false;
     }
 
 }

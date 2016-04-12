@@ -1,15 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.netcracker.monitoring.monitor;
 
-/**
- *
- * @author Магистраж
- */
+import com.netcracker.monitoring.conservator.ResultsConservator;
+import com.netcracker.monitoring.delegate.DatabaseDelegate;
+import com.netcracker.monitoring.rank.RankStrategy;
+
 public interface MonitorPool {
 
     Monitor getMonitor(int competitionId);
+    void setDatabaseDelegate(DatabaseDelegate delegate);
+    void setResultsConservator(ResultsConservator conservator);
+    void setRankStrategy(RankStrategy strategy);
+    
 }

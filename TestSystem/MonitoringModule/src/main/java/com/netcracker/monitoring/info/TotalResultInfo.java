@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.netcracker.monitoring.info;
 
 import java.util.List;
@@ -10,27 +5,25 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author Магистраж
- */
 @XmlRootElement(name = "total-result")
 public class TotalResultInfo {
 
-    private List<ProblemResultInfo> problemResultInfoList;
-    private int id;
-    private int place;
-    private int points;
-    private int fine;
+    private List<ProblemResultInfo> problemResultInfoList = null;
+    private int id = 0;
+    private int place = 0;
+    private short points = 0;
+    private int fine = 0;
+
+    public TotalResultInfo() { }
 
     public TotalResultInfo(int id, List<ProblemResultInfo> problemResultInfoList) {
         this.id = id;
         this.problemResultInfoList = problemResultInfoList;
-        problemResultInfoList.forEach((ProblemResultInfo info) -> this.points += info.getPoints());
-        problemResultInfoList.forEach((ProblemResultInfo info) -> this.fine += info.getFine());
+        problemResultInfoList.forEach(info -> this.points += info.getPoints());
+        problemResultInfoList.forEach(info -> this.fine += info.getFine());
     }
 
-    public List<ProblemResultInfo> getProblemResultInfo() {
+    public List<ProblemResultInfo> getProblemResultInfoList() {
         return problemResultInfoList;
     }
 
@@ -38,7 +31,7 @@ public class TotalResultInfo {
         return place;
     }
 
-    public int getPoints() {
+    public short getPoints() {
         return points;
     }
 
@@ -67,7 +60,7 @@ public class TotalResultInfo {
     }
 
     @XmlElement
-    public void setPoints(int points) {
+    public void setPoints(short points) {
         this.points = points;
     }
 

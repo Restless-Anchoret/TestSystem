@@ -1,12 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.netcracker.monitoring.monitor;
 
 import com.netcracker.monitoring.conservator.ResultsConservator;
 import com.netcracker.monitoring.delegate.DatabaseDelegate;
+import com.netcracker.monitoring.info.CompetitionInfo;
 import com.netcracker.monitoring.info.CompetitionPhase;
 import com.netcracker.monitoring.info.ProblemResultInfo;
 import com.netcracker.monitoring.info.TotalResultInfo;
@@ -22,39 +18,32 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- *
- * @author Магистраж
- */
 public class StandardMonitor implements Monitor {
 
-
-    public static final Logger logger = MonitoringLogging.logger;
-
-    private static final long DELAY = 30000;
+    private static final long DEFAULT_DELAY = 30_000;
+    
     private int competitionId;
     private String competitionFolder = null;
     private List<TotalResultInfo> actualResults = null;
     private List<TotalResultInfo> visibleResults = null;
-    private DatabaseDelegate delegate;
-    private ResultsConservator conservator;
-    private RankStrategy strategy;
-    private ScheduledFuture<List<TotalResultInfo>> savesOfVisibleResults = null;
-    private Date lastTimeUpdateOfResults = null;
-    private long toUpdateTheResultsDelay = DELAY;
+    private DatabaseDelegate databaseDelegate;
+    private ResultsConservator resultsConservator;
+    private RankStrategy rankStrategy;
+    private ScheduledFuture<List<TotalResultInfo>> visibleResultsSavingTask = null;
+    private Date lastUpdatingMoment = null;
+    private long updatingDelay = DEFAULT_DELAY;
 
     public StandardMonitor(int competitionId, DatabaseDelegate delegate, ResultsConservator conservator, RankStrategy strategy) {
         this.competitionId = competitionId;
-        this.delegate = delegate;
-        this.conservator = conservator;
-        this.strategy = strategy;
+        this.databaseDelegate = delegate;
+        this.resultsConservator = conservator;
+        this.rankStrategy = strategy;
     }
 
     @Override
     public synchronized void startMonitoring() {
-        competitionFolder = delegate.getCompetitionInfo(competitionId).getCompetitionFolder();
+        competitionFolder = databaseDelegate.getCompetitionInfo(competitionId).getCompetitionFolder();
         updateResults();
     }
 
@@ -72,12 +61,52 @@ public class StandardMonitor implements Monitor {
 
     @Override
     public synchronized void setRankStrategy(RankStrategy strategy) {
-        this.strategy = strategy;
+        this.rankStrategy = strategy;
     }
 
+    private void updateResults() {
+        CompetitionInfo competitionInfo = databaseDelegate.getCompetitionInfo(competitionId);
+        CompetitionPhase competitionPhase = competitionInfo.getCompetitionStatus();
+        if (competitionPhase.equals(CompetitionPhase.BEFORE)) {
+            return;
+        }
+        Date currentMoment = new Date();
+        if (actualResults == null || currentMoment.getTime() - lastUpdatingMoment.getTime() >= updatingDelay) {
+            List<ProblemResultInfo> problemResultInfos = databaseDelegate.getProblemResultInfos(competitionId);
+            actualResults = rankStrategy.formResults(problemResultInfos);
+            lastUpdatingMoment = currentMoment;
+        }
+        if (competitionPhase.equals(CompetitionPhase.CODING)) {
+            ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+            Date dateNow = new Date();
+            Date dateMoment = competitionInfo.getTimeOfFreezing();
+            long milliseconds = dateMoment.getTime() - dateNow.getTime();
+            VisibleResultsSavingTask task = new VisibleResultsSavingTask(service);
+            visibleResultsSavingTask = service.schedule(task, milliseconds, TimeUnit.MILLISECONDS);
+        } else {
+            if (visibleResults != null) {
+                return;
+            }
+            if (visibleResultsSavingTask != null) {
+                try {
+                    visibleResults = visibleResultsSavingTask.get();
+                } catch (InterruptedException | ExecutionException exception) {
+                    MonitoringLogging.logger.log(Level.FINE, "Exception while calling get()-method of saving task", exception);
+                }
+            } else {
+                List<TotalResultInfo> tempVisibleResults = resultsConservator.getVisibleResults(competitionFolder);
+                if (tempVisibleResults != null) {
+                    visibleResults = tempVisibleResults;
+                } else {
+                    VisibleResultsSavingTask task = new VisibleResultsSavingTask(null);
+                    visibleResults = task.call();
+                }
+            }
+        }
+    }
+    
     private class VisibleResultsSavingTask implements Callable<List<TotalResultInfo>> {
-
-        ScheduledExecutorService executor;
+        private ScheduledExecutorService executor;
 
         public VisibleResultsSavingTask(ScheduledExecutorService executor) {
             this.executor = executor;
@@ -86,54 +115,11 @@ public class StandardMonitor implements Monitor {
         @Override
         public List<TotalResultInfo> call() {
             List<TotalResultInfo> nowActualResults = actualResults;
-            conservator.persistVisibleResults(competitionFolder, nowActualResults);
+            resultsConservator.persistVisibleResults(competitionFolder, nowActualResults);
             if (executor != null) {
                 executor.shutdown();
-
             }
-            return conservator.getVisibleResults(competitionFolder);
-        }
-
-    }
-
-    private void updateResults() {
-        CompetitionPhase competitionPhaseUpdate = delegate.getCompetitionInfo(competitionId).getCompetitionStatus();
-        if (competitionPhaseUpdate.equals(CompetitionPhase.BEFORE)) {
-            return;
-        }
-        if (actualResults == null || new Date().getTime() - lastTimeUpdateOfResults.getTime() < toUpdateTheResultsDelay) {
-            List<ProblemResultInfo> problemResultInfos = delegate.getProblemResultInfos(competitionId);
-            List<TotalResultInfo> formResults = strategy.formResults(problemResultInfos);
-            this.actualResults = formResults;
-            this.lastTimeUpdateOfResults = new Date();
-        }
-        if (competitionPhaseUpdate.equals(CompetitionPhase.CODING)) {
-            ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
-            Date dateNow = new Date();
-            Date dateMoment = delegate.getCompetitionInfo(competitionId).getTimeOfFreezing();
-            long milliseconds = dateMoment.getTime() - dateNow.getTime();
-            VisibleResultsSavingTask task = new VisibleResultsSavingTask(service);
-            ScheduledFuture<List<TotalResultInfo>> future = service.schedule(task, milliseconds, TimeUnit.MILLISECONDS);
-            this.savesOfVisibleResults = future;
-        } else {
-            if (visibleResults != null) {
-                return;
-            }
-            if (savesOfVisibleResults != null) {
-                try {
-                    this.visibleResults = savesOfVisibleResults.get();
-                } catch (InterruptedException | ExecutionException ex) {
-                      logger.log(Level.SEVERE, "some errors occured during getting results: {0}", ex.toString());
-                }
-            } else {
-                List<TotalResultInfo> tmpVisibleResults = conservator.getVisibleResults(competitionFolder);
-                if (tmpVisibleResults != null) {
-                    this.visibleResults = tmpVisibleResults;
-                } else {
-                    VisibleResultsSavingTask task = new VisibleResultsSavingTask(null);
-                    this.visibleResults = task.call();
-                }
-            }
+            return nowActualResults;
         }
     }
 

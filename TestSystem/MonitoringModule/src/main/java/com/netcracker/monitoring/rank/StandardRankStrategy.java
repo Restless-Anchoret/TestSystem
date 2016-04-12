@@ -1,24 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.netcracker.monitoring.rank;
 
 import com.netcracker.monitoring.info.ProblemResultInfo;
 import com.netcracker.monitoring.info.TotalResultInfo;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author Магистраж
- */
 public class StandardRankStrategy implements RankStrategy {
 
     @Override
@@ -27,7 +16,6 @@ public class StandardRankStrategy implements RankStrategy {
         Map<Integer, List<ProblemResultInfo>> idToProblemResultMap = new HashMap<>();
 
         for (ProblemResultInfo info : problemResultInfos) {
-
             if (!idToProblemResultMap.containsKey(info.getUserId())) {
                 idToProblemResultMap.put(info.getUserId(), new ArrayList<>());
             }
@@ -37,25 +25,16 @@ public class StandardRankStrategy implements RankStrategy {
             resultInfoList.add(new TotalResultInfo(entry.getKey(), entry.getValue()));
         }
 
-        Collections.sort(resultInfoList, new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                TotalResultInfo obj1 = (TotalResultInfo) o1;
-                TotalResultInfo obj2 = (TotalResultInfo) o2;
-
-                if (obj1.getPoints() > obj2.getPoints()) {
-                    return -1;
-                } else if (obj2.getPoints() > obj1.getPoints()) {
-                    return 1;
-                } else {
-                    return obj1.getFine() < obj2.getFine() ? -1 : 1;
-                }
+        Collections.sort(resultInfoList, ((info1, info2) -> {
+            if (info1.getPoints() != info2.getPoints()) {
+                return -Short.compare(info1.getPoints(), info2.getPoints());
+            } else {
+                return Integer.compare(info1.getFine(), info2.getFine());
             }
-        });
+        }));
 
         for (int i = 0; i < resultInfoList.size(); i++) {
             resultInfoList.get(i).setPlace(i + 1);
-
         }
 
         return resultInfoList;
