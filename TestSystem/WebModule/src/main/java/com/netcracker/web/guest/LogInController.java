@@ -53,7 +53,7 @@ public class LogInController {
                 message = "Ошибка при аутентификации";
                 break;
         }
-        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, message, message);
+        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, message, "");
         FacesContext.getCurrentInstance().addMessage(null, facesMessage);
         return null;
     }

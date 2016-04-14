@@ -1,34 +1,45 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Вход в систему</title>
     </h:head>
     <h:body>
-        <h1>Аутентификация</h1>
+        <p:growl id="growl" life="5000" showDetail="true" autoUpdate="true"/>
+        <h1>Войти в систему</h1>
         <h:form>
-            <h:panelGrid columns="2">
-                <h:outputText value="Логин:"/>
-                <h:inputText value="#{logInController.login}"/>
-                <h:outputText value="Пароль:"/>
-                <h:inputSecret value="#{logInController.password}"/>
+            <h:panelGrid id="authenticationGrid" columns="2" cellpadding="5">
+                <h:outputText value="Логин: "/>
+                <p:inputText value="#{logInController.login}"/>
+                <h:outputText value="Пароль: "/>
+                <p:password value="#{logInController.password}"/>
             </h:panelGrid>
-            <h:commandButton action="#{logInController.doAuthentication()}" value="Войти"/>
+            <p:commandButton value="Войти" update="authenticationGrid" action="#{logInController.doAuthentication()}"
+                             ajax="true"/>
         </h:form>
-        <h1>Регистрация</h1>
+        
+        <p:spacer height="10" />
+        <p:separator />
+        
+        <h1>Зарегистрироваться</h1>
         <h:form>
-            <h:panelGrid columns="2">
-                <h:outputText value="Логин:"/>
-                <h:inputText value="#{registrationController.login}"/>
-                <h:outputText value="Пароль:"/>
-                <h:inputSecret value="#{registrationController.password}"/>
-                <h:outputText value="Повторите пароль:"/>
-                <h:inputSecret value="#{registrationController.passwordAgain}"/>
+            <h:panelGrid id="registrationGrid" columns="2" cellpadding="5">
+                <h:outputText value="Логин: "/>
+                <p:inputText value="#{registrationController.login}" required="true"/>
+                <h:outputText value="Пароль: "/>
+                <p:password id="regPassword" value="#{registrationController.password}" match="regPasswordAgain"
+                            feedback="true" label="Password" required="true"
+                            promptLabel="Введите пароль" weakLabel="Слабый пароль"
+                            goodLabel="Хороший пароль" strongLabel="Сильный пароль"/>
+                <h:outputText value="Повторите пароль: "/>
+                <p:password id="regPasswordAgain" value="#{registrationController.password}"
+                            label="Password repetition" required="true"/>
             </h:panelGrid>
-            <h:commandButton action="#{registrationController.doRegistration()}" value="Зарегистрироваться"/>
+            <p:commandButton value="Зарегистрироваться" update="registrationGrid"
+                             action="#{registrationController.doRegistration()}" ajax="true"/>
         </h:form>
-        <h:messages/>
     </h:body>
 </html>
 

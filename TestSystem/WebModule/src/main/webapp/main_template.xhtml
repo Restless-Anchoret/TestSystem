@@ -2,24 +2,33 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title><ui:insert name="title">TestSystem</ui:insert></title>
     </h:head>
     <h:body>
-        <h:panelGrid columns="2">
+        <p:panelGrid columns="2">
             <h:outputText value="#{authenticationController.currentUserLogin}"/>
             <h:form>
                 <h:commandLink action="#{logOutController.doLogOut()}">Выйти</h:commandLink>
             </h:form>
-        </h:panelGrid>
-        <h:panelGrid columns="3">
-            <h:link value="Соревнования" outcome="competitions.xhtml"/>
-            <h:link value="Достижения" outcome="achievements.xhtml"/>
-            <h:link value="Модерирование" outcome="moderation.xhtml"
+        </p:panelGrid>
+        <p:separator/>
+        <p:panelGrid columns="3">
+            <p:link value="Соревнования" outcome="competitions.xhtml"/>
+            <p:link value="Достижения" outcome="achievements.xhtml"/>
+            <p:link value="Модерирование" outcome="moderation.xhtml"
                           rendered="#{authenticationController.authenticatedModeratorOrAdmin}"/>
-        </h:panelGrid>
+        </p:panelGrid>
+        <!--<p:tabMenu>
+            <p:menuitem value="Соревнования" outcome="competitions.xhtml"/>
+            <p:menuitem value="Достижения" outcome="achievements.xhtml"/>
+            <p:menuitem value="Модерирование" outcome="moderation.xhtml"
+                          rendered="#{authenticationController.authenticatedModeratorOrAdmin}"/>
+        </p:tabMenu>-->
         <ui:insert name="content">Страница пуста</ui:insert>
-        <p><h:outputText value="TestSystem"/></p>
+        <p:separator/>
+        <h:outputText value="TestSystem"/>
     </h:body>
 </html>
