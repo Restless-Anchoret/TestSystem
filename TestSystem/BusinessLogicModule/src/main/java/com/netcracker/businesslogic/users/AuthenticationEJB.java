@@ -28,18 +28,10 @@ public class AuthenticationEJB {
             if (user == null) {
                 return new Result(null, Info.REFUSE);
             }
-            //Date registrationDate = user.getRegistrationDate();
-            //String hash = HashCreator.getHash(password, registrationDate);
             String hashSalt = user.getHashSalt();
-            //String hashSalt = "1b37f7e2b0011a2560be2bca20ba1139d94e5b75";
             HashCreator hashCreator = HashCreator.getDefault();
             HashCreator.Result hashCreatingResult = hashCreator.getHash(password, hashSalt);
             String hash = hashCreatingResult.getPasswordHashString();
-//            BusinessLogicLogging.logger.info("Login: " + login);
-//            BusinessLogicLogging.logger.info("Password: " + password);
-//            BusinessLogicLogging.logger.info("Date: " + registrationDate.toString());
-//            BusinessLogicLogging.logger.info("Long: " + registrationDate.getTime());
-//            BusinessLogicLogging.logger.info("Hash: " + hash);
             if (hash.equals(user.getPasswordHash())) {
                 currentUser = user;
                 return new Result(currentUser, Info.SUCCESS);

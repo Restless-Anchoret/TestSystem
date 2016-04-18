@@ -43,14 +43,6 @@ public class RegistrationEJB {
     }
     
     private Result tryRegistrate(String login, String password, Role role, boolean actual) {
-        if (login.length() < 4 || login.length() > 30 || !login.matches("\\w*")) {
-            return new Result(null, Info.UNSUITABLE_LOGIN);
-        }
-        if (password.length() < 4 || password.length() > 40 ||
-                !password.matches(".*[a-zA-Z].*") ||
-                !password.matches(".*\\d.*")) {
-            return new Result(null, Info.UNSUITABLE_PASSWORD);
-        }
         try {
             if (userFacade.findByLogin(login) != null) {
                 return new Result(null, Info.LOGIN_ALREADY_EXISTS);
@@ -77,8 +69,6 @@ public class RegistrationEJB {
         SUCCESS,
         NOT_AVAILABLE_LOGIN,
         LOGIN_ALREADY_EXISTS,
-        UNSUITABLE_LOGIN,
-        UNSUITABLE_PASSWORD,
         FAIL
     }
     

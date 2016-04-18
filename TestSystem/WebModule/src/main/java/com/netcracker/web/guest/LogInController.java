@@ -2,11 +2,10 @@ package com.netcracker.web.guest;
 
 import com.netcracker.businesslogic.users.AuthenticationEJB;
 import com.netcracker.web.session.AuthenticationController;
+import com.netcracker.web.util.JSFUtil;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 
 @Named
 @RequestScoped
@@ -42,19 +41,18 @@ public class LogInController {
     public String doAuthentication() {
         AuthenticationEJB.Result authenticationResult = authenticationEJB
                 .tryAuthenticateUser(login, password);
-        String message = null;
+        String summary = null;
         switch (authenticationResult.getInfo()) {
             case SUCCESS:
                 return "competitions.xhtml";
             case REFUSE:
-                message = "Неверные комбинация логина и пароля";
+                summary = "Неверные комбинация логина и пароля";
                 break;
             case FAIL:
-                message = "Ошибка при аутентификации";
+                summary = "Ошибка при аутентификации";
                 break;
         }
-        FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR, message, "");
-        FacesContext.getCurrentInstance().addMessage(null, facesMessage);
+        JSFUtil.addErrorMessage(summary, "");
         return null;
     }
 

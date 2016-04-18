@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="main_template.xhtml">
+        <ui:define name="title">Профиль</ui:define>
+        <ui:define name="content">
+            <h:form>
+                <h:panelGrid id="profileGrid" columns="2" cellpadding="5">
+                    <h:outputText value="Логин: "/>
+                    <h:outputText value="#{authenticationController.currentUserLogin}"/>
+                    <h:outputText value="Роль: "/>
+                    <h:outputText value="#{authenticationController.currentUserRole}" converter="roleConverter"/>
+                    <h:outputText value="Дата регистрации: "/>
+                    <h:outputText value="#{authenticationController.currentUser.registrationDate}">
+                        <f:convertDateTime dateStyle="full" timeStyle="long" type="both"/>
+                    </h:outputText>
+                    <h:outputText value="Старый пароль: "/>
+                    <p:password id="oldPassword" value="#{profileController.oldPassword}" required="true"/>
+                    <h:outputText value="Новый пароль: "/>
+                    <p:password id="newPassword" value="#{profileController.newPassword}" match="newPasswordAgain"
+                                feedback="true" label="New password" required="true" validator="passwordValidator"
+                                promptLabel="Введите пароль" weakLabel="Слабый пароль"
+                                goodLabel="Хороший пароль" strongLabel="Сильный пароль"/>
+                    <h:outputText value="Повторите пароль: "/>
+                    <p:password id="newPasswordAgain" value="#{profileController.newPassword}"
+                                label="New password repetition" required="true"/>
+                </h:panelGrid>
+                <p:commandButton value="Сменить пароль" update="profileGrid"
+                                 action="#{profileController.doChangePassword()}" ajax="true"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
