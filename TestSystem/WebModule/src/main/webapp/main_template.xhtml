@@ -19,21 +19,9 @@
         <p:panelGrid columns="3">
             <p:link value="Соревнования" outcome="competitions.xhtml"/>
             <p:link value="Достижения" outcome="achievements.xhtml"/>
-            <p:link value="Модерирование" outcome="moderation.xhtml"
+            <p:link value="Модерирование" outcome="moderation_registration.xhtml"
                           rendered="#{authenticationController.authenticatedModeratorOrAdmin}"/>
         </p:panelGrid>
-        <!--<p:tabMenu activeIndex="#{viewParam.mainPage}">
-            <p:menuitem value="Соревнования" outcome="competitions.xhtml">
-                <f:param name="mainPage" value="0" />
-            </p:menuitem>
-            <p:menuitem value="Достижения" outcome="achievements.xhtml">
-                <f:param name="mainPage" value="1" />
-            </p:menuitem>
-            <p:menuitem value="Модерирование" outcome="moderation.xhtml"
-                        rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
-                <f:param name="mainPage" value="2" />
-            </p:menuitem>
-        </p:tabMenu>-->
         <ui:insert name="content">Страница пуста</ui:insert>
         <p:separator/>
         <h:outputText value="TestSystem"/>
