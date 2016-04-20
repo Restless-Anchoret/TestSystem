@@ -4,11 +4,11 @@ insert into public.user (login, password_hash, hash_salt, role, registration_dat
 insert into public.user (login, password_hash, hash_salt, role, registration_date, actual) values ('participant1', '172e50f782d280f5503fe23fb64866f2bda2db6681a20d25263c0ccda2fc2573', '1b37f7e2b0011a2560be2bca20ba1139d94e5b75', 'participant', timestamp'01-01-2016', true);
 insert into public.user (login, password_hash, hash_salt, role, registration_date, actual) values ('participant2', '172e50f782d280f5503fe23fb64866f2bda2db6681a20d25263c0ccda2fc2573', '1b37f7e2b0011a2560be2bca20ba1139d94e5b75', 'participant', timestamp'01-01-2016', true);
 
-insert into public.competition (name, hold_competition, evaluation_type, registration_type, visible, show_monitor, pretests_only, practice_permition, finished, folder_name, competition_start, competition_interval, interval_frozen) values ('Competition 1', true, 'icpc', 'public', true, false, false, true, true, '1', timestamp'01-01-2016', 120, 0);
-insert into public.competition (name, hold_competition, evaluation_type, registration_type, visible, show_monitor, pretests_only, practice_permition, finished, folder_name, competition_start, competition_interval, interval_frozen) values ('Competition 2', true, 'icpc', 'public', true, false, false, true, false, '2', timestamp'01-01-2017', 120, 0);
+insert into public.competition (name, hold_competition, evaluation_type, registration_type, visible, show_monitor, pretests_only, practice_permition, finished, competition_start, competition_interval, interval_frozen) values ('Competition 1', true, 'icpc', 'public', true, false, false, true, true, timestamp'01-01-2016', 120, 0);
+insert into public.competition (name, hold_competition, evaluation_type, registration_type, visible, show_monitor, pretests_only, practice_permition, finished, competition_start, competition_interval, interval_frozen) values ('Competition 2', true, 'icpc', 'public', true, false, false, true, false, timestamp'01-01-2017', 120, 0);
 
-insert into public.problem (type, name, folder_name) values ('coding', 'Problem 1', '1');
-insert into public.problem (type, name, folder_name) values ('coding', 'Problem 2', '2');
+insert into public.problem (type, name) values ('coding', 'Problem 1');
+insert into public.problem (type, name) values ('coding', 'Problem 2');
 
 insert into public.test_group (problem_id, test_group_type, tests_quantity, points_for_test) values (1, 'samples', 2, 0);
 insert into public.test_group (problem_id, test_group_type, tests_quantity, points_for_test) values (1, 'pretests', 1, 0);
@@ -25,10 +25,10 @@ insert into public.compilator (name) values ('java');
 insert into public.author_decision (problem_id, folder_name, compilator_id) values (1, 'ki_decision', 1);
 insert into public.author_decision (problem_id, folder_name, compilator_id) values (2, 'ki_decision', 1);
 
-insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, folder_name, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', '1', 'accepted', null, 942);
-insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, folder_name, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', '2', 'time_limit', 2, 1000);
-insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, folder_name, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', '3', 'runtime_error', 2, 434);
-insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, folder_name, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', '4', 'secutiry_viol', 1, 455);
+insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', 'accepted', null, 942);
+insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', 'time_limit', 2, 1000);
+insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', 'runtime_error', 2, 434);
+insert into public.submission (competition_problem_id, user_id, compilator_id, submission_time, verdict, wrong_test_number, decision_time) values (1, 4, 1, timestamp'01-01-2016', 'secutiry_viol', 1, 455);
 
 insert into public.participation (competition_id, user_id, registered, points, fine, place, solved_problems) values (1, 4, true, 1, 0, 1, 1);
 insert into public.participation (competition_id, user_id, registered, points, fine, place, solved_problems) values (1, 5, true, 0, 0, 2, 0);

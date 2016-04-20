@@ -154,7 +154,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean"/>
 		<comment><![CDATA[Обозначает, считается ли соревнование официально завершённым]]></comment>
 	</column>
-	<column name="folder_name" not-null="true">
+	<column name="folder_name" default-value="null">
 		<type name="varchar" length="20"/>
 		<comment><![CDATA[Имя папки соревнования в файловой системе]]></comment>
 	</column>
@@ -310,7 +310,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="boolean"/>
 		<comment><![CDATA[Обозначает, считается ли данная задача провалидированной]]></comment>
 	</column>
-	<column name="folder_name" not-null="true">
+	<column name="folder_name" default-value="null">
 		<type name="varchar" length="20"/>
 		<comment><![CDATA[Имя папки с данной задачей]]></comment>
 	</column>
@@ -400,7 +400,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="timestamp"/>
 		<comment><![CDATA[Время, когда была сделана посылка]]></comment>
 	</column>
-	<column name="folder_name" not-null="true">
+	<column name="folder_name" default-value="null">
 		<type name="varchar" length="20"/>
 		<comment><![CDATA[Имя папки с посылкой в файловой системе]]></comment>
 	</column>
@@ -584,7 +584,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="problem_id" not-null="true">
 		<type name="integer"/>
 	</column>
-	<column name="folder_name" not-null="true">
+	<column name="folder_name" default-value="null">
 		<type name="varchar" length="15"/>
 		<comment><![CDATA[Имя папки с авторским решением в файловой системе]]></comment>
 	</column>
