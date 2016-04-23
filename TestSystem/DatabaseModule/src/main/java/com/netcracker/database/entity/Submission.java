@@ -43,7 +43,6 @@ public class Submission implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date submissionTime;
     @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "folder_name")
     private String folderName;
