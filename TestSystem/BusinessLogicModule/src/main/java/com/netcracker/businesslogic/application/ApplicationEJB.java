@@ -75,7 +75,7 @@ public class ApplicationEJB {
         }
         if (fileSystemPath == null) {
             BusinessLogicLogging.logger.fine("fileSystemPath == null");
-            fileSystemPath = "D:\\Dropbox\\University\\NetCracker (project)";
+            fileSystemPath = "D:\\NCProject\\fileSystem\\";
         }
         if (testingSystemThreads == null) {
             BusinessLogicLogging.logger.fine("testingSystemThreads == null");

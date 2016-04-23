@@ -8,12 +8,65 @@
     <ui:composition template="competition_template.xhtml">
         <ui:define name="title">Задачи</ui:define>
         <ui:define name="subcontent">
-            <f:metadata>
-                <f:viewParam name="competitionId" value="#{competitionProblemsController.competiotionId}" />
-            </f:metadata>
-            <h1>Задачи</h1>
-            <br/>
-            <h:outputText value="Id соревнования: #{competitionProblemsController.competiotionId}"/>
+            <h:form>
+                <p:dataTable var="competitionProblem" value="#{competitionController.competitionProblems}"
+                             emptyMessage="Для данного соревнования задач нет, зайдите позже.">
+                    <f:facet name="header">
+                        Задачи соревнования
+                    </f:facet>
+                    <p:column headerText="№">
+                        <h:outputText value="#{competitionProblem.problemNumber}" />
+                    </p:column>
+
+                    <p:column headerText="Название">
+                        <h:outputText value="#{competitionProblem.problemId.name}" />
+                    </p:column>
+
+                    <p:column headerText="Скачать условие">
+                        <p:link value="скачать" target="_blank" outcome="#{competitionController.loadStatementFile(competitionProblem)}"/>
+                    </p:column>                    
+                </p:dataTable>               
+            </h:form>
+            <h:form enctype="multipart/form-data">
+                <p:growl id="messages" showDetail="true" />
+                <h:panelGrid>
+                    <p:row>
+                        <p:column style="font-weight: bold;">Язык: </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{competitionController.currentCompilator}" 
+                                             style="width:150px">
+                                <f:selectItem itemLabel="язык" itemValue="" />
+                                <f:selectItems value="#{competitionController.compilators}"
+                                               var="compilator" itemLabel="#{compilator.name}"
+                                               itemValue="#{compilator.name}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="font-weight: bold;">Задача: </p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{competitionController.currentCompetitionProblem}" 
+                                             style="width:150px">
+                                <f:selectItem itemLabel="задача" itemValue=""/>
+                                <f:selectItems value="#{competitionController.competitionProblems}"
+                                               var="problem" itemLabel="#{problem.problemId.name}"
+                                               itemValue="#{problem.problemId.name}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:fileUpload id="file" value="#{competitionController.file}"
+                                          label="Выбирите файл" mode="simple"/>
+                        </p:column>
+                    </p:row>
+                </h:panelGrid>
+                <p:commandButton value="Отправить" ajax="false" 
+                                 action="#{competitionController.upLoadFile()}">
+                    <f:param name="competitionId" value="#{competitionController.competitionId}"/>
+                    <f:param name="page" value="#{competitionController.page}"/>
+                </p:commandButton>
+            </h:form>
         </ui:define>
     </ui:composition>
 </html>

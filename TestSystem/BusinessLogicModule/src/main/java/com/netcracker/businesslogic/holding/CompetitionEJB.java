@@ -1,10 +1,21 @@
 package com.netcracker.businesslogic.holding;
 
+import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.database.entity.Competition;
+import com.netcracker.database.entity.CompetitionProblem;
+import com.netcracker.database.entity.Compilator;
 import com.netcracker.monitoring.info.CompetitionPhase;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
+import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 @Stateless
 @LocalBean
@@ -25,6 +36,40 @@ public class CompetitionEJB {
         } else {
             return CompetitionPhase.WAITING_RESULTS;
         }
+    }
+    
+    public boolean addSubmission(Integer competitionId, CompetitionProblem competitionProblem,
+                        Compilator compilator, InputStream file, String fileName, Long fileSize) {
+        boolean result = false;
+        BusinessLogicLogging.logger.log(Level.INFO, "addsubmission method");
+        try {
+            File submission = new File("D:\\NCProject\\fileSystem\\" + fileName);
+            submission.createNewFile();
+            OutputStream outputStream = new FileOutputStream(submission);
+            long bytes = saveFile(file, outputStream);
+            result = (bytes == fileSize);
+        } catch (Exception ex) {
+            BusinessLogicLogging.logger.log(Level.SEVERE, null, ex);
+        }
+        return true;
+    }
+    
+    private long saveFile(InputStream inputStream, OutputStream outputStream) {
+        long result = 0;
+        int read;
+        byte[] buffer = new byte[1024];
+        try {
+            while ((read = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
+                result += read;
+            }
+            inputStream.close();
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException ex) {
+            BusinessLogicLogging.logger.log(Level.SEVERE, null, ex);
+        }
+        return result;
     }
     
     public Date getCompetitionFrozenStart(Competition competition) {

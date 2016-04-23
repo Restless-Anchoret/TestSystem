@@ -11,13 +11,13 @@
             <h:form>  
                 <p:menubar>
                     <p:menuitem value="Задачи" outcome="competition_problems">
-                        <f:param name="competitionId" value="2"/>
+                        <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
                     <p:menuitem value="Посылки" outcome="competition_submissions">
-                        <f:param name="competitionId" value="2"/>
+                        <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
                     <p:menuitem value="Монитор" outcome="competition_monitor">
-                        <f:param name="competitionId" value="2"/>
+                        <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
                 </p:menubar>
             </h:form>
