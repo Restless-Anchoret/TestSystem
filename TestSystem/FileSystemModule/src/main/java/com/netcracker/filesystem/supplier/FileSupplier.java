@@ -8,6 +8,7 @@ public interface FileSupplier {
  
 boolean addProblemFolder(String problemFolder);
 Path getProblemFolder(String problemFolder);
+Path getProblemStatement(String problemFolder, boolean checkExisting);
 Path getProblemStatement(String problemFolder);
 Path getProblemCheckerFolder(String problemFolder);
 

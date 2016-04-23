@@ -143,17 +143,22 @@ public class StandardFileSupplier implements FileSupplier {
             return null;
         }
     }
-
+    
     @Override
-    public Path getProblemStatement(String problemFolder) {
+    public Path getProblemStatement(String problemFolder, boolean checkExisting) {
         checkFileStructure();
         Path path = Paths.get(pathFile.toString(), FILE_SYSTEM, PROBLEMS, problemFolder, STATEMENT);
-        if (Files.exists(path)) {
+        if (!checkExisting || Files.exists(path)) {
             return path;
         } else {
             FileSystemLogging.logger.log(Level.FINE, "Statement does not exist for problem: {0}", problemFolder);
             return null;
         }
+    }
+    
+    @Override
+    public Path getProblemStatement(String problemFolder) {
+        return getProblemStatement(problemFolder, true);
     }
 
     @Override

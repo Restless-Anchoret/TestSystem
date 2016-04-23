@@ -1,6 +1,5 @@
 package com.netcracker.businesslogic.application;
 
-import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.businesslogic.support.DatabaseDelegateEJB;
 import com.netcracker.businesslogic.support.FileSystemDelegateImpl;
 import com.netcracker.businesslogic.support.TestingFileSupplierImpl;
@@ -23,11 +22,9 @@ import javax.ejb.Singleton;
 import javax.ejb.LocalBean;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
-import javax.ejb.Startup;
 
 @Singleton
 @LocalBean
-@Startup
 @Lock(LockType.READ)
 public class ApplicationEJB {
 
@@ -49,9 +46,12 @@ public class ApplicationEJB {
     @EJB(beanName = "RegistrationEJB")
     private RegistrationEJB registrationEJB;
 
+    public String getAdminDefaultLogin() {
+        return adminDefaultLogin;
+    }
+
     @PostConstruct
     public void initApplication() {
-        checkResources();
         registrationEJB.checkAdminRegistration(adminDefaultLogin, adminDefaultPassword);
         fileSupplier = new StandardFileSupplier(Paths.get(fileSystemPath));
         monitorPool = StandardMonitorPool.getDefault();
@@ -62,25 +62,6 @@ public class ApplicationEJB {
         testingSystem = new MultithreadTestingSystem(testingSystemThreads,
                 new TestingFileSupplierImpl(fileSupplier));
         testingSystem.start();
-    }
-    
-    private void checkResources() {
-        if (adminDefaultLogin == null) {
-            BusinessLogicLogging.logger.fine("adminDefaultLogin == null");
-            adminDefaultLogin = "admin";
-        }
-        if (adminDefaultPassword == null) {
-            BusinessLogicLogging.logger.fine("adminDefaultPassword == null");
-            adminDefaultPassword = "password943";
-        }
-        if (fileSystemPath == null) {
-            BusinessLogicLogging.logger.fine("fileSystemPath == null");
-            fileSystemPath = "D:\\NCProject\\fileSystem\\";
-        }
-        if (testingSystemThreads == null) {
-            BusinessLogicLogging.logger.fine("testingSystemThreads == null");
-            testingSystemThreads = 10;
-        }
     }
     
     @PreDestroy
