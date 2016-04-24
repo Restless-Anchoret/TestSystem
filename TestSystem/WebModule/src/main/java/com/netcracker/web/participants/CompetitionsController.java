@@ -3,10 +3,12 @@ package com.netcracker.web.participants;
 import com.netcracker.businesslogic.holding.CompetitionEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
 import com.netcracker.database.entity.Competition;
+import com.netcracker.web.logging.WebLogging;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -25,7 +27,8 @@ public class CompetitionsController {
     public List<Competition> getCompetitionsList() {
         try {
             return competitionFacade.findAllCompetiotions(new int[] { 0, 30 });
-        } catch (Exception exception) {
+        } catch (Throwable ex) {
+            WebLogging.logger.log(Level.SEVERE, null, ex);
             return Collections.EMPTY_LIST;
         }
     }

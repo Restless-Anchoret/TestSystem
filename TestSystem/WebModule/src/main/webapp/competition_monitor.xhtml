@@ -8,11 +8,11 @@
         <ui:define name="title">Монитор</ui:define>
         <ui:define name="subcontent">
             <f:metadata>
-                <f:viewParam name="competitionId" value="#{competitionMonitorController.competiotionId}" />
+                <f:viewParam name="competitionId" value="#{competitionController.competitionId}"/>
             </f:metadata>
             <h1>Монитор</h1>
             <br/>
-            <h:outputText value="Id соревнования: #{competitionMonitorController.competiotionId}"/>
+            <h:outputText value="Id соревнования #{competitionController.competitionId}"/>
         </ui:define>
     </ui:composition>
 </html>

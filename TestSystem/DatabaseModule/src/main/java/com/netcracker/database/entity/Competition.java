@@ -77,7 +77,6 @@ public class Competition implements Serializable {
     @Column(name = "finished")
     private boolean finished;
     @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "folder_name")
     private String folderName;
