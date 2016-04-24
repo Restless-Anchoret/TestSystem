@@ -2,11 +2,30 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
     <ui:composition template="moderation_template.xhtml">
         <ui:define name="title">Модерирование соревнований</ui:define>
         <ui:define name="subcontent">
-            Список соревнований для модерирования
+            <h1>Модерирование соревнований</h1>
+            <p:dataTable var="competition" value="#{competitionsController.competitionsList}"
+                         rows="50" paginator="true"
+                         paginatorTemplate="{PageLinks}"
+                         emptyMessage="Соревнований пока нет, зайдите позже.">
+                <p:column headerText="Название">
+                    <p:link value="#{competition.name}"
+                            outcome="moderation_competition.xhtml?id=#{competition.id}"/>
+                </p:column>
+                <p:column headerText="Тип">
+                    <h:outputText value="#{competitionsController.getTypeDescription(competition)}" />
+                </p:column>
+                <p:column headerText="Начало">
+                    <h:outputText value="#{competitionsController.getDateCompetition(competition)}" />
+                </p:column>
+                <p:column headerText="Длительность">
+                    <h:outputText value="#{competition.competitionInterval}" />
+                </p:column>
+            </p:dataTable>
         </ui:define>
     </ui:composition>
 </html>
