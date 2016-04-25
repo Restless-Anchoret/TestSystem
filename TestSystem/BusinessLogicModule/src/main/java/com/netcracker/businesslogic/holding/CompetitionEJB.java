@@ -14,8 +14,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 
 @Stateless
 @LocalBean
@@ -24,6 +22,11 @@ public class CompetitionEJB {
     public CompetitionPhase getCompetitionPhase(Competition competition) {
         if (competition.getFinished()) {
             return CompetitionPhase.FINISHED;
+        }
+        if (competition.getCompetitionStart() == null ||
+                competition.getCompetitionInterval() == null ||
+                competition.getIntervalFrozen() == null) {
+            return CompetitionPhase.BEFORE;
         }
         Date currentMoment = new Date();
         long millis = currentMoment.getTime();
@@ -36,6 +39,10 @@ public class CompetitionEJB {
         } else {
             return CompetitionPhase.WAITING_RESULTS;
         }
+    }
+    
+    public RegistrationType getRegistrationType(Competition competition) {
+        return RegistrationType.valueOf(competition.getRegistrationType().toUpperCase());
     }
     
     public boolean addSubmission(Integer competitionId, CompetitionProblem competitionProblem,
