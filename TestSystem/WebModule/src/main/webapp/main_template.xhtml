@@ -6,19 +6,19 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title><ui:insert name="title">TestSystem</ui:insert></title>
+        <title><ui:insert name="title">Kolibri</ui:insert></title>
     </h:head>
     <h:body>
         <p:growl id="growl" life="5000" showDetail="true" autoUpdate="true"/>
         <h:form>
             <p:menubar>
                 <p:menuitem value="Соревнования" outcome="competitions.xhtml"/>
-                <p:menuitem value="Достижения" outcome="achievements.xhtml"/>
+                <p:menuitem value="Профиль" outcome="user_profile.xhtml"/>
                 <p:menuitem value="Модерирование" outcome="moderation_registration.xhtml"
                             rendered="#{authenticationController.authenticatedModeratorOrAdmin}"/>
                 <f:facet name="options">
                     <h:panelGrid columns="3">
-                        <p:link value="#{authenticationController.currentUserLogin}" outcome="profile.xhtml"/>
+                        <p:link value="#{authenticationController.currentUserLogin}" outcome="user_profile.xhtml"/>
                         <h:outputText value="  "/>
                         <p:commandLink value = "Выйти" action="#{logOutController.doLogOut()}"/>
                     </h:panelGrid>
@@ -27,6 +27,6 @@
         </h:form>
         <ui:insert name="content">Страница пуста</ui:insert>
         <p:separator/>
-        <h:outputText value="TestSystem"/>
+        <p:outputLabel value="Kolibri"/>
     </h:body>
 </html>

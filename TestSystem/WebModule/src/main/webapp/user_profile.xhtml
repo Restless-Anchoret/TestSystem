@@ -5,20 +5,22 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-    <ui:composition template="main_template.xhtml">
+    <ui:composition template="profile_template.xhtml">
         <ui:define name="title">Профиль</ui:define>
-        <ui:define name="content">
+        <ui:define name="subcontent">
             <h1>Профиль</h1>
-            <h:form>
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputText value="Логин: "/>
+                <h:outputText value="#{profileController.user.login}"/>
+                <h:outputText value="Роль: "/>
+                <h:outputText value="#{profileController.user.role}" converter="roleConverter"/>
+                <h:outputText value="Дата регистрации: "/>
+                <h:outputText value="#{profileController.user.registrationDate}">
+                    <f:convertDateTime dateStyle="full" timeStyle="long" type="both"/>
+                </h:outputText>
+            </h:panelGrid>
+            <h:form rendered="#{profileController.profileOfCurrentUser}">
                 <h:panelGrid id="profileGrid" columns="2" cellpadding="5">
-                    <h:outputText value="Логин: "/>
-                    <h:outputText value="#{authenticationController.currentUserLogin}"/>
-                    <h:outputText value="Роль: "/>
-                    <h:outputText value="#{authenticationController.currentUserRole}" converter="roleConverter"/>
-                    <h:outputText value="Дата регистрации: "/>
-                    <h:outputText value="#{authenticationController.currentUser.registrationDate}">
-                        <f:convertDateTime dateStyle="full" timeStyle="long" type="both"/>
-                    </h:outputText>
                     <h:outputText value="Старый пароль: "/>
                     <p:password id="oldPassword" value="#{profileController.oldPassword}" required="true"/>
                     <h:outputText value="Новый пароль: "/>
