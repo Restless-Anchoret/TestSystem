@@ -6,14 +6,16 @@
       xmlns:p="http://primefaces.org/ui">
     <ui:composition template="main_template.xhtml">
         <ui:define name="content">
-            <p:panelGrid columns="5">
-                <p:link value="Регистрация участников" outcome="moderation_registration.xhtml"/>
-                <p:link value="Соревнования" outcome="moderation_competitions.xhtml"/>
-                <p:link value="Задачи" outcome="moderation_problems.xhtml"/>
-                <p:link value="Участники" outcome="moderation_participants.xhtml"/>
-                <p:link value="Модераторы" outcome="moderation_moderators.xhtml"
-                        rendered="#{authenticationController.authenticatedAdmin}"/>
-            </p:panelGrid>
+            <h:form>
+                <p:menubar>
+                    <p:menuitem value="Регистрация участников" outcome="moderation_registration.xhtml"/>
+                    <p:menuitem value="Соревнования" outcome="moderation_competitions.xhtml"/>
+                    <p:menuitem value="Задачи" outcome="moderation_problems.xhtml"/>
+                    <p:menuitem value="Участники" outcome="moderation_participants.xhtml"/>
+                    <p:menuitem value="Модераторы" outcome="moderation_moderators.xhtml"
+                                rendered="#{authenticationController.authenticatedAdmin}"/>
+                </p:menubar>
+            </h:form>
             <ui:insert name="subcontent">Страница пуста</ui:insert>
         </ui:define>
     </ui:composition>
