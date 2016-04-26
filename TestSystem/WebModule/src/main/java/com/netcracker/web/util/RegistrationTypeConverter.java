@@ -1,7 +1,6 @@
 package com.netcracker.web.util;
 
 import com.netcracker.businesslogic.holding.RegistrationType;
-import com.netcracker.businesslogic.users.Role;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;

@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="moderation_template.xhtml">
         <ui:define name="title">Модерирование соревнований</ui:define>
         <ui:define name="subcontent">
@@ -14,7 +15,9 @@
                          emptyMessage="Соревнований пока нет, зайдите позже.">
                 <p:column headerText="Название">
                     <p:link value="#{competition.name}"
-                            outcome="moderation_competition.xhtml?id=#{competition.id}"/>
+                            outcome="moderation_competition.xhtml">
+                        <f:param name="id" value="#{competition.id}"/>
+                    </p:link>
                 </p:column>
                 <p:column headerText="Тип">
                     <h:outputText value="#{competitionsController.getTypeDescription(competition)}" />

@@ -3,6 +3,7 @@ package com.netcracker.web.util;
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 public class JSFUtil {
     
@@ -17,6 +18,12 @@ public class JSFUtil {
     
     public static void addInfoMessage(String summary, String detail) {
         addMessage(summary, detail, FacesMessage.SEVERITY_INFO);
+    }
+    
+    public static String getRequestParameter(String parameter) {
+        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance()
+                .getExternalContext().getRequest();
+        return request.getParameter(parameter);
     }
     
     private JSFUtil() { }

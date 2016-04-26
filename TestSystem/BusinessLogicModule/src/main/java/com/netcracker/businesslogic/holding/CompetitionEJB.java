@@ -5,12 +5,15 @@ import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.CompetitionProblem;
 import com.netcracker.database.entity.Compilator;
 import com.netcracker.monitoring.info.CompetitionPhase;
+import com.netcracker.testing.evaluation.EvaluationSystemRegistry;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
@@ -18,7 +21,7 @@ import javax.ejb.LocalBean;
 @Stateless
 @LocalBean
 public class CompetitionEJB {
-
+    
     public CompetitionPhase getCompetitionPhase(Competition competition) {
         if (competition.getFinished()) {
             return CompetitionPhase.FINISHED;
@@ -90,6 +93,18 @@ public class CompetitionEJB {
     
     private Date addMinutesToDate(Date date, int minutes) {
         return new Date(date.getTime() + minutes * 60_000);
+    }
+    
+    public List<String> getAvailableEvaluationSystems() {
+        return new ArrayList<>(EvaluationSystemRegistry.registry().getAvailableIds());
+    }
+    
+    public List<String> getAvailableRegistrationTypes() {
+        List<String> resultList = new ArrayList<>();
+        for (RegistrationType type: RegistrationType.values()) {
+            resultList.add(type.toString().toLowerCase());
+        }
+        return resultList;
     }
     
 }

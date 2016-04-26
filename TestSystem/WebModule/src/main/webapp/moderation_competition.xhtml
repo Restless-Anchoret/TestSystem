@@ -6,10 +6,6 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <ui:composition template="moderation_template.xhtml">
-        <f:metadata>
-            <f:viewParam name="id" value="#{moderationCompetitionController.competition.id}"/>
-            <f:viewAction action="#{moderationCompetitionController.loadCompetitionById()}"/>
-        </f:metadata>
         <ui:define name="title">Модерирование соревнования</ui:define>
         <ui:define name="subcontent">
             <h1>Модерирование соревнования</h1>
@@ -17,36 +13,50 @@
                 <h:panelGrid id="competitionGrid" columns="2" cellpadding="5">
                     <h:outputText value="Название: "/>
                     <p:inputText value="#{moderationCompetitionController.competition.name}"/>
+                    <h:outputText value="Статус:"/>
+                    <h:outputText value="#{moderationCompetitionController.competitionPhase}"
+                                  converter="competitionPhaseConverter"/>
                     <h:outputText value="Начало: "/>
-                    <h:outputText value="#{moderationCompetitionController.competition.competitionStart}"/>
-                    <h:outputText value="Длительность: "/>
-                    <h:outputText value="#{moderationCompetitionController.competition.competitionInterval}"/>
-                    <h:outputText value="Длительность заморозки: "/>
-                    <h:outputText value="#{moderationCompetitionController.competition.intervalFrozen}"/>
+                    <p:inputText value="#{moderationCompetitionController.competition.competitionStart}" label="Date">
+                        <f:convertDateTime type="both" pattern="dd.MM.yyyy HH:mm:ss"/>
+                    </p:inputText>
+                    <h:outputText value="Длительность (мин.): "/>
+                    <p:inputText value="#{moderationCompetitionController.competition.competitionInterval}"/>
+                    <h:outputText value="Длительность заморозки (мин.): "/>
+                    <p:inputText value="#{moderationCompetitionController.competition.intervalFrozen}"/>
                     <h:outputText value="Система оценивания: "/>
-                    <h:outputText value="#{moderationCompetitionController.competition.evaluationType}"/>
+                    <p:selectOneMenu value="#{moderationCompetitionController.competition.evaluationType}"
+                                     style="width:125px">
+                        <f:selectItems value="#{moderationCompetitionController.evaluationSystemItems}"/>
+                    </p:selectOneMenu>
                     <h:outputText value="Тип регистрации: "/>
-                    <h:outputText value="#{moderationCompetitionController.competition.registrationType}"/>
-                    <h:outputText value="Видимое соренование: "/>
+                    <p:selectOneMenu value="#{moderationCompetitionController.competition.registrationType}"
+                                     style="width:250px">
+                        <f:selectItems value="#{moderationCompetitionController.registrationTypeItems}"/>
+                    </p:selectOneMenu>
+                    <h:outputText value="Видимое соревнование: "/>
                     <p:selectBooleanCheckbox value="#{moderationCompetitionController.competition.visible}"/>
                     <h:outputText value="Соревнование проводится: "/>
                     <p:selectBooleanCheckbox value="#{moderationCompetitionController.competition.holdCompetition}"/>
                     <h:outputText value="Показывать монитор: "/>
                     <p:selectBooleanCheckbox value="#{moderationCompetitionController.competition.showMonitor}"/>
-                    <h:outputText value="Во время соревнования только претесты: "/>
+                    <h:outputText value="Проверять только претесты: "/>
                     <p:selectBooleanCheckbox value="#{moderationCompetitionController.competition.pretestsOnly}"/>
                     <h:outputText value="Разрешить дорешивание: "/>
                     <p:selectBooleanCheckbox value="#{moderationCompetitionController.competition.practicePermition}"/>
                 </h:panelGrid>
                 <p:commandButton value="Сохранить" update="competitionGrid"
-                                 action="#{moderationCompetitionController.saveCompetitionChanges()}"
-                                 ajax="true"/>
+                                 action="#{moderationCompetitionController.saveCompetitionChanges()}">
+                    <f:param name="id" value="#{moderationCompetitionController.competition.id}"/>
+                </p:commandButton>
                 <p:commandButton value="Провести системное тестирование" update="competitionGrid"
-                                 action="#{moderationCompetitionController.runSystemTesting()}"
-                                 ajax="true"/>
+                                 action="#{moderationCompetitionController.runSystemTesting()}">
+                    <f:param name="id" value="#{moderationCompetitionController.competition.id}"/>
+                </p:commandButton>
                 <p:commandButton value="Завершить соревнование" update="competitionGrid"
-                                 action="#{moderationCompetitionController.finalizeCompetition()}"
-                                 ajax="true"/>
+                                 action="#{moderationCompetitionController.finalizeCompetition()}">
+                    <f:param name="id" value="#{moderationCompetitionController.competition.id}"/>
+                </p:commandButton>
             </h:form>
         </ui:define>
     </ui:composition>
