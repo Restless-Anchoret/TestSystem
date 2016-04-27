@@ -2,35 +2,29 @@ package com.netcracker.web.participants;
 
 import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.holding.CompetitionEJB;
+import com.netcracker.businesslogic.users.AuthenticationEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
 import com.netcracker.database.dal.CompilatorFacadeLocal;
+import com.netcracker.database.dal.SubmissionFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.CompetitionProblem;
 import com.netcracker.database.entity.Compilator;
+import com.netcracker.database.entity.Submission;
 import com.netcracker.web.logging.WebLogging;
+import com.netcracker.web.session.AuthenticationController;
 import com.netcracker.web.util.CompetitionProblemComporatorOfProblemNumber;
 import com.netcracker.web.util.Pages;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.UploadedFile;
@@ -47,6 +41,9 @@ public class CompetitionController {
     private ApplicationEJB applicationEJB;
     @EJB(beanName = "CompetitionEJB")
     private CompetitionEJB competitionEJB;
+    private AuthenticationEJB authenticationEJB;
+    @EJB(beanName = "SubmissionFacade")
+    private SubmissionFacadeLocal submissionFacade;
     private Integer competitionId;
     private List<CompetitionProblem> competitionProblems;
     private UploadedFile file;
@@ -55,6 +52,7 @@ public class CompetitionController {
     private String currentCompetitionProblem;
     private final long SIZELIMIT = 262144;
     private String page;
+    private List<Submission> submissions;
     
     @PostConstruct
     public void initPage() {
@@ -72,9 +70,13 @@ public class CompetitionController {
             initProblemsPage();
             return;
         }
+        authenticationEJB = AuthenticationController.getSessionAuthenticationEJB();
         switch (currentPage) {
             case PROBLEMS:
                 initProblemsPage();
+                break;
+            case SUBMSSIONS:
+                initSubmissionsPage();
                 break;
         }
     }
@@ -96,6 +98,17 @@ public class CompetitionController {
         }
     }
 
+    private void initSubmissionsPage() {
+        try {
+            submissions = submissionFacade.
+                    findAllSubmissionsByUserIdAndCompetitionId(authenticationEJB.getCurrentUser().getId(),
+                            competitionId);
+        } catch (Throwable ex) {
+            WebLogging.logger.log(Level.SEVERE, null, ex);
+            submissions = Collections.EMPTY_LIST;
+        }
+    }
+    
     public String loadStatementFile(CompetitionProblem competitionProblem) {
         Path pathStatementFile = applicationEJB.getFileSupplier().
                 getProblemStatement(competitionProblem.getCompetitionId().getFolderName());
@@ -141,7 +154,8 @@ public class CompetitionController {
             return "competition_problems";
         }
         if (competitionEJB.addSubmission(competitionId, getFromProblems(currentCompetitionProblem),
-                getFromCompolators(currentCompilator), is, file.getFileName(), file.getSize())) {
+                authenticationEJB.getCurrentUser(), getFromCompolators(currentCompilator), is, 
+                file.getFileName(), file.getSize())) {
             page = Pages.SUBMSSIONS.toString();
             return "competition_submissions";
         }
@@ -223,6 +237,14 @@ public class CompetitionController {
 
     public void setPage(String page) {
         this.page = page;
+    }
+
+    public List<Submission> getSubmissions() {
+        return submissions;
+    }
+
+    public void setSubmissions(List<Submission> submissions) {
+        this.submissions = submissions;
     }
     
 }

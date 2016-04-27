@@ -2,7 +2,9 @@ package com.netcracker.web.moderators;
 
 import com.netcracker.database.dal.CompetitionFacadeLocal;
 import com.netcracker.database.entity.Competition;
+import com.netcracker.web.logging.WebLogging;
 import com.netcracker.web.util.JSFUtil;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
@@ -30,6 +32,18 @@ public class ModerationCompetitionController {
     
     public void saveCompetitionChanges() {
         try {
+            WebLogging.logger.log(Level.INFO, competition.getId().toString());
+            WebLogging.logger.log(Level.INFO, competition.getName());
+            if (competition.getHoldCompetition())
+                WebLogging.logger.log(Level.INFO, "да");
+            else
+                WebLogging.logger.log(Level.INFO, "нет");
+            WebLogging.logger.log(Level.INFO, competition.getEvaluationType());
+            WebLogging.logger.log(Level.INFO, competition.getRegistrationType());
+            WebLogging.logger.log(Level.INFO, competition.getFolderName());
+            WebLogging.logger.log(Level.INFO, competition.getCompetitionStart().toString());
+            WebLogging.logger.log(Level.INFO, competition.getCompetitionInterval().toString());
+            WebLogging.logger.log(Level.INFO, competition.getIntervalFrozen().toString());
             competitionFacade.edit(competition);
             JSFUtil.addInfoMessage("Информация о соревновании сохранена", "");
         } catch (Exception exception) {

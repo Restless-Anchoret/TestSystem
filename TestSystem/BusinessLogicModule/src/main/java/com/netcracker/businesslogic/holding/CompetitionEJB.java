@@ -1,9 +1,13 @@
 package com.netcracker.businesslogic.holding;
 
+import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
+import com.netcracker.database.dal.SubmissionFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.CompetitionProblem;
 import com.netcracker.database.entity.Compilator;
+import com.netcracker.database.entity.Submission;
+import com.netcracker.database.entity.User;
 import com.netcracker.monitoring.info.CompetitionPhase;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.logging.Level;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
 import javax.faces.application.FacesMessage;
@@ -21,6 +26,11 @@ import javax.faces.context.FacesContext;
 @LocalBean
 public class CompetitionEJB {
 
+    @EJB(beanName = "SubmissionFacade")
+    private SubmissionFacadeLocal submissionFacade;
+    @EJB(beanName = "ApplicationEJB")
+    private ApplicationEJB applicationEJB;
+    
     public CompetitionPhase getCompetitionPhase(Competition competition) {
         if (competition.getFinished()) {
             return CompetitionPhase.FINISHED;
@@ -38,19 +48,40 @@ public class CompetitionEJB {
         }
     }
     
-    public boolean addSubmission(Integer competitionId, CompetitionProblem competitionProblem,
+    public boolean addSubmission(Integer competitionId, CompetitionProblem competitionProblem, User user,
                         Compilator compilator, InputStream file, String fileName, Long fileSize) {
-        boolean result = false;
         BusinessLogicLogging.logger.log(Level.INFO, "addsubmission method");
+        Submission submission = new Submission();
+        submission.setCompetitionProblemId(competitionProblem);
+        submission.setUserId(user);
+        submission.setCompilatorId(compilator);
+        submission.setSubmissionTime(new Date());
         try {
-            File submission = new File("D:\\NCProject\\fileSystem\\" + fileName);
-            submission.createNewFile();
-            OutputStream outputStream = new FileOutputStream(submission);
-            long bytes = saveFile(file, outputStream);
-            result = (bytes == fileSize);
-        } catch (Exception ex) {
+            submissionFacade.create(submission);
+            submission.setFolderName(submission.getId().toString());
+        } catch(Throwable ex) {
             BusinessLogicLogging.logger.log(Level.SEVERE, null, ex);
+            return false;
         }
+        if (!applicationEJB.getFileSupplier().addSubmissionFolder(submission.getFolderName())) {
+            return false;
+        }
+        try {
+            File submissionFile = new File(applicationEJB.getFileSupplier().
+                    getSubmissionSourceFolder(fileName) + fileName);
+            submissionFile.createNewFile();
+            OutputStream outputStream = new FileOutputStream(submissionFile);
+            long bytes = saveFile(file, outputStream);
+            if (bytes != fileSize) {
+                submissionFile.delete();
+                submission.setFolderName(null);
+            }
+            submissionFacade.edit(submission);
+        } catch (Throwable ex) {
+            BusinessLogicLogging.logger.log(Level.SEVERE, null, ex);
+            return false;
+        }
+        
         return true;
     }
     

@@ -7,12 +7,39 @@
     <ui:composition template="competition_template.xhtml">
         <ui:define name="title">Посылки</ui:define>
         <ui:define name="subcontent">
-            <f:metadata>
-                <f:viewParam name="competitionId" value="#{competitionController.competitionId}"/>
-            </f:metadata>
-            <h1>Посылки</h1>
-            <br/>
-            <h:outputText value="Id соревнования #{competitionController.competitionId}"/>
+            <h:form>
+                <p:dataTable var="submission" value="#{competitionController.submissions}"
+                             rows="15" paginator="true" id="submissions"
+                             paginatorTemplate="{PageLinks}"
+                             emptyMessage="Посылок нет.">
+                    <f:facet name="header">
+                        Посылки
+                    </f:facet>
+                    <p:column headerText="Когда">
+                        <h:outputText value="#{submission.submissionTime}" />
+                    </p:column>
+                    
+                    <p:column headerText="Задача">
+                        <h:outputText value="#{submission.competitionProblemId.problemId.name}" />
+                    </p:column>
+
+                    <p:column headerText="Язык">
+                        <h:outputText value="#{submission.compilatorId.name}" />
+                    </p:column>
+
+                    <p:column headerText="Вердикт">
+                        <h:outputText value="#{submission.verdict}"/>
+                    </p:column>
+
+                    <p:column headerText="Время">
+                        <h:outputText value="#{submission.decisionTime}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Память">
+                        <h:outputText value="#{submission.decisionMemory}"/>
+                    </p:column>
+                </p:dataTable>               
+            </h:form>
         </ui:define>
     </ui:composition>
 </html>

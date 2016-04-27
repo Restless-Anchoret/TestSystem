@@ -10,7 +10,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.inject.Inject;
 
 @Stateless
 public class SubmissionFacade extends AbstractFacade<Submission> implements SubmissionFacadeLocal {
@@ -36,7 +35,7 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
     @Override
     public List<Submission> findByUserIdAndCompetitionProblemId(Object userId, Object competitionProblemId) {
         CompetitionProblem competiotionProblem = competitionProblemFacade.find(competitionProblemId);
-        Date finish = competiotionProblem.getCompetitionId().getCompetitionStart();
+        Date finish = new Date(competiotionProblem.getCompetitionId().getCompetitionStart().getTime());
         finish.setTime(finish.getTime() + competiotionProblem.getCompetitionId().getCompetitionInterval() * 60000);
         TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionProblemId", 
                 Submission.class);
@@ -67,7 +66,7 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
     @Override
     public List<Submission> findAllSubmissionsByCompetitionId(Object competitionId) {
         Competition competiotion = competitionFacade.find(competitionId);
-        Date finish = competiotion.getCompetitionStart();
+        Date finish = new Date(competiotion.getCompetitionStart().getTime());
         finish.setTime(finish.getTime() + competiotion.getCompetitionInterval() * 60000);
         TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionProblemId", 
                 Submission.class);
@@ -75,6 +74,23 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
         query.setParameter("start", competiotion.getCompetitionStart());
         query.setParameter("finish", finish);
         return query.getResultList();
+    }
+
+    @Override
+    public List<Submission> findAllSubmissionsByUserIdAndCompetitionId(Object userId, Object competitionId) {
+        Competition competiotion = competitionFacade.find(competitionId);
+        Date finish = new Date(competiotion.getCompetitionStart().getTime());
+        finish.setTime(finish.getTime() + competiotion.getCompetitionInterval() * 60000);
+        TypedQuery query = em.createNamedQuery("Submission.findAllSubmissionsByUserIdAndCompetitionId", 
+                Submission.class);
+        query.setParameter("competitionId", competitionId);
+        query.setParameter("userId", userId);
+        query.setParameter("start", competiotion.getCompetitionStart());
+        query.setParameter("finish", finish);
+        List<Submission> result = query.getResultList();
+        for (Submission submission: result)
+            submission.getCompetitionProblemId();
+        return result;
     }
     
     

@@ -25,9 +25,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Submission.findAllByUserIdAndCompetitionProblemId", 
-            query = "SELECT s FROM Submission s WHERE s.competitionProblemId.id = :competitionProblemId AND s.userId.id = :userId AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime"),
+            query = "SELECT s FROM Submission s WHERE s.competitionProblemId.id = :competitionProblemId AND s.userId.id = :userId AND s.folderName IS NOT NULL AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime"),
     @NamedQuery(name = "Submission.findAllSubmissionsByCompetitionId", 
-            query = "SELECT s FROM Submission s WHERE s.competitionProblemId.competitionId.id = :competitionId AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime"),
+            query = "SELECT s FROM Submission s WHERE s.competitionProblemId.competitionId.id = :competitionId AND s.folderName IS NOT NULL AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime"),
+    @NamedQuery(name = "Submission.findAllSubmissionsByUserIdAndCompetitionId", 
+            query = "SELECT s FROM Submission s WHERE s.competitionProblemId.competitionId.id = :competitionId AND s.userId.id = :userId AND s.folderName IS NOT NULL AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime"),
     @NamedQuery(name = "Submission.findById", query = "SELECT s FROM Submission s WHERE s.id = :id")})
 public class Submission implements Serializable {
 
