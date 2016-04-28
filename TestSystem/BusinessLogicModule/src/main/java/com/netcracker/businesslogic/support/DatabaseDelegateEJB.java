@@ -26,6 +26,15 @@ public class DatabaseDelegateEJB implements DatabaseDelegate {
     private CompetitionEJB competitionEJB;
     
     @Override
+    public void initilizeProblemResults(int competitionId) {
+        List<ParticipationResult> participationResults = participationResultFacade.findByCompetitionId(competitionId);
+        if (participationResults.isEmpty()) {
+            Competition competition = competitionFacade.find(competitionId);
+            competitionFacade.createNullsResults(competition);
+        }
+    }
+    
+    @Override
     public List<ProblemResultInfo> getProblemResultInfos(int competitionId) {
         List<ParticipationResult> participationResults = participationResultFacade.findByCompetitionId(competitionId);
         List<ProblemResultInfo> problemResultInfos = new ArrayList<>();

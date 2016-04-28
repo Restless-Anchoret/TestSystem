@@ -44,6 +44,7 @@ public class StandardMonitor implements Monitor {
     @Override
     public synchronized void startMonitoring() {
         competitionFolder = databaseDelegate.getCompetitionInfo(competitionId).getCompetitionFolder();
+        databaseDelegate.initilizeProblemResults(competitionId);
         updateResults();
     }
 
