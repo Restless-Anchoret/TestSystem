@@ -2,11 +2,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="moderation_template.xhtml">
         <ui:define name="title">Модераторы</ui:define>
         <ui:define name="subcontent">
-            Список модераторов
+            <h1>Модераторы</h1>
+            <p:dataTable id="userGrid"
+                         var="user" value="#{moderatingUsersController.moderators}"
+                         rows="50" paginator="true"
+                         paginatorTemplate="{PageLinks}"
+                         emptyMessage="Модераторов пока нет.">
+                <p:column headerText="Логин">
+                    <p:link value="#{user.login}"
+                            outcome="user_profile.xhtml">
+                        <f:param name="userId" value="#{user.id}"/>
+                    </p:link>
+                </p:column>
+                <p:column headerText="Активен">
+                    <h:outputText value="#{user.actual}" />
+                </p:column>
+                <p:column headerText="Дата регистрации">
+                    <h:outputText value="#{user.registrationDate}" />
+                </p:column>
+            </p:dataTable>
+            <h:form>
+                <p:commandButton value="Добавить модератора"
+                                 update="userGrid"
+                                 action="#{moderatingUsersController.addNewModerator()}"
+                                 ajax="true"/>
+            </h:form>
         </ui:define>
     </ui:composition>
 </html>
