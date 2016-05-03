@@ -15,7 +15,7 @@
             <p:menubar>
                 <p:menuitem value="Соревнования" outcome="competitions.xhtml"/>
                 <p:menuitem value="Профиль" outcome="user_profile.xhtml"/>
-                <p:menuitem value="Модерирование" outcome="moderation_registration.xhtml"
+                <p:menuitem value="Модерирование" outcome="moderation_competitions.xhtml"
                             rendered="#{authenticationController.authenticatedModeratorOrAdmin}"/>
                 <f:facet name="options">
                     <h:panelGrid columns="3">
@@ -28,6 +28,6 @@
         </h:form>
         <ui:insert name="content">Страница пуста</ui:insert>
         <p:separator/>
-        <p:outputLabel value="Kolibri"/>
+        <p:outputLabel value="Kolibri, 2016"/>
     </h:body>
 </html>
