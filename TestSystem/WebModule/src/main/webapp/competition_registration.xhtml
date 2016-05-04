@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="main_template.xhtml">
+        <ui:define name="title">Регистрация на соревнование</ui:define>
+        <ui:define name="content">
+            <h1>Регистрация на соревнование</h1>
+            <h:form>
+                <h:panelGrid id="infoGrid" columns="2" cellpadding="5">
+                    <h:outputText value="Соревнование:"/>
+                    <h:outputText value="#{competitionRegistrationController.competition.name}"/>
+                    <h:outputText value="Тип регистрации:"/>
+                    <h:outputText value="#{competitionRegistrationController.competition.registrationType}"
+                                  converter="registrationTypeConverter"/>
+                    <h:outputText value="Статус регистрации:"/>
+                    <h:outputText value="#{competitionRegistrationController.registrationStatus}"/>
+                </h:panelGrid>
+                <h:panelGrid id="personalDataGrid" columns="2" cellpadding="5"
+                             rendered="#{competitionRegistrationController.needPersonalData}">
+                    <h:outputText value="Имя:"/>
+                    <p:inputText value="#{competitionRegistrationController.personalData.firstName}"/>
+                    <h:outputText value="Фамилия:"/>
+                    <p:inputText value="#{competitionRegistrationController.personalData.lastName}"/>
+                    <h:outputText value="Отчество:"/>
+                    <p:inputText value="#{competitionRegistrationController.personalData.patronymic}"/>
+                    <h:outputText value="Вуз (школа):"/>
+                    <p:inputText value="#{competitionRegistrationController.personalData.organization}"/>
+                    <h:outputText value="Курс (класс):"/>
+                    <p:inputText value="#{competitionRegistrationController.personalData.course}"/>
+                    <h:outputText value="Страна:"/>
+                    <p:inputText value="#{competitionRegistrationController.personalData.country}"/>
+                    <h:outputText value="Город:"/>
+                    <p:inputText value="#{competitionRegistrationController.personalData.city}"/>
+                </h:panelGrid>
+                <p:commandButton value="Зарегистрироваться"
+                                 update="infoGrid personalDataGrid"
+                                 action="#{competitionRegistrationController.registrateForCompetition()}"
+                                 rendered="#{!competitionRegistrationController.alreadyMadeRequest}"
+                                 ajax="true"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

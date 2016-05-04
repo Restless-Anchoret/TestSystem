@@ -8,9 +8,9 @@
         <ui:define name="content">
             <h:form>
                 <p:menubar>
-                    <p:menuitem value="Регистрация участников" outcome="moderation_registration.xhtml"/>
                     <p:menuitem value="Соревнования" outcome="moderation_competitions.xhtml"/>
                     <p:menuitem value="Задачи" outcome="moderation_problems.xhtml"/>
+                    <p:menuitem value="Заявки" outcome="moderation_registration.xhtml"/>
                     <p:menuitem value="Участники" outcome="moderation_participants.xhtml"/>
                     <p:menuitem value="Модераторы" outcome="moderation_moderators.xhtml"
                                 rendered="#{authenticationController.authenticatedAdmin}"/>
