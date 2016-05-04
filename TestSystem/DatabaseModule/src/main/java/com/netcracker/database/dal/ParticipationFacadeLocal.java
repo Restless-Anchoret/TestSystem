@@ -19,4 +19,6 @@ public interface ParticipationFacadeLocal {
     
     Participation loadCompetition(Participation participation);
     
+    Participation findByCompetitionIdAndUserId(Object competitionId, Object userId);
+    
 }

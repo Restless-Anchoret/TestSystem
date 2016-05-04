@@ -29,29 +29,27 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
         super(Competition.class);
     }
     
-    private List<Competition> findVisibleByHoldCompetitions(boolean holdCompetition, int[] range) {
+    private List<Competition> findVisibleByHoldCompetitions(boolean holdCompetition) {
         TypedQuery query = em.createNamedQuery("Competition.findByVisibleAndHoldCompetition", Competition.class);
         query.setParameter("visible", true);
         query.setParameter("holdCompetition", holdCompetition);
-        query.setFirstResult(range[0]).setMaxResults(range[1] - range[0] + 1);
         return query.getResultList();
     }
     
-    private List<Competition> findByHoldCompetitions(boolean holdCompetition, int[] range) {
+    private List<Competition> findByHoldCompetitions(boolean holdCompetition) {
         TypedQuery query = em.createNamedQuery("Competition.findByHoldCompetition", Competition.class);
         query.setParameter("holdCompetition", holdCompetition);
-        query.setFirstResult(range[0]).setMaxResults(range[1] - range[0] + 1);
         return query.getResultList();
     }
     
     @Override
-    public List<Competition> findVisibleCompetiotions(int[] range) {
-        return findVisibleByHoldCompetitions(true, range);
+    public List<Competition> findVisibleCompetiotions() {
+        return findVisibleByHoldCompetitions(true);
     }
 
     @Override
-    public List<Competition> findAllCompetiotions(int[] range) {
-        return findByHoldCompetitions(true, range);
+    public List<Competition> findAllCompetiotions() {
+        return findByHoldCompetitions(true);
     }
 
     @Override
@@ -60,25 +58,27 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
         List<ParticipationResult> participationResults = new ArrayList<>();
         ParticipationResult participationResult;
         for (Participation participation: competition.getParticipationList()) {
-            for (CompetitionProblem competitionProblem: competition.getCompetitionProblemList()) {
-                participationResult = new ParticipationResult();
-                participationResult.setUserId(participation.getUserId());
-                participationResult.setCompetitionProblemId(competitionProblem);
-                em.persist(participationResult);
-                participationResults.add(participationResult);
+            if (participation.getRegistered()) {
+                for (CompetitionProblem competitionProblem: competition.getCompetitionProblemList()) {
+                    participationResult = new ParticipationResult();
+                    participationResult.setUserId(participation.getUserId());
+                    participationResult.setCompetitionProblemId(competitionProblem);
+                    em.persist(participationResult);
+                    participationResults.add(participationResult);
+                }
             }
         }
         return participationResults;
     }
 
     @Override
-    public List<Competition> findAllTrainings(int[] range) {
-        return findByHoldCompetitions(false, range);
+    public List<Competition> findAllTrainings() {
+        return findByHoldCompetitions(false);
     }
 
     @Override
-    public List<Competition> findVisibleTranings(int[] range) {
-        return findVisibleByHoldCompetitions(false, range);
+    public List<Competition> findVisibleTranings() {
+        return findVisibleByHoldCompetitions(false);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
     }
 
     @Override
-    public void addPaticipations(Competition competition, List<User> users) {
+    public void addParticipations(Competition competition, List<User> users) {
         Participation participation;
         for (User user: users) {
             participation = new Participation();
@@ -134,10 +134,6 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
             participation.setCompetitionId(competition);
             em.persist(participation);
         }
-    }
-    
-    
-    
-    
+    }    
     
 }

@@ -20,9 +20,9 @@ public interface CompetitionFacadeLocal {
 
     Competition find(Object id);
 
-    List<Competition> findAllCompetiotions(int[] range);
+    List<Competition> findAllCompetiotions();
     
-    List<Competition> findVisibleCompetiotions(int[] range);
+    List<Competition> findVisibleCompetiotions();
     
     Competition loadCompetitionProblems(Competition competition);
     
@@ -30,9 +30,9 @@ public interface CompetitionFacadeLocal {
     
     List<ParticipationResult> createNullsResults(Competition competition);
     
-    List<Competition> findAllTrainings(int[] range);
+    List<Competition> findAllTrainings();
     
-    List<Competition> findVisibleTranings(int[] range);
+    List<Competition> findVisibleTranings();
 
     void finishCompetition(Competition competition, List<ParticipationResult> participationResults);
     
@@ -40,6 +40,8 @@ public interface CompetitionFacadeLocal {
     
     void registrationNewParticipation(Competition competition, User user);
     
-    void addPaticipations(Competition competition, List<User> users);
+    void addParticipations(Competition competition, List<User> users);
+    
+    List<Competition> findAll();
     
 }

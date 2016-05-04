@@ -9,13 +9,11 @@
         <ui:define name="title">Соревнования</ui:define>
         <ui:define name="content">
             <h:form>
+                <h1>Соревнования</h1>
                 <p:dataTable var="competition" value="#{competitionsController.competitionsList}"
                              rows="10" paginator="true" id="competitions"
                              paginatorTemplate="{PageLinks}"
                              emptyMessage="Соревнований пока нет, зайдите позже.">
-                    <f:facet name="header">
-                        Соревнования
-                    </f:facet>
                     <p:column headerText="Название">
                         <h:outputText value="#{competition.name}" />
                         <br/>
@@ -23,14 +21,13 @@
                                 value="Войти"
                                 outcome="competition_problems">
                             <f:param name="competitionId" value="#{competition.id}"/>
-                            <f:param name="page" value="PROBLEMS"/>
                         </p:link>
                     </p:column>
                     <p:column headerText="Тип">
                         <h:outputText value="#{competitionsController.getTypeDescription(competition)}" />
                     </p:column>
                     <p:column headerText="Начало">
-                        <h:outputText value="#{competitionsController.getDateCompetition(competition)}" />
+                        <h:outputText value="#{competition.competitionStart}" converter="dateConverter" />
                     </p:column>
                     <p:column headerText="Длительность">
                         <h:outputText value="#{competition.competitionInterval}" />

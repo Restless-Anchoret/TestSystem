@@ -30,7 +30,6 @@ public class AuthorDecision implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
     @Size(min = 1, max = 15)
     @Column(name = "folder_name")
     private String folderName;

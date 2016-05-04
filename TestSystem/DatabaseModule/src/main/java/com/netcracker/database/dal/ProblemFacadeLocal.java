@@ -22,4 +22,6 @@ public interface ProblemFacadeLocal {
     
     Problem loadTestGroups(Problem problem);
     
+    List<Problem> findAll();
+    
 }

@@ -34,14 +34,13 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
 
     @Override
     public List<Submission> findByUserIdAndCompetitionProblemId(Object userId, Object competitionProblemId) {
-        CompetitionProblem competiotionProblem = competitionProblemFacade.find(competitionProblemId);
-        Date finish = new Date(competiotionProblem.getCompetitionId().getCompetitionStart().getTime());
-        finish.setTime(finish.getTime() + competiotionProblem.getCompetitionId().getCompetitionInterval() * 60000);
+        CompetitionProblem competitionProblem = competitionProblemFacade.find(competitionProblemId);
+        Date finish = getFinishCompetition(competitionProblem.getCompetitionId());
         TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionProblemId", 
                 Submission.class);
         query.setParameter("competitionProblemId", competitionProblemId);
         query.setParameter("userId", userId);
-        query.setParameter("start", competiotionProblem.getCompetitionId().getCompetitionStart());
+        query.setParameter("start", competitionProblem.getCompetitionId().getCompetitionStart());
         query.setParameter("finish", finish);
         return query.getResultList();
     }
@@ -65,27 +64,25 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
 
     @Override
     public List<Submission> findAllSubmissionsByCompetitionId(Object competitionId) {
-        Competition competiotion = competitionFacade.find(competitionId);
-        Date finish = new Date(competiotion.getCompetitionStart().getTime());
-        finish.setTime(finish.getTime() + competiotion.getCompetitionInterval() * 60000);
+        Competition competition = competitionFacade.find(competitionId);
+        Date finish = getFinishCompetition(competition);
         TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionProblemId", 
                 Submission.class);
         query.setParameter("competitionId", competitionId);
-        query.setParameter("start", competiotion.getCompetitionStart());
+        query.setParameter("start", competition.getCompetitionStart());
         query.setParameter("finish", finish);
         return query.getResultList();
     }
 
     @Override
     public List<Submission> findAllSubmissionsByUserIdAndCompetitionId(Object userId, Object competitionId) {
-        Competition competiotion = competitionFacade.find(competitionId);
-        Date finish = new Date(competiotion.getCompetitionStart().getTime());
-        finish.setTime(finish.getTime() + competiotion.getCompetitionInterval() * 60000);
+        Competition competition = competitionFacade.find(competitionId);
+        Date finish = getFinishCompetition(competition);
         TypedQuery query = em.createNamedQuery("Submission.findAllSubmissionsByUserIdAndCompetitionId", 
                 Submission.class);
         query.setParameter("competitionId", competitionId);
         query.setParameter("userId", userId);
-        query.setParameter("start", competiotion.getCompetitionStart());
+        query.setParameter("start", competition.getCompetitionStart());
         query.setParameter("finish", finish);
         List<Submission> result = query.getResultList();
         for (Submission submission: result)
@@ -93,6 +90,19 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
         return result;
     }
     
-    
+    private Date getFinishCompetition(Competition competition) {
+        Date result = new Date(competition.getCompetitionStart().getTime());
+        result.setTime(result.getTime() + 
+                competition.getCompetitionInterval() * 60000);
+        return result;
+    }
+
+    @Override
+    public Submission loadUserAndCompetitionProblemAndCompetition(Submission submission) {
+        submission = em.merge(submission);
+        submission.getCompetitionProblemId().getCompetitionId();
+        submission.getUserId();
+        return submission;
+    }
     
 }

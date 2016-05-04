@@ -8,15 +8,13 @@
         <ui:define name="title">Посылки</ui:define>
         <ui:define name="subcontent">
             <h:form>
+                <h1>Посылки</h1>
                 <p:dataTable var="submission" value="#{competitionController.submissions}"
                              rows="15" paginator="true" id="submissions"
                              paginatorTemplate="{PageLinks}"
                              emptyMessage="Посылок нет.">
-                    <f:facet name="header">
-                        Посылки
-                    </f:facet>
                     <p:column headerText="Когда">
-                        <h:outputText value="#{submission.submissionTime}" />
+                        <h:outputText value="#{submission.submissionTime}" converter="dateConverter" />
                     </p:column>
                     
                     <p:column headerText="Задача">

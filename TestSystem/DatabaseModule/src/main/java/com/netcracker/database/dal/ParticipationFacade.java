@@ -39,6 +39,19 @@ public class ParticipationFacade extends AbstractFacade<Participation> implement
         participation.getCompetitionId();
         return participation;
     }
+
+    @Override
+    public Participation findByCompetitionIdAndUserId(Object competitionId, Object userId) {
+        TypedQuery query = em.createNamedQuery("Participation.findByCompetitionIdAndUserId",
+                Participation.class);
+        query.setParameter("competitionId", competitionId);
+        query.setParameter("userId", userId);
+        List<Participation> results = query.getResultList();
+        if (results.isEmpty())
+            return null;
+        else
+            return results.get(0);
+    }
     
     
     

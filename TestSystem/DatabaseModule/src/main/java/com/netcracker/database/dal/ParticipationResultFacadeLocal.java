@@ -17,7 +17,8 @@ public interface ParticipationResultFacadeLocal {
     
     List<ParticipationResult> findByCompetitionId(Object competitionId);
     
-    List<ParticipationResult> findByCompetitionIdAndUserId(Object competitionId, Object userId);
+    ParticipationResult findByCompetitionIdAndUserIdAndCompetitionProblemId(
+            Object competitionId, Object userId, Object competitionProblemId);
     
     ParticipationResult loadCompetitionProblem(ParticipationResult participationResult);
     

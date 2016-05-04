@@ -13,11 +13,11 @@ import com.netcracker.database.entity.Submission;
 import com.netcracker.web.logging.WebLogging;
 import com.netcracker.web.session.AuthenticationController;
 import com.netcracker.web.util.CompetitionProblemComporatorOfProblemNumber;
-import com.netcracker.web.util.Pages;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
@@ -51,34 +51,29 @@ public class CompetitionController {
     private String currentCompilator;
     private String currentCompetitionProblem;
     private final long SIZELIMIT = 262144;
-    private String page;
     private List<Submission> submissions;
     
     @PostConstruct
     public void initPage() {
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        Integer id = Integer.parseInt(request.getParameter("competitionId"));
-        competitionId = id;
-        Pages currentPage = null;
+        Integer id;
         try {
-            currentPage = Pages.valueOf(request.getParameter("page"));
+            String strId = request.getParameter("competitionId");
+            if (strId == null) {
+                WebLogging.logger.log(Level.SEVERE, "competitionId is null");
+                return;
+            }
+            id = Integer.parseInt(strId);
         }
         catch(Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
-        }
-        if (currentPage == null) {
-            initProblemsPage();
             return;
         }
+        competitionId = id;
         authenticationEJB = AuthenticationController.getSessionAuthenticationEJB();
-        switch (currentPage) {
-            case PROBLEMS:
-                initProblemsPage();
-                break;
-            case SUBMSSIONS:
-                initSubmissionsPage();
-                break;
-        }
+        WebLogging.logger.log(Level.SEVERE, request.getRequestURI());
+        initProblemsPage();
+        initSubmissionsPage();
     }
     
     private void initProblemsPage() {
@@ -111,7 +106,7 @@ public class CompetitionController {
     
     public String loadStatementFile(CompetitionProblem competitionProblem) {
         Path pathStatementFile = applicationEJB.getFileSupplier().
-                getProblemStatement(competitionProblem.getCompetitionId().getFolderName());
+                getProblemStatement(competitionProblem.getProblemId().getFolderName());
         if (pathStatementFile == null) {
             return "fileNotFound";
         } else {
@@ -120,27 +115,26 @@ public class CompetitionController {
     }
     
     public String upLoadFile() {
+        WebLogging.logger.log(Level.INFO, "start upload ");
         if (file.getFileName().equals("") || currentCompetitionProblem == null || currentCompilator == null) {
             if (currentCompilator == null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка.", "Выбирите язык.");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка.", "Выберите язык.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
             if (currentCompetitionProblem == null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка.", "Выбирите задачу для которой хотите отослать решение.");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка.", "Выберите задачу для которой хотите отослать решение.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
             if (file.getFileName().equals("")) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", "Выбирите файл.");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", "Выберите файл.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
-            page = Pages.PROBLEMS.toString();
             return "competition_problems";
         }
         if (file.getSize() > SIZELIMIT) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", "Превышен допустимый размер файла (256 Кбайт).");
             FacesContext.getCurrentInstance().addMessage(null, message);
             file = null;
-            page = Pages.PROBLEMS.toString();
             return "competition_problems";
         }
         InputStream is;
@@ -150,32 +144,29 @@ public class CompetitionController {
             FacesMessage message = new FacesMessage("Ошибка загрузки файла.", "Произошда ошибка при загрузке файла, попробуйте загрузить еще раз.");
             FacesContext.getCurrentInstance().addMessage(null, message);
             WebLogging.logger.log(Level.SEVERE, null, ex);
-            page = Pages.PROBLEMS.toString();
             return "competition_problems";
         }
         if (competitionEJB.addSubmission(competitionId, getFromProblems(currentCompetitionProblem),
-                authenticationEJB.getCurrentUser(), getFromCompolators(currentCompilator), is, 
+                authenticationEJB.getCurrentUser(), getFromCompilators(currentCompilator), is, 
                 file.getFileName(), file.getSize())) {
-            page = Pages.SUBMSSIONS.toString();
             return "competition_submissions";
         }
         else {
             FacesMessage message = new FacesMessage("Ошибка загрузки файла.", "Произошда ошибка при загрузке файла, попробуйте загрузить еще раз.");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            page = Pages.PROBLEMS.toString();
             return "competition_problems";
         }
     }
     
     public CompetitionProblem getFromProblems(String name) {
         for (CompetitionProblem problem: competitionProblems) {
-            if (problem.getCompetitionId().getName().equals(name))
+            if (problem.getProblemId().getName().equals(name))
                 return problem;
         }
         return null;
     }
     
-    public Compilator getFromCompolators(String name) {
+    public Compilator getFromCompilators(String name) {
         for (Compilator compilator: compilators) {
             if (compilator.getName().equals(name))
                 return compilator;
@@ -229,14 +220,6 @@ public class CompetitionController {
 
     public void setCurrentCompetitionProblem(String currentCompetitionProblem) {
         this.currentCompetitionProblem = currentCompetitionProblem;
-    }
-
-    public String getPage() {
-        return page;
-    }
-
-    public void setPage(String page) {
-        this.page = page;
     }
 
     public List<Submission> getSubmissions() {

@@ -26,7 +26,7 @@ public class CompetitionsController {
     
     public List<Competition> getCompetitionsList() {
         try {
-            return competitionFacade.findAllCompetiotions(new int[] { 0, 30 });
+            return competitionFacade.findVisibleCompetiotions();
         } catch (Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
             return Collections.EMPTY_LIST;
@@ -39,11 +39,6 @@ public class CompetitionsController {
         } else {
             return "Тренировка";
         }
-    }
-    
-    public String getDateCompetition(Competition competition) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-        return format.format(competition.getCompetitionStart());
     }
     
     public boolean isStartedCompetiotion(Competition competition) {
