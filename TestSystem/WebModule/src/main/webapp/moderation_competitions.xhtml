@@ -24,7 +24,7 @@
                     <h:outputText value="#{competitionsController.getTypeDescription(competition)}" />
                 </p:column>
                 <p:column headerText="Начало">
-                    <h:outputText value="#{competitionsController.getDateCompetition(competition)}" />
+                    <h:outputText value="#{competition.competitionStart}" converter="dateConverter"/>
                 </p:column>
                 <p:column headerText="Длительность">
                     <h:outputText value="#{competition.competitionInterval}" />

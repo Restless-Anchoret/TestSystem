@@ -33,7 +33,7 @@ public class ModeratingCompetitionEJB {
     
     public List<Competition> getAllCompetitions() {
         try {
-            return competitionFacade.findAllCompetiotions(new int[] {0, 30});
+            return competitionFacade.findAllCompetiotions();
         } catch (Exception exception) {
             BusinessLogicLogging.logger.log(Level.FINE, "Exception while getting all competitions", exception);
             return Collections.EMPTY_LIST;
