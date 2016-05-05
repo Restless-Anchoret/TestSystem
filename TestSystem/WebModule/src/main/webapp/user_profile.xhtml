@@ -19,7 +19,7 @@
                     <f:convertDateTime dateStyle="full" timeStyle="long" type="both"/>
                 </h:outputText>
             </h:panelGrid>
-            <h:form rendered="#{profileController.profileOfCurrentUser}">
+            <h:form>
                 <h:panelGrid id="profileGrid" columns="2" cellpadding="5">
                     <h:outputText value="Старый пароль: "/>
                     <p:password id="oldPassword" value="#{profileController.oldPassword}" required="true"/>
@@ -33,7 +33,21 @@
                                 label="New password repetition" required="true"/>
                 </h:panelGrid>
                 <p:commandButton value="Сменить пароль" update="profileGrid"
-                                 action="#{profileController.doChangePassword()}" ajax="true"/>
+                                 action="#{profileController.doChangePassword()}"
+                                 ajax="true">
+                    <f:param name="userId" value="#{profileController.user.id}"/>
+                </p:commandButton>
+            </h:form>
+            <h:form rendered="#{profileController.needShowActuality}">
+                <h:panelGrid id="actualityGrid" columns="1" cellpadding="5">
+                    <h:outputText value="Активность: #{profileController.userActual}"/>
+                    <p:commandButton value="Активировать/деактивировать"
+                                     update="actualityGrid"
+                                     action="#{profileController.doChangeActuality()}"
+                                     ajax="true">
+                        <f:param name="userId" value="#{profileController.user.id}"/>
+                    </p:commandButton>
+                </h:panelGrid>
             </h:form>
         </ui:define>
     </ui:composition>

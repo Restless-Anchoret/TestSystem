@@ -1,6 +1,7 @@
 package com.netcracker.web.moderators;
 
 import com.netcracker.businesslogic.moderating.ModeratingUserEJB;
+import com.netcracker.businesslogic.users.RegistrationEJB;
 import com.netcracker.database.entity.User;
 import com.netcracker.web.util.JSFUtil;
 import java.util.List;
@@ -14,6 +15,8 @@ public class ModeratingUsersController {
 
     @EJB(beanName = "ModeratingUserEJB")
     private ModeratingUserEJB moderatingUserEJB;
+    @EJB(beanName = "RegistrationEJB")
+    private RegistrationEJB registrationEJB;
 
     public List<User> getParticipants() {
         return moderatingUserEJB.getAllParticipants();
@@ -24,11 +27,20 @@ public class ModeratingUsersController {
     }
     
     public void addNewParticipant() {
-        JSFUtil.addInfoMessage("Unsupported operation", "");
+        processRegistrationResult(registrationEJB.addNewParticipant());
     }
     
     public void addNewModerator() {
-        JSFUtil.addInfoMessage("Unsupported operation", "");
+        processRegistrationResult(registrationEJB.addNewModerator());
+    }
+    
+    public void processRegistrationResult(RegistrationEJB.Result result) {
+        if (result.getInfo().equals(RegistrationEJB.Info.SUCCESS)) {
+            JSFUtil.addInfoMessage("Пользователь успешно добавлен",
+                    "Логин нового пользователя: " + result.getUser().getLogin());
+        } else {
+            JSFUtil.addErrorMessage("Ошибка при добавлении пользователя", "");
+        }
     }
     
 }

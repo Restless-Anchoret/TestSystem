@@ -7,16 +7,6 @@
         <session>
             <ejb-name>ApplicationEJB</ejb-name>
             <env-entry>
-                <env-entry-name>adminDefaultLogin</env-entry-name>
-                <env-entry-type>java.lang.String</env-entry-type>
-                <env-entry-value>admin</env-entry-value>
-            </env-entry>
-            <env-entry>
-                <env-entry-name>adminDefaultPassword</env-entry-name>
-                <env-entry-type>java.lang.String</env-entry-type>
-                <env-entry-value>password943</env-entry-value>
-            </env-entry>
-            <env-entry>
                 <env-entry-name>fileSystemPath</env-entry-name>
                 <env-entry-type>java.lang.String</env-entry-type>
                 <env-entry-value>D:\NCProject\fileSystem</env-entry-value>
@@ -25,6 +15,29 @@
                 <env-entry-name>testingSystemThreads</env-entry-name>
                 <env-entry-type>java.lang.Integer</env-entry-type>
                 <env-entry-value>10</env-entry-value>
+            </env-entry>
+        </session>
+        <session>
+            <ejb-name>RegistrationEJB</ejb-name>
+            <env-entry>
+                <env-entry-name>adminDefaultLogin</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>admin</env-entry-value>
+            </env-entry>
+            <env-entry>
+                <env-entry-name>moderatorDefaultLoginPrefix</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>moderator</env-entry-value>
+            </env-entry>
+            <env-entry>
+                <env-entry-name>participantDefaultLoginPrefix</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>participant</env-entry-value>
+            </env-entry>
+            <env-entry>
+                <env-entry-name>defaultPassword</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>password943</env-entry-value>
             </env-entry>
         </session>
     </enterprise-beans>
