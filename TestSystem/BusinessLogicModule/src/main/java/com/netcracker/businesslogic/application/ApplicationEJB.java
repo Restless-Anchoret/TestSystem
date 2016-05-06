@@ -29,11 +29,7 @@ import javax.ejb.LockType;
 @LocalBean
 @Lock(LockType.READ)
 public class ApplicationEJB {
-
-    @Resource(name = "adminDefaultLogin")
-    private String adminDefaultLogin;
-    @Resource(name = "adminDefaultPassword")
-    private String adminDefaultPassword;
+    
     @Resource(name = "fileSystemPath")
     private String fileSystemPath;
     @Resource(name = "testingSystemThreads")
@@ -48,13 +44,9 @@ public class ApplicationEJB {
     @EJB(beanName = "RegistrationEJB")
     private RegistrationEJB registrationEJB;
 
-    public String getAdminDefaultLogin() {
-        return adminDefaultLogin;
-    }
-
     @PostConstruct
     public void initApplication() {
-        registrationEJB.checkAdminRegistration(adminDefaultLogin, adminDefaultPassword);
+        registrationEJB.checkAdminRegistration(/*adminDefaultLogin, adminDefaultPassword*/);
         fileSupplier = new StandardFileSupplier(Paths.get(fileSystemPath));
         monitorPool = StandardMonitorPool.getDefault();
         monitorPool.setDatabaseDelegate(databaseDelegateEJB);

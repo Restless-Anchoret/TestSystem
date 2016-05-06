@@ -21,7 +21,17 @@
                     </p:link>
                 </p:column>
                 <p:column headerText="Тип">
-                    <h:outputText value="#{problem.type}" />
+                    <h:outputText value="#{problem.type}"
+                                  converter="problemTypeConverter"/>
+                </p:column>
+                <p:column headerText="Лимит по времени">
+                    <h:outputText value="#{problem.timeLimit} ms"/>
+                </p:column>
+                <p:column headerText="Лимит по памяти">
+                    <h:outputText value="#{problem.memoryLimit} MB"/>
+                </p:column>
+                <p:column headerText="Валидация">
+                    <h:outputText value="#{moderatingProblemsController.getValidatedDescription(problem)}"/>
                 </p:column>
             </p:dataTable>
             <h:form>

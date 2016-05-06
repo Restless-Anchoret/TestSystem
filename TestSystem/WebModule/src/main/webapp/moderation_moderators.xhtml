@@ -21,10 +21,11 @@
                     </p:link>
                 </p:column>
                 <p:column headerText="Активен">
-                    <h:outputText value="#{user.actual}" />
+                    <h:outputText value="#{moderatingUsersController.getActualityDescription(user)}"/>
                 </p:column>
                 <p:column headerText="Дата регистрации">
-                    <h:outputText value="#{user.registrationDate}" />
+                    <h:outputText value="#{user.registrationDate}"
+                                  converter="dateConverter"/>
                 </p:column>
             </p:dataTable>
             <h:form>

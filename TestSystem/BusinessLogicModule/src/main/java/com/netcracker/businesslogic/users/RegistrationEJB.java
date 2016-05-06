@@ -5,7 +5,9 @@ import com.netcracker.businesslogic.support.HashCreator;
 import com.netcracker.database.dal.UserFacadeLocal;
 import com.netcracker.database.entity.User;
 import java.util.Date;
+import java.util.Random;
 import java.util.logging.Level;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
@@ -14,10 +16,23 @@ import javax.ejb.LocalBean;
 @LocalBean
 public class RegistrationEJB {
     
+    private static final int RANDOM_ADDING_TRIES = 20;
+    private static final int RANDOM_NUMBER_SYMBOLS = 8;
+    
+    @Resource(name = "adminDefaultLogin")
+    private String adminDefaultLogin;
+    @Resource(name = "moderatorDefaultLoginPrefix")
+    private String moderatorDefaultLoginPrefix;
+    @Resource(name = "participantDefaultLoginPrefix")
+    private String participantDefaultLoginPrefix;
+    @Resource(name = "defaultPassword")
+    private String defaultPassword;
+    
     @EJB(beanName = "UserFacade")
     private UserFacadeLocal userFacade;
+    private Random random = new Random();
     
-    public void checkAdminRegistration(String adminDefaultLogin, String adminDefaultPassword) {
+    public void checkAdminRegistration(/*String adminDefaultLogin, String adminDefaultPassword*/) {
         User user = null;
         try {
             user = userFacade.getAdmin();
@@ -27,11 +42,48 @@ public class RegistrationEJB {
         }
         if (user == null) {
             Result adminRegistrationResult = tryRegistrateActual(adminDefaultLogin,
-                    adminDefaultPassword, Role.ADMIN);
+                    defaultPassword, Role.ADMIN);
             String message = "Trying to registrate admin. Result: " +
                     adminRegistrationResult.getInfo().toString();
             BusinessLogicLogging.logger.info(message);
         }
+    }
+    
+    public Result addNewModerator() {
+        String newLogin = findUnusedLoginWithPrefix(moderatorDefaultLoginPrefix);
+        if (newLogin == null) {
+            return new Result(null, Info.FAIL);
+        }
+        return tryRegistrateActual(newLogin, defaultPassword, Role.MODERATOR);
+    }
+    
+    public Result addNewParticipant() {
+        String newLogin = findUnusedLoginWithPrefix(participantDefaultLoginPrefix);
+        if (newLogin == null) {
+            return new Result(null, Info.FAIL);
+        }
+        return tryRegistrateNotActual(newLogin, defaultPassword, Role.PARTICIPANT);
+    }
+    
+    private String findUnusedLoginWithPrefix(String prefix) {
+        for (int i = 0; i < RANDOM_ADDING_TRIES; i++) {
+            String newLogin = prefix + getRandomNumberLine();
+            User user = userFacade.findByLogin(newLogin);
+            if (user == null) {
+                return newLogin;
+            }
+        }
+        return null;
+    }
+    
+    private String getRandomNumberLine() {
+        int number = random.nextInt();
+        StringBuilder builder = new StringBuilder(RANDOM_NUMBER_SYMBOLS);
+        for (int i = 0; i < RANDOM_NUMBER_SYMBOLS; i++) {
+            builder.append(Math.abs(number % 10));
+            number /= 10;
+        }
+        return builder.toString();
     }
     
     public Result tryRegistrateActual(String login, String password, Role role) {

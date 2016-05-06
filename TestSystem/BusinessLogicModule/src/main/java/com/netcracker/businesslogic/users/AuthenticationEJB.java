@@ -25,7 +25,7 @@ public class AuthenticationEJB {
     public Result tryAuthenticateUser(String login, String password) {
         try {
             User user = userFacade.findByLogin(login);
-            if (user == null) {
+            if (user == null || !user.getActual()) {
                 return new Result(null, Info.REFUSE);
             }
             String hashSalt = user.getHashSalt();

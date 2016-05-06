@@ -2,6 +2,7 @@ package com.netcracker.web.participants;
 
 import com.netcracker.businesslogic.users.AuthenticationEJB;
 import com.netcracker.businesslogic.users.PasswordChangeEJB;
+import com.netcracker.businesslogic.users.Role;
 import com.netcracker.database.dal.UserFacadeLocal;
 import com.netcracker.database.entity.User;
 import com.netcracker.web.logging.WebLogging;
@@ -51,6 +52,10 @@ public class ProfileController {
     public void setUser(User user) {
         this.user = user;
     }
+    
+    public String getUserActual() {
+        return (user.getActual() ? "Активен" : "Не активен");
+    }
 
     public String getOldPassword() {
         return oldPassword;
@@ -69,7 +74,15 @@ public class ProfileController {
     }
     
     public boolean isProfileOfCurrentUser() {
-        return user.getId().equals(authenticationEJB.getCurrentUser().getId());
+        return authenticationEJB.getCurrentUser().getId().equals(user.getId());
+    }
+    
+    public boolean isNeedShowActuality() {
+        User currentUser = authenticationEJB.getCurrentUser();
+        return currentUser.getRole().equals(Role.ADMIN.toString().toLowerCase()) &&
+                !user.getRole().equals(Role.ADMIN.toString().toLowerCase()) ||
+                currentUser.getRole().equals(Role.MODERATOR.toString().toLowerCase()) &&
+                user.getRole().equals(Role.PARTICIPANT.toString().toLowerCase());
     }
     
     public void doChangePassword() {
@@ -81,6 +94,19 @@ public class ProfileController {
             case FAIL: summary = "Ошибка при смене пароля"; break;
         }
         JSFUtil.addErrorMessage(summary, "");
+    }
+    
+    public void doChangeActuality() {
+        boolean actualInStart = user.getActual();
+        try {
+            user.setActual(!user.getActual());
+            userFacade.edit(user);
+            JSFUtil.addInfoMessage("Активность пользователя успешно изменена", "");
+        } catch (Exception exception) {
+            user.setActual(actualInStart);
+            WebLogging.logger.log(Level.FINE, "Exception while changing actuality of user", exception);
+            JSFUtil.addErrorMessage("Ошибка при изменении активности пользователя", "");
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.netcracker.businesslogic.moderating;
 
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
+import com.netcracker.businesslogic.users.RegistrationEJB;
 import com.netcracker.database.dal.UserFacadeLocal;
 import com.netcracker.database.entity.User;
 import java.util.Collections;
@@ -13,7 +14,7 @@ import javax.ejb.Stateless;
 @Stateless
 @LocalBean
 public class ModeratingUserEJB {
-
+    
     @EJB(beanName = "UserFacade")
     private UserFacadeLocal userFacade;
     
