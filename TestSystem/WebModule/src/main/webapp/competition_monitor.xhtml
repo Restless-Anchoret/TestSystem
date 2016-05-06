@@ -7,12 +7,33 @@
     <ui:composition template="competition_template.xhtml">
         <ui:define name="title">Монитор</ui:define>
         <ui:define name="subcontent">
-            <f:metadata>
-                <f:viewParam name="competitionId" value="#{competitionController.competitionId}"/>
-            </f:metadata>
-            <h1>Монитор</h1>
-            <br/>
-            <h:outputText value="Id соревнования #{competitionController.competitionId}"/>
+            <h:form>
+                <h1>Монитор</h1>
+                <p:dataTable var="result" value="#{competitionController.results}"
+                             emptyMessage="Соревнование еще не началось.">
+                    <p:column headerText="Место">
+                        <h:outputText value="#{result.place}" />
+                    </p:column>
+
+                    <p:column headerText="Участник">
+                        <h:outputText value="#{competitionController.getUser(result.id)}" />
+                    </p:column>
+
+                    <p:columns value="#{competitionController.columns}" var="column"
+                               headerText="#{column.header}">
+                        <h:outputText value="#{competitionController.getPointsOfProblem(result, column.value)}" />
+                    </p:columns>
+                    
+                    <p:column headerText="Решено">
+                        <h:outputText value="#{competitionController.getCountSolveProblem(result)}" />
+                    </p:column>
+
+                    <p:column headerText="Время">
+                        <h:outputText value="#{result.fine}" />
+                    </p:column>  
+                </p:dataTable>               
+            </h:form>
+            
         </ui:define>
     </ui:composition>
 </html>

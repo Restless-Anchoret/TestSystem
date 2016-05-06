@@ -7,8 +7,8 @@ import java.util.Comparator;
 public class CompetitionProblemComporatorOfProblemNumber implements Comparator<CompetitionProblem> {
 
     @Override
-    public int compare(CompetitionProblem t, CompetitionProblem t1) {
-        return t.getProblemNumber().compareToIgnoreCase(t1.getProblemNumber());
+    public int compare(CompetitionProblem problem, CompetitionProblem problem1) {
+        return problem.getProblemNumber().compareToIgnoreCase(problem1.getProblemNumber());
     }
 
 }

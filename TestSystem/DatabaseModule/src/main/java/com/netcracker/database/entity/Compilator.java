@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "compilator", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Compilator.findAll", query = "SELECT c FROM Compilator c"),
+    @NamedQuery(name = "Compilator.findAll", query = "SELECT c FROM Compilator c ORDER BY c.id"),
     @NamedQuery(name = "Compilator.findById", query = "SELECT c FROM Compilator c WHERE c.id = :id"),
     @NamedQuery(name = "Compilator.findByName", query = "SELECT c FROM Compilator c WHERE c.name = :name")})
 public class Compilator implements Serializable {

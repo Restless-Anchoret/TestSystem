@@ -64,8 +64,6 @@ public class Problem implements Serializable {
     @NotNull
     @Column(name = "validated")
     private boolean validated;
-    @Basic(optional = false)
-    @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "folder_name")
     private String folderName;

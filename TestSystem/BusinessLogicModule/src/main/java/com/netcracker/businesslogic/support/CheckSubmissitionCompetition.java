@@ -17,7 +17,7 @@ import java.util.logging.Level;
 
 public class CheckSubmissitionCompetition extends CheckSubmissition{
 
-    ParticipationResultFacadeLocal participationResultFacade;
+    protected ParticipationResultFacadeLocal participationResultFacade;
     
     public CheckSubmissitionCompetition(Submission submission, SubmissionFacadeLocal submissionFacade,
             ParticipationResultFacadeLocal participationResultFacade) {
@@ -28,14 +28,13 @@ public class CheckSubmissitionCompetition extends CheckSubmissition{
     @Override
     public void process(TestingInfo info) {
         super.process(info);
-        BusinessLogicLogging.logger.log(Level.INFO, "start");
         submissionFacade.loadUserAndCompetitionProblemAndCompetition(submission);
         List<Submission> submissions = submissionFacade.findByUserIdAndCompetitionProblemId(
                 submission.getUserId().getId(), submission.getCompetitionProblemId().getId());
         TreeMap<Date, VerdictInfo> treeMap = new TreeMap<>();
         VerdictInfo verdictInfo;
         for (Submission s: submissions) {
-            verdictInfo = new VerdictInfo(Verdict.valueOf(s.getVerdict()), s.getPoints());
+            verdictInfo = new VerdictInfo(Verdict.valueOf(s.getVerdict().toUpperCase()), s.getPoints());
             treeMap.put(s.getSubmissionTime(), verdictInfo);
         }
         ProblemResult problemResult = info.getEvaluationSystem().countProblemResult(treeMap, 
@@ -54,7 +53,6 @@ public class CheckSubmissitionCompetition extends CheckSubmissition{
         participationResult.setFine(problemResult.getFine());
         participationResult.setPoints(problemResult.getPoints());
         participationResultFacade.edit(participationResult);
-        BusinessLogicLogging.logger.log(Level.INFO, "end");
     }
 
     

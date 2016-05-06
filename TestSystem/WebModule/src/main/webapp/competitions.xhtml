@@ -17,9 +17,15 @@
                     <p:column headerText="Название">
                         <h:outputText value="#{competition.name}" />
                         <br/>
-                        <p:link rendered="#{competitionsController.isStartedCompetiotion(competition)}"
+                        <p:link disabled="#{not competitionsController.isAccess(competition)}"      
                                 value="Войти"
                                 outcome="competition_problems">
+                            <f:param name="competitionId" value="#{competition.id}"/>
+                        </p:link>
+                        <br/>
+                        <p:link rendered="#{competitionsController.toRegistrate(competition)}"
+                                value="Зарегистрироваться"
+                                outcome="competition_registration">
                             <f:param name="competitionId" value="#{competition.id}"/>
                         </p:link>
                     </p:column>

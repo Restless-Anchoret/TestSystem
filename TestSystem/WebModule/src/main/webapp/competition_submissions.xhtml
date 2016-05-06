@@ -7,6 +7,9 @@
     <ui:composition template="competition_template.xhtml">
         <ui:define name="title">Посылки</ui:define>
         <ui:define name="subcontent">
+            <f:metadata>
+                <f:viewAction action="#{competitionController.initSubmissionsPage()}" />
+            </f:metadata>
             <h:form>
                 <h1>Посылки</h1>
                 <p:dataTable var="submission" value="#{competitionController.submissions}"

@@ -21,11 +21,6 @@ public class CheckSubmissition implements TestResultHandler{
     
     @Override
     public void process(TestingInfo info) {
-        BusinessLogicLogging.logger.log(Level.INFO, "start process");
-        if (submission == null)
-            BusinessLogicLogging.logger.log(Level.INFO, "null");
-        else
-            BusinessLogicLogging.logger.log(Level.INFO, "not null");
         submission.setVerdict(info.getVerdictInfo().getVerdict().name());
         submission.setDecisionMemory(info.getVerdictInfo().getDecisionTime());
         submission.setDecisionTime(info.getVerdictInfo().getDecisionTime());
@@ -34,10 +29,7 @@ public class CheckSubmissition implements TestResultHandler{
             submission.setWrongTestNumber(null);
         else
             submission.setWrongTestNumber(info.getVerdictInfo().getWrongTestNumber().shortValue());
-        if (submissionFacade == null)
-            BusinessLogicLogging.logger.log(Level.INFO, "error");
         submissionFacade.edit(submission);
-        BusinessLogicLogging.logger.log(Level.INFO, "stop process");
     }
 
 }

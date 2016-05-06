@@ -29,6 +29,7 @@ import com.netcracker.testing.system.ProblemFileSupplier;
 import com.netcracker.testing.system.TestGroupType;
 import com.netcracker.testing.system.TestTable;
 import com.netcracker.testing.system.TestingInfo;
+import com.netcracker.testing.system.Verdict;
 import com.netcracker.testing.tester.ProblemTester;
 import com.netcracker.testing.tester.ProblemTesterRegistry;
 import java.io.File;
@@ -39,6 +40,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -93,13 +96,21 @@ public class CompetitionEJB {
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public boolean addSubmission(Integer competitionId, CompetitionProblem competitionProblem, 
             User user, Compilator compilator, InputStream file, String fileName, Long fileSize) {
-        //applicationEJB.getMonitorPool().getMonitor(competitionId);
+        applicationEJB.getMonitorPool().getMonitor(competitionId);
         Submission submission = new Submission();
         submission.setCompetitionProblemId(competitionProblem);
         submission.setUserId(user);
         submission.setCompilatorId(compilator);
-        submission.setSubmissionTime(new Date());
-        submission.setVerdict("проверяется");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        Date result;
+        try {
+            result = format.parse("2016.01.01 00:05:00");
+        } catch (ParseException ex) {
+            BusinessLogicLogging.logger.log(Level.SEVERE, null, ex);
+            result = new Date();
+        }
+        submission.setSubmissionTime(result);
+        submission.setVerdict(Verdict.WAITING.toString());
         try {
             submissionFacade.create(submission);
             submission.setFolderName(submission.getId().toString());
@@ -142,17 +153,16 @@ public class CompetitionEJB {
             testTable.putTestGroup(TestGroupType.valueOf(testGroup.getTestGroupType().toUpperCase()),
                     testGroup.getPointsForTest(), testGroup.getTestsQuantity());
         CheckSubmissition checkSubmissition;
-        //if (submission.getSubmissionTime().compareTo(getCompetitionEnd(competition)) < 0)
+        if (submission.getSubmissionTime().compareTo(getCompetitionEnd(competition)) < 0)
             checkSubmissition = new CheckSubmissitionCompetition(submission, submissionFacade,
                 participationResultFacade);
-//        else
-//            checkSubmissition = new CheckSubmissition(submission);
+        else
+            checkSubmissition = new CheckSubmissition(submission, submissionFacade);
         TestingInfo testingInfo = new TestingInfo(checkSubmissition,
                 problemTester, evaluationSystem, languageToolkit, checker, codeFileSupplier,
                 problemFileSupplier, competition.getPretestsOnly(),
                 competitionProblem.getProblemId().getTimeLimit(), 
                 competitionProblem.getProblemId().getMemoryLimit(), testTable);
-        BusinessLogicLogging.logger.log(Level.INFO, "add in test system");
         applicationEJB.getTestingSystem().addSubmission(testingInfo);
         return true;
     }

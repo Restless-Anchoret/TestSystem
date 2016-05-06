@@ -4,6 +4,8 @@ import com.netcracker.businesslogic.support.DatabaseDelegateEJB;
 import com.netcracker.businesslogic.support.FileSystemDelegateImpl;
 import com.netcracker.businesslogic.support.TestingFileSupplierImpl;
 import com.netcracker.businesslogic.users.RegistrationEJB;
+import com.netcracker.database.dal.ParticipationResultFacadeLocal;
+import com.netcracker.database.dal.SubmissionFacadeLocal;
 import com.netcracker.filesystem.supplier.FileSupplier;
 import com.netcracker.filesystem.supplier.StandardFileSupplier;
 import com.netcracker.monitoring.conservator.ResultsConservator;

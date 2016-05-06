@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Participation.findById", query = "SELECT p FROM Participation p WHERE p.id = :id"),
-    @NamedQuery(name = "Participation.findByCompetitionIdAndUserId", query = "SELECT p FROM Participation p WHERE p.competitionId.id = :competitionId AND p.userId.id = :userId")})
+    @NamedQuery(name = "Participation.findByCompetitionIdAndUserId", query = "SELECT p FROM Participation p WHERE p.competitionId.id = :competitionId AND p.userId.id = :userId ORDER BY p.id")})
 public class Participation implements Serializable {
 
     private static final long serialVersionUID = 1L;
