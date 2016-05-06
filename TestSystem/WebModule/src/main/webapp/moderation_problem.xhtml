@@ -12,11 +12,33 @@
             <h:form>
                 <h:panelGrid id="problemGrid" columns="2" cellpadding="5">
                     <h:outputText value="Название: "/>
-                    <p:inputText value="#{moderationProblemController.problem.name}"/>
+                    <p:inputText value="#{moderatingProblemController.problem.name}"/>
+                    <h:outputText value="Тип задачи:"/>
+                    <p:selectOneMenu value="#{moderatingProblemController.problem.type}"
+                                     style="width:250px">
+                        <f:selectItems value="#{moderatingProblemController.problemTypeItems}"/>
+                    </p:selectOneMenu>
+                    <h:outputText value="Тип чекера:"/>
+                    <p:selectOneMenu value="#{moderatingProblemController.problem.checkerType}"
+                                     style="width:250px">
+                        <f:selectItems value="#{moderatingProblemController.checkerTypeItems}"/>
+                    </p:selectOneMenu>
+                    <h:outputText value="Ограничение по времени:"/>
+                    <p:inputText value="#{moderatingProblemController.problem.timeLimit}"/>
+                    <h:outputText value="Ограничение по памяти:"/>
+                    <p:inputText value="#{moderatingProblemController.problem.memoryLimit}"/>
+                    <h:outputText value="Имеет файл с условием:"/>
+                    <p:selectBooleanCheckbox value="#{moderatingProblemController.problem.descriptionFileExists}"/>
+                    <h:outputText value="Проверена:"/>
+                    <p:selectBooleanCheckbox value="#{moderatingProblemController.problem.validated}"/>
                 </h:panelGrid>
                 <p:commandButton value="Сохранить" update="problemGrid"
-                                 action="#{moderationProblemController.saveProblemChanges()}">
-                    <f:param name="id" value="#{moderationProblemController.problem.id}"/>
+                                 action="#{moderatingProblemController.saveProblemChanges()}">
+                    <f:param name="id" value="#{moderatingProblemController.problem.id}"/>
+                </p:commandButton>
+                <p:commandButton value="Загрузить тесты"
+                                 action="#{moderatingProblemController.loadTests()}">
+                    <f:param name="id" value="#{moderatingProblemController.problem.id}"/>
                 </p:commandButton>
             </h:form>
         </ui:define>

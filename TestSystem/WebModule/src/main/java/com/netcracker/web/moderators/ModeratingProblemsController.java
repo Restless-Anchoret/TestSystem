@@ -1,7 +1,6 @@
 package com.netcracker.web.moderators;
 
 import com.netcracker.businesslogic.moderating.ModeratingProblemEJB;
-import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.Problem;
 import com.netcracker.web.util.JSFUtil;
 import java.util.List;
@@ -20,10 +19,18 @@ public class ModeratingProblemsController {
         return moderatingProblemEJB.getAllProblems();
     }
     
+    public String getValidatedDescription(Problem problem) {
+        if (problem.getValidated()) {
+            return "Проверена";
+        } else {
+            return "Не проверена";
+        }
+    }
+    
     public void addNewProblem() {
         Problem problem = moderatingProblemEJB.addNewProblem();
         if (problem == null) {
-            JSFUtil.addErrorMessage("Exception while adding problem", "");
+            JSFUtil.addErrorMessage("Ошибка при добавлении задачи", "");
         }
     }
 

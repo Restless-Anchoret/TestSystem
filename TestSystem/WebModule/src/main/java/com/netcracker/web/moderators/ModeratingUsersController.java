@@ -26,6 +26,14 @@ public class ModeratingUsersController {
         return moderatingUserEJB.getAllModerators();
     }
     
+    public String getActualityDescription(User user) {
+        if (user.getActual()) {
+            return "Активен";
+        } else {
+            return "Не активен";
+        }
+    }
+    
     public void addNewParticipant() {
         processRegistrationResult(registrationEJB.addNewParticipant());
     }

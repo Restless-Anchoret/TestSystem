@@ -23,6 +23,13 @@
                 <p:column headerText="Тип">
                     <h:outputText value="#{competitionsController.getTypeDescription(competition)}" />
                 </p:column>
+                <p:column headerText="Тип регистрации">
+                    <h:outputText value="#{competition.registrationType}"
+                                  converter="registrationTypeConverter"/>
+                </p:column>
+                <p:column headerText="Система оценивания">
+                    <h:outputText value="#{competition.evaluationType}"/>
+                </p:column>
                 <p:column headerText="Начало">
                     <h:outputText value="#{competition.competitionStart}" converter="dateConverter"/>
                 </p:column>

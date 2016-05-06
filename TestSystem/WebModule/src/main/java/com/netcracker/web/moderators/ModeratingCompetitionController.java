@@ -19,7 +19,7 @@ import javax.inject.Named;
 
 @Named
 @RequestScoped
-public class ModerationCompetitionController {
+public class ModeratingCompetitionController {
 
     @EJB(beanName = "CompetitionFacade")
     private CompetitionFacadeLocal competitionFacade;
@@ -71,18 +71,18 @@ public class ModerationCompetitionController {
     
     public void saveCompetitionChanges() {
         try {
-            WebLogging.logger.log(Level.INFO, competition.getId().toString());
-            WebLogging.logger.log(Level.INFO, competition.getName());
-            if (competition.getHoldCompetition())
-                WebLogging.logger.log(Level.INFO, "да");
-            else
-                WebLogging.logger.log(Level.INFO, "нет");
-            WebLogging.logger.log(Level.INFO, competition.getEvaluationType());
-            WebLogging.logger.log(Level.INFO, competition.getRegistrationType());
-            WebLogging.logger.log(Level.INFO, competition.getFolderName());
-            WebLogging.logger.log(Level.INFO, competition.getCompetitionStart().toString());
-            WebLogging.logger.log(Level.INFO, competition.getCompetitionInterval().toString());
-            WebLogging.logger.log(Level.INFO, competition.getIntervalFrozen().toString());
+//            WebLogging.logger.log(Level.INFO, competition.getId().toString());
+//            WebLogging.logger.log(Level.INFO, competition.getName());
+//            if (competition.getHoldCompetition())
+//                WebLogging.logger.log(Level.INFO, "да");
+//            else
+//                WebLogging.logger.log(Level.INFO, "нет");
+//            WebLogging.logger.log(Level.INFO, competition.getEvaluationType());
+//            WebLogging.logger.log(Level.INFO, competition.getRegistrationType());
+//            WebLogging.logger.log(Level.INFO, competition.getFolderName());
+//            WebLogging.logger.log(Level.INFO, competition.getCompetitionStart().toString());
+//            WebLogging.logger.log(Level.INFO, competition.getCompetitionInterval().toString());
+//            WebLogging.logger.log(Level.INFO, competition.getIntervalFrozen().toString());
             competitionFacade.edit(competition);
             JSFUtil.addInfoMessage("Информация о соревновании сохранена", "");
         } catch (Exception exception) {
