@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
     <ui:composition template="main_template.xhtml">
         <ui:define name="title">Соревнования</ui:define>
         <ui:define name="content">
@@ -37,6 +38,13 @@
                     </p:column>
                     <p:column headerText="Длительность">
                         <h:outputText value="#{competition.competitionInterval}" />
+                    </p:column>
+                    <p:column headerText="До начала осталось">
+                        <pe:timer timeout="#{competitionsController.getSecondsBeforeStart(competition)}" 
+                                  format="HH:mm:ss" update="competitions" 
+                                  rendered="#{competitionsController.isViewTimer(competition)}"/>
+                        <h:outputText value="больше 24 часов"
+                                      rendered="#{not competitionsController.isViewTimer(competition)}"/>
                     </p:column>
                 </p:dataTable>
             </h:form>

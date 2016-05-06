@@ -30,7 +30,7 @@ public class DateConverter implements Converter {
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
         Date date = (Date) value;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         return format.format(date);
     }
 

@@ -192,14 +192,12 @@ public class CompetitionController {
                 FacesContext.getCurrentInstance().addMessage(null, message);
             }
             file = null;
-            //return "competition_problems";
             return;
         }
         if (file.getSize() > SIZELIMIT) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", "Превышен допустимый размер файла (256 Кбайт).");
             FacesContext.getCurrentInstance().addMessage(null, message);
             file = null;
-            //return "competition_problems";
             return;
         }
         InputStream is;
@@ -210,7 +208,6 @@ public class CompetitionController {
             FacesContext.getCurrentInstance().addMessage(null, message);
             WebLogging.logger.log(Level.SEVERE, null, ex);
             file = null;
-            //return "competition_problems";
             return;
         }
         if (competitionEJB.addSubmission(competitionId, getFromProblems(currentCompetitionProblem),
@@ -219,13 +216,11 @@ public class CompetitionController {
             file = null;
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Файл отправлен.", "Результат можно посмотреть во вкладке посылки.");
             FacesContext.getCurrentInstance().addMessage(null, message);
-            //return "competition_submissions";
         }
         else {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", "Произошда ошибка при загрузке файла, попробуйте загрузить еще раз.");
             FacesContext.getCurrentInstance().addMessage(null, message);
             file = null;
-            //return "competition_problems";
         }
     }
     
