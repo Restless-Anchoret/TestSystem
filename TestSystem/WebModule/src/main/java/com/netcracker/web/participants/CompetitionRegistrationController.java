@@ -3,6 +3,7 @@ package com.netcracker.web.participants;
 import com.netcracker.businesslogic.holding.RegistrationType;
 import com.netcracker.businesslogic.users.AuthenticationEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
+import com.netcracker.database.dal.ParticipationFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.Participation;
 import com.netcracker.database.entity.PersonalData;
@@ -21,24 +22,27 @@ public class CompetitionRegistrationController {
 
     @EJB(beanName = "CompetitionFacade")
     private CompetitionFacadeLocal competitionFacade;
+    @EJB(beanName = "ParticipationFacade")
+    private ParticipationFacadeLocal participationFacade;
     private AuthenticationEJB authenticationEJB;
-    private Competition competition = new Competition();
-    private PersonalData personalData = new PersonalData();
+    private Competition competition;
+    private PersonalData personalData;
     private boolean alreadyMadeRequest = false;
+    private String patronymic; 
 
     @PostConstruct
     public void initController() {
+        competition = new Competition();
+        personalData = new PersonalData();
         try {
             authenticationEJB = AuthenticationController.getSessionAuthenticationEJB();
-            Integer id = Integer.parseInt(JSFUtil.getRequestParameter("id"));
+            Integer id = Integer.parseInt(JSFUtil.getRequestParameter("competitionId"));
             competition = competitionFacade.find(id);
-            for (Participation participation: competition.getParticipationList()) {
-                if (participation.getUserId().getLogin().equals(authenticationEJB.getCurrentUser().getLogin())) {
-                    alreadyMadeRequest = true;
-                    break;
-                }
-            }
-        } catch (Exception exception) {
+            Participation participation = participationFacade.findByCompetitionIdAndUserId(
+                    competition.getId(), authenticationEJB.getCurrentUser().getId());
+            if (participation != null)
+                alreadyMadeRequest = true;
+        } catch (Throwable exception) {
             WebLogging.logger.log(Level.FINE, "Exception while loading competition", exception);
         }
     }
@@ -78,14 +82,28 @@ public class CompetitionRegistrationController {
     public void registrateForCompetition() {
         try {
             if (isNeedPersonalData()) {
+                personalData.setPatronymic(patronymic);
                 competitionFacade.registrationNewParticipation(competition, authenticationEJB.getCurrentUser(), personalData);
             } else {
                 competitionFacade.registrationNewParticipation(competition, authenticationEJB.getCurrentUser());
             }
             JSFUtil.addInfoMessage("Регистрация на соревнование прошла успешно", "");
-        } catch (Exception exception) {
-            JSFUtil.addErrorMessage("Ошибка при регистрации", "");
+        } catch (Throwable exception) {
+            JSFUtil.addErrorMessage("Ошибка при регистрации", 
+                    "Произощла ошибка при регистрации, повторите попытку позже.");
+            WebLogging.logger.log(Level.SEVERE, null, exception);
         }
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        if (patronymic.equals(""))
+            this.patronymic = null;
+        else
+            this.patronymic = patronymic;
     }
 
 }

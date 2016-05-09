@@ -66,6 +66,7 @@ public class CompetitionController {
     private List<Participation> participations;
     private List<MonitorColumn> columns;
     private String competitionType;
+    private Competition competition;
     
     @PostConstruct
     public void initPage() {
@@ -74,11 +75,13 @@ public class CompetitionController {
         Integer id;
         try {
             String strId = request.getParameter("competitionId");
+            WebLogging.logger.log(Level.SEVERE, "competitionId " + strId);
             if (strId == null) {
                 WebLogging.logger.log(Level.SEVERE, "competitionId is null");
                 return;
             }
             id = Integer.parseInt(strId);
+            competition = competitionFacade.find(id);
         }
         catch(Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
@@ -105,8 +108,7 @@ public class CompetitionController {
     public void initProblemsPage() {
         WebLogging.logger.log(Level.INFO, "init problems page");
         try {
-            Competition currentCompetition = competitionFacade.find(competitionId);
-            competitionProblems = competitionFacade.loadCompetitionProblems(currentCompetition).getCompetitionProblemList();
+            competitionProblems = competitionFacade.loadCompetitionProblems(competition).getCompetitionProblemList();
             competitionProblems.sort(new CompetitionProblemComporatorOfProblemNumber());
         } catch (Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
@@ -136,15 +138,13 @@ public class CompetitionController {
         WebLogging.logger.log(Level.INFO, "init monitor page");
         columns = Collections.EMPTY_LIST;
         Monitor monitor = applicationEJB.getMonitorPool().getMonitor(competitionId);
-        Competition competition = competitionFacade.find(competitionId);
         CompetitionPhase phase = competitionEJB.getCompetitionPhase(competition);
         if (phase == CompetitionPhase.BEFORE) {
             results = Collections.EMPTY_LIST;
             return;
         }
         try {
-            Competition currentCompetition = competitionFacade.find(competitionId);
-            competitionProblems = competitionFacade.loadCompetitionProblems(currentCompetition).getCompetitionProblemList();
+            competitionProblems = competitionFacade.loadCompetitionProblems(competition).getCompetitionProblemList();
             competitionProblems.sort(new CompetitionProblemComporatorOfProblemNumber());
         } catch (Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
@@ -353,6 +353,14 @@ public class CompetitionController {
 
     public void setColumns(List<MonitorColumn> columns) {
         this.columns = columns;
+    }
+
+    public Competition getCompetition() {
+        return competition;
+    }
+
+    public void setCompetition(Competition competition) {
+        this.competition = competition;
     }
     
 }
