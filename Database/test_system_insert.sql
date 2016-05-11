@@ -74,6 +74,7 @@ insert into public.competition_problem (competition_id, problem_id, problem_numb
 insert into public.competition_problem (competition_id, problem_id, problem_number) values (5, 5, 'E');
 
 insert into public.compilator (name) values ('java');
+insert into public.compilator (name) values ('visual_cpp');
 
 insert into public.author_decision (problem_id, folder_name, compilator_id) values (1, 'ki_decision', 1);
 insert into public.author_decision (problem_id, folder_name, compilator_id) values (2, 'ki_decision', 1);
