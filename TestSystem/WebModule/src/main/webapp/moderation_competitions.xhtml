@@ -9,7 +9,7 @@
         <ui:define name="title">Модерирование соревнований</ui:define>
         <ui:define name="subcontent">
             <h1>Модерирование соревнований</h1>
-            <p:dataTable id="competitionGrid"
+            <p:dataTable id="competitionGrid" rowStyleClass= "#{competition.id ge 3 ? 'red' : null}"
                          var="competition" value="#{moderatingCompetitionsController.competitionsList}"
                          rows="50" paginator="true"
                          paginatorTemplate="{PageLinks}"
