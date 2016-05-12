@@ -2,12 +2,50 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <ui:composition template="profile_template.xhtml">
         <ui:define name="title">Достижения</ui:define>
         <ui:define name="subcontent">
-            <h1>Достижения</h1>
-            <h:outputText value="Список достижений"/>
+            <h:form>
+
+                <h1>Достижения</h1>
+                <p:dataTable id="participations" var="participation" value="#{profileController.participations}"
+                             rows="15" paginator="true" 
+                             paginatorTemplate="{PageLinks}"
+                             emptyMessage="Достижений нет.">
+                    <f:facet name="header">
+                        Достижения
+
+                        <p:commandButton id="toggler" type="button" value="Выбор колонок" style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="participations" trigger="toggler" />
+                    </f:facet>
+
+                    <p:column headerText="Название соревнования">
+                        <h:outputText value="#{participation.competitionId.name}" />
+                    </p:column>
+
+                    <p:column headerText="Статус">
+                        <h:outputText value="#{profileController.competitionEJB.getCompetitionPhase(participation.competitionId)}" converter="competitionPhaseConverter" />
+                    </p:column>
+
+                    <p:column headerText="Начало">
+                        <h:outputText value="#{participation.competitionId.competitionStart}" converter="dateConverter" />
+                    </p:column>
+
+                    <p:column headerText="Статус регистрации">
+                        <h:outputText value="#{profileController.getTypeDescription(participation)}"/>
+                    </p:column>
+
+                    <p:column headerText="Количество решенных задач">
+                        <h:outputText value="#{participation.solvedProblems}"/>
+                    </p:column>
+                    <p:column headerText="Место">
+                        <h:outputText value="#{participation.place}"/>
+                    </p:column>
+                </p:dataTable>               
+            </h:form> 
         </ui:define>
     </ui:composition>
 </html>
