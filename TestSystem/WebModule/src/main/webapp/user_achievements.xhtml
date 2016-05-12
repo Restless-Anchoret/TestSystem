@@ -6,15 +6,19 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <ui:composition template="profile_template.xhtml">
+
         <ui:define name="title">Достижения</ui:define>
         <ui:define name="subcontent">
             <h:form>
-
+                <f:metadata>
+                    <f:viewAction action="#{profileController.initUserAchievements()}" />
+                </f:metadata>
                 <h1>Достижения</h1>
                 <p:dataTable id="participations" var="participation" value="#{profileController.participations}"
                              rows="15" paginator="true" 
                              paginatorTemplate="{PageLinks}"
                              emptyMessage="Достижений нет.">
+
                     <f:facet name="header">
                         Достижения
 
