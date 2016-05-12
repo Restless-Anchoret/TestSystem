@@ -21,7 +21,7 @@ public class StandardFileSupplier implements FileSupplier {
     private static final String CONFIG = "config";
     private static final String BIN = "bin";
     private static final String SRC = "src";
-    private static final String ANSWER = "answer.txt";
+    private static final String ANSWER = "output.txt";
     private static final String INPUT = "input.txt";
     private static final String VISIBLE_RESULTS = "visible_results.xml";
     private static final String STATEMENT = "statement.pdf";
