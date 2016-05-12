@@ -4,7 +4,10 @@ import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.holding.RegistrationType;
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
+import com.netcracker.database.dal.ProblemFacadeLocal;
 import com.netcracker.database.entity.Competition;
+import com.netcracker.database.entity.CompetitionProblem;
+import com.netcracker.database.entity.Problem;
 import com.netcracker.testing.evaluation.EvaluationSystemRegistry;
 import java.util.Calendar;
 import java.util.Collections;
@@ -30,12 +33,14 @@ public class ModeratingCompetitionEJB {
     private ApplicationEJB applicationEJB;
     @EJB(beanName = "CompetitionFacade")
     private CompetitionFacadeLocal competitionFacade;
+    @EJB(beanName = "ProblemFacade")
+    private ProblemFacadeLocal problemFacade;
     
     public List<Competition> getAllCompetitions() {
         try {
             return competitionFacade.findAllCompetiotions();
-        } catch (Exception exception) {
-            BusinessLogicLogging.logger.log(Level.FINE, "Exception while getting all competitions", exception);
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.FINE, "Exception while getting all competitions", throwable);
             return Collections.EMPTY_LIST;
         }
     }
@@ -58,8 +63,8 @@ public class ModeratingCompetitionEJB {
             competition.setFolderName(competitionFolder);
             competitionFacade.edit(competition);
             return competition;
-        } catch (Exception exception) {
-            BusinessLogicLogging.logger.log(Level.FINE, "Exception while trying to add new competition", exception);
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.FINE, "Exception while trying to add new competition", throwable);
             return null;
         }
     }
@@ -69,6 +74,42 @@ public class ModeratingCompetitionEJB {
         calendar.setTime(new Date());
         calendar.add(Calendar.YEAR, 1);
         return calendar.getTime();
+    }
+    
+    public List<Problem> getAllValidatedProblems() {
+        try {
+            return problemFacade.findByValidated(true);
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.FINE, "Exception while loading all validated problems", throwable);
+            return Collections.EMPTY_LIST;
+        }
+    }
+    
+    public boolean addCompetitionProblem(Competition competition, Integer problemId, String problemNumber) {
+        try {
+            Problem problem = problemFacade.find(problemId);
+            CompetitionProblem competitionProblem = new CompetitionProblem();
+            competitionProblem.setProblemId(problem);
+            competitionProblem.setCompetitionId(competition);
+            competitionProblem.setProblemNumber(problemNumber);
+            competition.getCompetitionProblemList().add(competitionProblem);
+            competitionFacade.edit(competition);
+            return true;
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.FINE, "Exception while adding new competition problem", throwable);
+            return false;
+        }
+    }
+    
+    public boolean removeCompetitionProblem(Competition competition, CompetitionProblem competitionProblem) {
+        try {
+            competition.getCompetitionProblemList().remove(competitionProblem);
+            competitionFacade.edit(competition);
+            return true;
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.FINE, "Exception while removing competition problem", throwable);
+            return false;
+        }
     }
     
 }
