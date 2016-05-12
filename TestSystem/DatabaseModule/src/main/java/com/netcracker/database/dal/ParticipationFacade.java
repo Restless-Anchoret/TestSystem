@@ -34,13 +34,6 @@ public class ParticipationFacade extends AbstractFacade<Participation> implement
     }
 
     @Override
-    public Participation loadCompetition(Participation participation) {
-        em.merge(participation);
-        participation.getCompetitionId();
-        return participation;
-    }
-
-    @Override
     public Participation findByCompetitionIdAndUserId(Object competitionId, Object userId) {
         TypedQuery query = em.createNamedQuery("Participation.findByCompetitionIdAndUserId",
                 Participation.class);

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 @Stateless
 public class ProblemFacade extends AbstractFacade<Problem> implements ProblemFacadeLocal {
@@ -43,6 +44,14 @@ public class ProblemFacade extends AbstractFacade<Problem> implements ProblemFac
     public Problem loadTestGroups(Problem problem) {
         em.merge(problem).getTestGroupList();
         return problem;
+    }
+
+    @Override
+    public List<Problem> findByValidated(boolean validated) {
+        TypedQuery query = em.createNamedQuery("Problem.findByValidated", 
+                Problem.class);
+        query.setParameter("validated", validated);
+        return query.getResultList();
     }
     
     
