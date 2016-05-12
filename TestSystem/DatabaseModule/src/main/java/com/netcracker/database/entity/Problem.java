@@ -24,7 +24,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "problem", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Problem.findById", query = "SELECT p FROM Problem p WHERE p.id = :id")})
+    @NamedQuery(name = "Problem.findById", query = "SELECT p FROM Problem p WHERE p.id = :id"),
+    @NamedQuery(name = "Problem.findByValidated", query = "SELECT p FROM Problem p WHERE p.validated = :validated")})
 public class Problem implements Serializable {
 
     private static final long serialVersionUID = 1L;

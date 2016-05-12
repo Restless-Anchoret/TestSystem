@@ -86,18 +86,4 @@ public class CompetitionsController {
         return result;
     }
     
-    public long getSecondsBeforeStart(Competition competition) {
-        if (competition.getCompetitionStart().before(new Date())) {
-            return 0;
-        }
-        else
-            return (competition.getCompetitionStart().getTime() - new Date().getTime()) / 1000;
-    }
-    
-    public boolean isViewTimer(Competition competition) {
-        if (competition.getCompetitionStart().before(new Date())) {
-            return true;
-        }
-        return ((competition.getCompetitionStart().getTime() - new Date().getTime()) / 1000 <= 86_400);
-    }
 }

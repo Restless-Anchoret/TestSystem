@@ -40,11 +40,12 @@
                         <h:outputText value="#{competition.competitionInterval}" />
                     </p:column>
                     <p:column headerText="До начала осталось">
-                        <pe:timer timeout="#{competitionsController.getSecondsBeforeStart(competition)}" 
+                        <pe:timer timeout="#{timersInfo.getSecondsBeforeStart(competition)}" 
                                   format="HH:mm:ss" update="competitions" 
-                                  rendered="#{competitionsController.isViewTimer(competition)}"/>
-                        <h:outputText value="больше 24 часов"
-                                      rendered="#{not competitionsController.isViewTimer(competition)}"/>
+                                  rendered="#{timersInfo.isViewTimerBeforeStart(competition)}"
+                                  />
+                        <h:outputText value="#{timersInfo.statusCompetitionOnCompetitionsPage(competition)}"
+                                      rendered="#{not timersInfo.isViewTimerBeforeStart(competition)}"/>
                     </p:column>
                 </p:dataTable>
             </h:form>

@@ -24,4 +24,6 @@ public interface ProblemFacadeLocal {
     
     List<Problem> findAll();
     
+    List<Problem> findByValidated(boolean validated);
+    
 }
