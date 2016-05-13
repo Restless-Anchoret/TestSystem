@@ -66,6 +66,7 @@ public class CompetitionController {
     private String currentCompetitionProblem;
     private final long SIZELIMIT = 262144;
     private List<Submission> submissions;
+    private List<Submission> submissionsAfterCompetition;
     private List<TotalResultInfo> results;
     private List<Participation> participations;
     private List<MonitorColumn> columns;
@@ -74,16 +75,10 @@ public class CompetitionController {
     
     @PostConstruct
     public void initPage() {
-        WebLogging.logger.log(Level.INFO, "init page");
         HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
         Integer id;
         try {
             String strId = request.getParameter("competitionId");
-            WebLogging.logger.log(Level.SEVERE, "competitionId " + strId);
-            if (strId == null) {
-                WebLogging.logger.log(Level.SEVERE, "competitionId is null");
-                return;
-            }
             id = Integer.parseInt(strId);
             competition = competitionFacade.find(id);
         }
@@ -95,7 +90,6 @@ public class CompetitionController {
         authenticationEJB = AuthenticationController.getSessionAuthenticationEJB();
         Path path = Paths.get(request.getRequestURI());
         String pageName = path.getFileName().toString();
-        WebLogging.logger.log(Level.INFO, path.getFileName().getName(0).toString());
         switch (pageName) {
             case "competition_problems.xhtml":
                 initProblemsPage();
@@ -140,6 +134,19 @@ public class CompetitionController {
             WebLogging.logger.log(Level.SEVERE, null, ex);
             submissions = Collections.EMPTY_LIST;
         }
+        if (competitionEJB.getCompetitionPhase(competition) == CompetitionPhase.FINISHED) {
+            try {
+                submissionsAfterCompetition = submissionFacade.
+                        findAllSubmissionsByUserIdAndCompetitionIdAfterCompetition(
+                                authenticationEJB.getCurrentUser().getId(), competitionId);
+            } catch (Throwable ex) {
+                WebLogging.logger.log(Level.SEVERE, null, ex);
+                submissionsAfterCompetition = Collections.EMPTY_LIST;
+            }
+        }
+        else {
+            submissionsAfterCompetition = Collections.EMPTY_LIST;
+        }
     }
     
     public void initMonitorPage() {
@@ -172,19 +179,7 @@ public class CompetitionController {
             results = monitor.getActualResults();
     }
     
-    public String loadStatementFile(CompetitionProblem competitionProblem) {
-        Path pathStatementFile = applicationEJB.getFileSupplier().
-                getProblemStatement(competitionProblem.getProblemId().getFolderName());
-        if (pathStatementFile == null) {
-            return "fileNotFound";
-        } else {
-            return "downloadFile?pathFile=" + pathStatementFile.toString();
-        } 
-    }
-    
     public void upLoadFile() {
-        WebLogging.logger.log(Level.INFO, "start upload ");
-        WebLogging.logger.log(Level.INFO, "compilator " + currentCompilator);
         if (file == null || file.getFileName().equals("")) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.",
                     "Выберите файл.");
@@ -203,7 +198,8 @@ public class CompetitionController {
         try {
             is = file.getInputstream();
         } catch (IOException ex) {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", "Произошда ошибка при загрузке файла, попробуйте загрузить еще раз.");
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", 
+                    "Произошда ошибка при загрузке файла, попробуйте загрузить еще раз.");
             FacesContext.getCurrentInstance().addMessage(null, message);
             WebLogging.logger.log(Level.SEVERE, null, ex);
             file = null;
@@ -213,11 +209,13 @@ public class CompetitionController {
                 authenticationEJB.getCurrentUser(), getFromCompilators(currentCompilator), is, 
                 file.getFileName(), file.getSize())) {
             file = null;
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Файл отправлен.", "Результат можно посмотреть во вкладке посылки.");
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Файл отправлен.", 
+                    "Результат можно посмотреть во вкладке посылки.");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
         else {
-            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", "Произошда ошибка при загрузке файла, попробуйте загрузить еще раз.");
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", 
+                    "Произошда ошибка при загрузке файла, попробуйте загрузить еще раз.");
             FacesContext.getCurrentInstance().addMessage(null, message);
             file = null;
         }
@@ -280,6 +278,10 @@ public class CompetitionController {
         WebLogging.logger.log(Level.SEVERE, "Нет задачи с id {0}", 
                     new Object[]{competitionProblem.getProblemId().getId()});
         return null;
+    }
+    
+    public boolean isViewTable() {
+        return !submissionsAfterCompetition.isEmpty();
     }
     
     public List<CompetitionProblem> getCompetitionProblems() {
@@ -368,6 +370,14 @@ public class CompetitionController {
 
     public void setCompilatorsName(List<SelectItem> compilatorsName) {
         this.compilatorsName = compilatorsName;
+    }
+
+    public List<Submission> getSubmissionsAfterCompetition() {
+        return submissionsAfterCompetition;
+    }
+
+    public void setSubmissionsAfterCompetition(List<Submission> submissionsAfterCompetition) {
+        this.submissionsAfterCompetition = submissionsAfterCompetition;
     }
     
 }

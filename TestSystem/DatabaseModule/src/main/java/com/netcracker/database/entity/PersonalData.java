@@ -47,8 +47,6 @@ public class PersonalData implements Serializable {
     @Size(max = 50)
     @Column(name = "city")
     private String city;
-    /*@OneToOne(mappedBy = "personalDataId")
-    private Participation participation;*/
 
     public PersonalData() {
     }
@@ -120,14 +118,6 @@ public class PersonalData implements Serializable {
     public void setCity(String city) {
         this.city = city;
     }
-
-    /*public Participation getParticipation() {
-        return participation;
-    }
-
-    public void setParticipation(Participation participation) {
-        this.participation = participation;
-    }*/
 
     @Override
     public int hashCode() {

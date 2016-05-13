@@ -104,5 +104,21 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
         submission.getUserId();
         return submission;
     }
+
+    @Override
+    public List<Submission> findAllSubmissionsByUserIdAndCompetitionIdAfterCompetition(Object userId, Object competitionId) {
+        Competition competition = competitionFacade.find(competitionId);
+        Date finish = getFinishCompetition(competition);
+        TypedQuery query = em.createNamedQuery("Submission.findAllSubmissionsByUserIdAndCompetitionIdAfterCompetition",
+                Submission.class);
+        query.setParameter("competitionId", competitionId);
+        query.setParameter("userId", userId);
+        query.setParameter("finish", finish);
+        List<Submission> result = query.getResultList();
+        for (Submission submission : result) {
+            submission.getCompetitionProblemId();
+        }
+        return result;
+    }
     
 }

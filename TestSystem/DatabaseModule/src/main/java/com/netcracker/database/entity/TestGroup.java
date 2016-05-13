@@ -42,9 +42,6 @@ public class TestGroup implements Serializable {
     @NotNull
     @Column(name = "points_for_test")
     private short pointsForTest;
-    //@JoinColumn(name = "problem_id", referencedColumnName = "id")
-    //@ManyToOne(optional = false)
-    //private Problem problemId;
 
     public TestGroup() {
     }
@@ -91,14 +88,6 @@ public class TestGroup implements Serializable {
     public void setPointsForTest(short pointsForTest) {
         this.pointsForTest = pointsForTest;
     }
-
-    /*public Problem getProblemId() {
-        return problemId;
-    }
-
-    public void setProblemId(Problem problemId) {
-        this.problemId = problemId;
-    }*/
 
     @Override
     public int hashCode() {

@@ -101,15 +101,7 @@ public class CompetitionEJB {
         submission.setCompetitionProblemId(competitionProblem);
         submission.setUserId(user);
         submission.setCompilatorId(compilator);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-        Date result;
-        try {
-            result = format.parse("2016.01.01 00:05:00");
-        } catch (ParseException ex) {
-            BusinessLogicLogging.logger.log(Level.SEVERE, null, ex);
-            result = new Date();
-        }
-        submission.setSubmissionTime(result);
+        submission.setSubmissionTime(new Date());
         submission.setVerdict(Verdict.WAITING.toString());
         try {
             submissionFacade.create(submission);

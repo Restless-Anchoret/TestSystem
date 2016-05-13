@@ -8,13 +8,13 @@ import javax.ejb.Local;
 @Local
 public interface UserFacadeLocal {
 
-    void create(User user); //test
+    void create(User user);
 
-    void edit(User user); //test
+    void edit(User user);
 
-    void remove(User user); // test
+    void remove(User user);
 
-    User find(Object id); //test
+    User find(Object id);
     
     User loadParticipations(User user);
     
@@ -22,12 +22,12 @@ public interface UserFacadeLocal {
     
     User loadSubmissions(User user);
     
-    User findByLogin(String login); //test
+    User findByLogin(String login);
     
-    List<User> getModerators(); //test
+    List<User> getModerators();
 
-    List<User> getParticipants(); //test
+    List<User> getParticipants();
     
-    User getAdmin(); //test
+    User getAdmin();
     
 }

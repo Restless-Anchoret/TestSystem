@@ -1,7 +1,11 @@
 package com.netcracker.web.participants;
 
+import com.netcracker.businesslogic.application.ApplicationEJB;
+import com.netcracker.database.dal.ProblemFacadeLocal;
 import com.netcracker.database.entity.CompetitionProblem;
+import com.netcracker.database.entity.Problem;
 import com.netcracker.web.logging.WebLogging;
+import com.netcracker.web.util.JSFUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,6 +13,8 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import javax.activation.MimetypesFileTypeMap;
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -21,24 +27,13 @@ import org.primefaces.model.StreamedContent;
 @RequestScoped
 public class DownloadFileController {
 
-    private String pathFile;
+    @EJB(beanName = "ProblemFacade")
+    private ProblemFacadeLocal problemFacade;
+    @EJB(beanName = "ApplicationEJB")
+    private ApplicationEJB applicationEJB;
     private StreamedContent file;
-    
-    public DownloadFileController() {}
-
-    public String getPathFile() {
-        return pathFile;
-    }
-
-    public void setPathFile(String pathFile) {
-        //WebLogging.logger.log(Level.INFO, "init parametr");
-        //WebLogging.logger.log(Level.INFO, pathFile);
-        this.pathFile = pathFile;
-        downloadFile();
-    }
 
     public StreamedContent getFile() {
-        //WebLogging.logger.log(Level.INFO, "download");
         return file;
     }
 
@@ -46,22 +41,27 @@ public class DownloadFileController {
         this.file = file;
     }
 
+    @PostConstruct
     public void downloadFile() {
-        //WebLogging.logger.log(Level.INFO, "load");
+        String parametr = JSFUtil.getRequestParameter("problemId");
         InputStream inputStream;
         try {
-            File temp = new File(pathFile);
+            Integer problemId = Integer.parseInt(parametr);
+            Problem problem = problemFacade.find(problemId);
+            Path pathStatementFile = applicationEJB.getFileSupplier().
+                getProblemStatement(problem.getFolderName());
+            File temp = pathStatementFile.toFile();
             inputStream = new FileInputStream(temp);
             file = new DefaultStreamedContent(inputStream, 
                 new MimetypesFileTypeMap().getContentType(temp),
                 temp.getName());
         } catch (Throwable ex) {
+            file = null;
             WebLogging.logger.log(Level.SEVERE, null, ex);
         }
     }
     
     public String isFileExist() {
-        //WebLogging.logger.log(Level.INFO, "check");
         if (file == null)
             return "fileNotFound";
         else

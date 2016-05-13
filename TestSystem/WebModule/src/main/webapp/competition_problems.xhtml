@@ -22,7 +22,9 @@
 
                     <p:column headerText="Скачать условие">
                         <p:link value="скачать" target="_blank" 
-                                       outcome="#{competitionController.loadStatementFile(competitionProblem)}"/>
+                                       outcome="downloadFile">
+                            <f:param name="problemId" value="#{competitionProblem.problemId.id}"/>
+                        </p:link>
                     </p:column>                    
                 </p:dataTable>               
             </h:form>
@@ -47,7 +49,7 @@
                 </h:panelGrid>
                 <h:panelGrid>
                     <p:fileUpload id="file" value="#{competitionController.file}"
-                                  label="Выбирите файл" mode="simple"/>
+                                  label="Выберите файл" mode="simple"/>
                 </h:panelGrid>
                 <p:commandButton value="Отправить" ajax="false" 
                                  action="#{competitionController.upLoadFile()}"

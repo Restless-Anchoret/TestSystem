@@ -7,11 +7,43 @@
     <ui:composition template="competition_template.xhtml">
         <ui:define name="title">Посылки</ui:define>
         <ui:define name="subcontent">
-            <f:metadata>
-                <f:viewAction action="#{competitionController.initSubmissionsPage()}" />
-            </f:metadata>
             <h:form>
+                
+                <p:dataTable var="submission" value="#{competitionController.submissionsAfterCompetition}"
+                             rows="15" paginator="true"
+                             paginatorTemplate="{PageLinks}"
+                             emptyMessage="Посылок нет."
+                             rendered="#{competitionController.viewTable}">
+                    <f:facet name="header">
+                        <h:outputText value="Посылки, отправленные после заверения соревнования"/>
+                    </f:facet>
+                    <p:column headerText="Когда">
+                        <h:outputText value="#{submission.submissionTime}" />
+                    </p:column>
+
+                    <p:column headerText="Задача">
+                        <h:outputText value="#{submission.competitionProblemId.problemId.name}" />
+                    </p:column>
+
+                    <p:column headerText="Язык">
+                        <h:outputText value="#{submission.compilatorId.name}" />
+                    </p:column>
+
+                    <p:column headerText="Вердикт">
+                        <h:outputText value="#{submission.verdict}"/>
+                    </p:column>
+
+                    <p:column headerText="Время">
+                        <h:outputText value="#{submission.decisionTime}"/>
+                    </p:column>
+
+                    <p:column headerText="Память">
+                        <h:outputText value="#{submission.decisionMemory}"/>
+                    </p:column>
+                </p:dataTable>
+                
                 <h1>Посылки</h1>
+                
                 <p:dataTable var="submission" value="#{competitionController.submissions}"
                              rows="15" paginator="true" id="submissions"
                              paginatorTemplate="{PageLinks}"

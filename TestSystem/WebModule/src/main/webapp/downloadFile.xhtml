@@ -10,7 +10,6 @@
     </h:head>
     <h:body>
         <f:metadata>
-            <f:viewParam name="pathFile" value="#{downloadFileController.pathFile}"/>
             <f:viewAction action="#{downloadFileController.isFileExist()}">
                 <p:fileDownload value="#{downloadFileController.file}"/>
             </f:viewAction>

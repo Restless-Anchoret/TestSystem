@@ -36,9 +36,6 @@ public class AuthorDecision implements Serializable {
     @JoinColumn(name = "compilator_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Compilator compilatorId;
-    /*@JoinColumn(name = "problem_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Problem problemId;*/
 
     public AuthorDecision() {
     }
