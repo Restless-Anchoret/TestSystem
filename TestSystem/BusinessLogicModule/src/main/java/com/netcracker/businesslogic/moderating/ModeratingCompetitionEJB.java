@@ -4,6 +4,7 @@ import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.holding.RegistrationType;
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
+import com.netcracker.database.dal.CompetitionProblemFacadeLocal;
 import com.netcracker.database.dal.ProblemFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.CompetitionProblem;
@@ -35,6 +36,8 @@ public class ModeratingCompetitionEJB {
     private CompetitionFacadeLocal competitionFacade;
     @EJB(beanName = "ProblemFacade")
     private ProblemFacadeLocal problemFacade;
+    @EJB(beanName = "CompetitionProblemFacade")
+    private CompetitionProblemFacadeLocal competitionProblemFacade;
     
     public List<Competition> getAllCompetitions() {
         try {
@@ -103,8 +106,20 @@ public class ModeratingCompetitionEJB {
     
     public boolean removeCompetitionProblem(Competition competition, CompetitionProblem competitionProblem) {
         try {
+            if (!competitionProblem.getParticipationResultList().isEmpty() ||
+                    !competitionProblem.getSubmissionList().isEmpty()) {
+//                System.out.println("Competition problem id: " + competitionProblem.getId());
+//                System.out.println("ParticipationResult list: " + competitionProblem.getParticipationResultList().isEmpty());
+//                if (!competitionProblem.getParticipationResultList().isEmpty()) {
+//                    System.out.println(competitionProblem.getParticipationResultList().get(0).getId());
+//                }
+//                System.out.println("Submissions list: " + competitionProblem.getSubmissionList().isEmpty());
+                return false;
+            }
             competition.getCompetitionProblemList().remove(competitionProblem);
             competitionFacade.edit(competition);
+            //competitionProblemFacade.remove(competitionProblem);
+            //competitionFacade.loadCompetitionProblems(competition);
             return true;
         } catch (Throwable throwable) {
             BusinessLogicLogging.logger.log(Level.FINE, "Exception while removing competition problem", throwable);

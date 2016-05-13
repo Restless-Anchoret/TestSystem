@@ -9,28 +9,37 @@
         <ui:define name="title">Модерирование участников</ui:define>
         <ui:define name="subcontent">
             <h1>Модерирование участников</h1>
-            <p:dataTable id="userGrid"
-                         var="user" value="#{moderatingUsersController.participants}"
-                         rows="50" paginator="true"
-                         paginatorTemplate="{PageLinks}"
-                         emptyMessage="Участников пока нет.">
-                <p:column headerText="Логин">
-                    <p:link value="#{user.login}"
-                            outcome="user_profile.xhtml">
-                        <f:param name="userId" value="#{user.id}"/>
-                    </p:link>
-                </p:column>
-                <p:column headerText="Активен">
-                    <h:outputText value="#{moderatingUsersController.getActualityDescription(user)}"/>
-                </p:column>
-                <p:column headerText="Дата регистрации">
-                    <h:outputText value="#{user.registrationDate}"
-                                  converter="dateConverter"/>
-                </p:column>
-            </p:dataTable>
-            <h:form>
+            <h:form id="usersForm">
+                <p:dataTable var="user" value="#{moderatingUsersController.participants}"
+                             rows="50" paginator="true"
+                             paginatorTemplate="{PageLinks}"
+                             emptyMessage="Участников пока нет.">
+                    <p:column headerText="Логин">
+                        <p:link value="#{user.login}"
+                                outcome="user_profile.xhtml">
+                            <f:param name="userId" value="#{user.id}"/>
+                        </p:link>
+                    </p:column>
+                    <p:column headerText="Активен">
+                        <h:outputText value="#{moderatingUsersController.getActualityDescription(user)}"/>
+                    </p:column>
+                    <p:column headerText="Дата регистрации">
+                        <h:outputText value="#{user.registrationDate}"
+                                      converter="dateConverter"/>
+                    </p:column>
+                    <p:column headerText="Операции">
+                        <p:commandButton value="Удалить"
+                                         update="usersForm"
+                                         action="#{moderatingUsersController.deleteUser(user)}"/>
+                    </p:column>
+                </p:dataTable>
+                <h2>Добавление участников</h2>
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputText value="Новый логин: "/>
+                    <p:inputText value="#{moderatingUsersController.newLogin}"/>
+                </h:panelGrid>
                 <p:commandButton value="Добавить участника"
-                                 update="userGrid"
+                                 update="usersForm"
                                  action="#{moderatingUsersController.addNewParticipant()}"
                                  ajax="true"/>
             </h:form>

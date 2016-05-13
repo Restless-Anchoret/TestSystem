@@ -49,20 +49,22 @@ public class RegistrationEJB {
         }
     }
     
-    public Result addNewModerator() {
-        String newLogin = findUnusedLoginWithPrefix(moderatorDefaultLoginPrefix);
-        if (newLogin == null) {
-            return new Result(null, Info.FAIL);
-        }
-        return tryRegistrateActual(newLogin, defaultPassword, Role.MODERATOR);
+    public Result addNewModerator(String newLogin) {
+        return addNewUser(newLogin, moderatorDefaultLoginPrefix, Role.MODERATOR, true);
     }
     
-    public Result addNewParticipant() {
-        String newLogin = findUnusedLoginWithPrefix(participantDefaultLoginPrefix);
+    public Result addNewParticipant(String newLogin) {
+        return addNewUser(newLogin, participantDefaultLoginPrefix, Role.PARTICIPANT, false);
+    }
+    
+    private Result addNewUser(String newLogin, String defaultLoginPrefix, Role role, boolean actual) {
+        if (newLogin == null) {
+            newLogin = findUnusedLoginWithPrefix(defaultLoginPrefix);
+        }
         if (newLogin == null) {
             return new Result(null, Info.FAIL);
         }
-        return tryRegistrateNotActual(newLogin, defaultPassword, Role.PARTICIPANT);
+        return tryRegistrate(newLogin, defaultPassword, role, actual);
     }
     
     private String findUnusedLoginWithPrefix(String prefix) {

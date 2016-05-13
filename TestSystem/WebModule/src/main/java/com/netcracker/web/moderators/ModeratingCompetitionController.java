@@ -156,7 +156,7 @@ public class ModeratingCompetitionController {
         if (deletingResult) {
             JSFUtil.addInfoMessage("Задача успешно удалена из соревнования", "");
         } else {
-            JSFUtil.addErrorMessage("Ошибка при удалении задачи из соревнования", "");
+            JSFUtil.addErrorMessage("Задача не может быть удалена из соревнования", "");
         }
     }
 
