@@ -9,7 +9,7 @@
             <env-entry>
                 <env-entry-name>fileSystemPath</env-entry-name>
                 <env-entry-type>java.lang.String</env-entry-type>
-                <env-entry-value>D:\NCProject\fileSystem</env-entry-value>
+                <env-entry-value>D:\fileSystem</env-entry-value>
             </env-entry>
             <env-entry>
                 <env-entry-name>testingSystemThreads</env-entry-name>

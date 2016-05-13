@@ -44,17 +44,58 @@
                     <p:selectBooleanCheckbox value="#{moderatingCompetitionController.competition.pretestsOnly}"/>
                     <h:outputText value="Разрешить дорешивание: "/>
                     <p:selectBooleanCheckbox value="#{moderatingCompetitionController.competition.practicePermition}"/>
+                    <h:outputText value="Завершено: "/>
+                    <p:selectBooleanCheckbox value="#{moderatingCompetitionController.competition.finished}"/>
                 </h:panelGrid>
                 <p:commandButton value="Сохранить" update="competitionGrid"
                                  action="#{moderatingCompetitionController.saveCompetitionChanges()}">
                     <f:param name="id" value="#{moderatingCompetitionController.competition.id}"/>
                 </p:commandButton>
                 <p:commandButton value="Провести системное тестирование" update="competitionGrid"
-                                 action="#{moderatingCompetitionController.runSystemTesting()}">
+                                 action="#{moderatingCompetitionController.runSystemTesting()}"
+                                 rendered="false">
                     <f:param name="id" value="#{moderatingCompetitionController.competition.id}"/>
                 </p:commandButton>
                 <p:commandButton value="Завершить соревнование" update="competitionGrid"
                                  action="#{moderatingCompetitionController.finalizeCompetition()}">
+                    <f:param name="id" value="#{moderatingCompetitionController.competition.id}"/>
+                </p:commandButton>
+            </h:form>
+            <h:form id="problemsForm">
+                <h2>Задачи</h2>
+                <p:dataTable id="problemsGrid"
+                             var="problem" value="#{moderatingCompetitionController.competitionProblems}"
+                             emptyMessage="Задач пока нет.">
+                    <p:column headerText="Номер">
+                        <h:outputText value="#{problem.problemNumber}"/>
+                    </p:column>
+                    <p:column headerText="Название">
+                        <p:link value="#{problem.problemId.name}"
+                                outcome="moderation_problem.xhtml">
+                            <f:param name="id" value="#{problem.problemId.id}"/>
+                        </p:link>
+                    </p:column>
+                    <p:column headerText="Операции">
+                        <p:commandButton value="Удалить"
+                                         update="problemsForm"
+                                         action="#{moderatingCompetitionController.deleteCompetitionProblem(problem)}">
+                            <f:param name="id" value="#{moderatingCompetitionController.competition.id}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                <h2>Добавление задач</h2>
+                <h:panelGrid id="newProblemGrid" columns="2" cellpadding="5">
+                    <h:outputText value="Название задачи"/>
+                    <p:selectOneMenu value="#{moderatingCompetitionController.chosenProblemId}"
+                                     style="width:300px">
+                        <f:selectItems value="#{moderatingCompetitionController.validatedProblemItems}"/>
+                    </p:selectOneMenu>
+                    <h:outputText value="Номер задачи"/>
+                    <p:inputText value="#{moderatingCompetitionController.problemNumber}"/>
+                </h:panelGrid>
+                <p:commandButton value="Добавить задачу"
+                                 update="problemsForm"
+                                 action="#{moderatingCompetitionController.addCompetitionProblem()}">
                     <f:param name="id" value="#{moderatingCompetitionController.competition.id}"/>
                 </p:commandButton>
             </h:form>

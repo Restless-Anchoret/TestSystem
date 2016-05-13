@@ -25,7 +25,7 @@ public class UserFacade extends AbstractFacade<User> implements UserFacadeLocal 
     @Override
     public User loadParticipations(User user) {
         em.merge(user).getParticipationList();
-        return user;
+        return user;//исп.Антон
     }
 
     @Override

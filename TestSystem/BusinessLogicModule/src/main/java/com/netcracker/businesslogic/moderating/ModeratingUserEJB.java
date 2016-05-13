@@ -21,8 +21,8 @@ public class ModeratingUserEJB {
     public List<User> getAllParticipants() {
         try {
             return userFacade.getParticipants();
-        } catch (Exception exception) {
-            BusinessLogicLogging.logger.log(Level.FINE, "Exception while getting all participants", exception);
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.FINE, "Exception while getting all participants", throwable);
             return Collections.EMPTY_LIST;
         }
     }
@@ -30,9 +30,24 @@ public class ModeratingUserEJB {
     public List<User> getAllModerators() {
         try {
             return userFacade.getModerators();
-        } catch (Exception exception) {
-            BusinessLogicLogging.logger.log(Level.FINE, "Exception while getting all moderators", exception);
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.FINE, "Exception while getting all moderators", throwable);
             return Collections.EMPTY_LIST;
+        }
+    }
+    
+    public boolean removeUser(User user) {
+        try {
+            if (!user.getParticipationList().isEmpty() ||
+                    !user.getParticipationResultList().isEmpty() ||
+                    !user.getSubmissionList().isEmpty()) {
+                return false;
+            }
+            userFacade.remove(user);
+            return true;
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.INFO, "Exception while removing user", throwable);
+            return false;
         }
     }
     

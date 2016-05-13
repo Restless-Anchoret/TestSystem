@@ -2,12 +2,53 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="profile_template.xhtml">
         <ui:define name="title">Посылки</ui:define>
         <ui:define name="subcontent">
-            <h1>Посылки</h1>
-            <h:outputText value="Список посылок"/>
+            <h:form>
+                <f:metadata>
+                    <f:viewAction action="#{profileController.initUserSubmissions()}" />
+                </f:metadata>
+                <h1>Посылки</h1>
+                <p:dataTable var="submission" value="#{profileController.submissions}"
+                             rows="15" paginator="true" id="submissions"
+                             paginatorTemplate="{PageLinks}"
+                             emptyMessage="Посылок нет.">
+                    <f:facet name="header">
+                        Посылки
+
+                        <p:commandButton id="toggler" type="button" value="Выбор колонок" style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler datasource="submissions" trigger="toggler" />
+                    </f:facet>
+                    <p:column headerText="Название соревнования">
+                        <h:outputText value="#{submission.competitionProblemId.competitionId.name}" />
+                    </p:column>
+
+                    <p:column headerText="Когда">
+                        <h:outputText value="#{submission.submissionTime}" converter="dateConverter" />
+                    </p:column>
+
+                    <p:column headerText="Задача">
+                        <h:outputText value="#{submission.competitionProblemId.problemId.name}" />
+                    </p:column>
+
+                    <p:column headerText="Компилятор">
+                        <h:outputText value="#{submission.compilatorId.name}" />
+                    </p:column>
+
+                    <p:column headerText="Вердикт">
+                        <h:outputText value="#{submission.verdict}"/>
+                    </p:column>
+
+                    <p:column headerText="Время">
+                        <h:outputText value="#{submission.decisionTime}"/>
+                    </p:column>
+
+                </p:dataTable> 
+            </h:form>
         </ui:define>
     </ui:composition>
 </html>
