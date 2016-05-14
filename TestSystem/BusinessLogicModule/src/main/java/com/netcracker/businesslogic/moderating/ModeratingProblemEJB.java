@@ -38,10 +38,13 @@ public class ModeratingProblemEJB {
     }
     
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public Problem addNewProblem() {
+    public Problem addNewProblem(String problemName) {
+        if (problemName == null) {
+            problemName = DEFAULT_PROBLEM_NAME;
+        }
         try {
             Problem problem = new Problem();
-            problem.setName(DEFAULT_PROBLEM_NAME);
+            problem.setName(problemName);
             problem.setType(DEFAULT_PROBLEM_TYPE);
             problem.setFolderName("0");
             problem.setCheckerType("match");
@@ -67,6 +70,21 @@ public class ModeratingProblemEJB {
     
     public List<String> getAvailableCheckerTypes() {
         return new ArrayList<>(CheckerRegistry.registry().getAvailableIds());
+    }
+    
+    public boolean removeProblem(Problem problem) {
+        try {
+            if (!problem.getAuthorDecisionList().isEmpty() ||
+                    !problem.getCompetitionProblemList().isEmpty() ||
+                    !problem.getTestGroupList().isEmpty()) {
+                return false;
+            }
+            problemFacade.remove(problem);
+            return true;
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.INFO, "Exception while removing problem", throwable);
+            return false;
+        }
     }
     
 }

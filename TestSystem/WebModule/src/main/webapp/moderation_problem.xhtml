@@ -37,6 +37,7 @@
                     <f:param name="id" value="#{moderatingProblemController.problem.id}"/>
                 </p:commandButton>
                 <p:commandButton value="Загрузить тесты"
+                                 rendered="false"
                                  action="#{moderatingProblemController.loadTests()}">
                     <f:param name="id" value="#{moderatingProblemController.problem.id}"/>
                 </p:commandButton>

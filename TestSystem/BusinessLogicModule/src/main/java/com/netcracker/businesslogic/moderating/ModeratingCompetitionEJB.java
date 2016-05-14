@@ -49,10 +49,13 @@ public class ModeratingCompetitionEJB {
     }
     
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public Competition addNewCompetition() {
+    public Competition addNewCompetition(String competitionName) {
+        if (competitionName == null) {
+            competitionName = DEFAULT_COMPETITION_NAME;
+        }
         try {
             Competition competition = new Competition();
-            competition.setName(DEFAULT_COMPETITION_NAME);
+            competition.setName(competitionName);
             String evaluationType = EvaluationSystemRegistry.registry().getAvailableIds().iterator().next();
             competition.setEvaluationType(evaluationType);
             competition.setRegistrationType(RegistrationType.PUBLIC.toString().toLowerCase());
@@ -123,6 +126,20 @@ public class ModeratingCompetitionEJB {
             return true;
         } catch (Throwable throwable) {
             BusinessLogicLogging.logger.log(Level.FINE, "Exception while removing competition problem", throwable);
+            return false;
+        }
+    }
+    
+    public boolean removeCompetition(Competition competition) {
+        try {
+            if (!competition.getCompetitionProblemList().isEmpty() ||
+                    !competition.getParticipationList().isEmpty()) {
+                return false;
+            }
+            competitionFacade.remove(competition);
+            return true;
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.INFO, "Exception while removing competition", throwable);
             return false;
         }
     }
