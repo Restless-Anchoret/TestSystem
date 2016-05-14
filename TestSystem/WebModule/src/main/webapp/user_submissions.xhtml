@@ -47,6 +47,13 @@
                         <h:outputText value="#{submission.decisionTime}"/>
                     </p:column>
 
+                    <p:column headerText="Операции">
+                        <p:link value="Код посылки"
+                                outcome="submission_code.xhtml">
+                            <f:param name="submissionId" value="#{submission.id}"/>
+                        </p:link>
+                    </p:column>
+
                 </p:dataTable> 
             </h:form>
         </ui:define>

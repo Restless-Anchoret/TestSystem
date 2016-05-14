@@ -7,10 +7,8 @@
       xmlns:p="http://primefaces.org/ui">
         <ui:composition template="main_template.xhtml">
         <ui:define name="title">Код посылки</ui:define>
-        <ui:define name="content">            
-            <f:metadata>
-                <f:viewParam name="submissionId" value="#{SubmissionCodeController.submissionId}" />
-            </f:metadata>
+        <ui:define name="content">    
+            
             <h:form> 
                 <p:inputTextarea value="#{SubmissionCodeController.getSubmissionText}" readonly="true" id="submission"/>
             </h:form>
