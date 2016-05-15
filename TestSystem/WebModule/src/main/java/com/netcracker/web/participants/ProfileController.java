@@ -168,9 +168,9 @@ public class ProfileController {
 
     public String getTypeDescription(Participation participation) {
         if (participation.getRegistered()) {
-            return "Зарегестрирован";
+            return "Зарегистрирован";
         } else {
-            return "Не зарегестрирован";
+            return "Не зарегистрирован";
         }
     }
 
