@@ -1,34 +1,36 @@
 package com.netcracker.businesslogic.holding;
 
 import com.netcracker.businesslogic.application.ApplicationEJB;
+import com.netcracker.database.dal.SubmissionFacadeLocal;
+import com.netcracker.database.entity.Submission;
 import com.netcracker.filesystem.supplier.FileSupplier;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import javax.ejb.EJB;
 import java.io.InputStream;
-import java.nio.file.Files;
+import javax.ejb.Stateless;
 
+@Stateless
 public class SubmissionCodeEJB {
 
+    @EJB(beanName = "SubmissionFacade")
+    private SubmissionFacadeLocal submissionFacade;
     @EJB(beanName = "ApplicationEJB")
     private ApplicationEJB applicationEJB;
     private FileSupplier fileSupplier;
 
-    public String getSubmissionCode(Integer ID) throws IOException {
-        File file = new File("");//Удалить
-        fileSupplier = applicationEJB.getFileSupplier();
-        // fileSupplier.getSubmissionCompileFile(submissionFolder);   
+    public String getSubmissionCode(Submission submission) throws IOException {
         try (ByteArrayOutputStream result = new ByteArrayOutputStream()) {
-            InputStream inputStream = new FileInputStream(file);
-            byte[] buffer = Files.readAllBytes(file.toPath());
+            fileSupplier = applicationEJB.getFileSupplier();
+            InputStream inputStream = new FileInputStream(fileSupplier.getSubmissionSourceFile(submission.getFolderName()).toFile());
+            byte[] buffer = new byte[1024];
             int length;
             while ((length = inputStream.read(buffer)) != -1) {
                 result.write(buffer, 0, length);
             }
-            inputStream.close();            
-            return result.toString("UTF-8");
+            inputStream.close();
+            return result.toString();
         }
     }
 ;

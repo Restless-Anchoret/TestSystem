@@ -9,34 +9,43 @@
         <ui:define name="title">Модерирование задач</ui:define>
         <ui:define name="subcontent">
             <h1>Модерирование задач</h1>
-            <p:dataTable id="problemGrid"
-                         var="problem" value="#{moderatingProblemsController.problemsList}"
-                         rows="50" paginator="true"
-                         paginatorTemplate="{PageLinks}"
-                         emptyMessage="Задач пока нет.">
-                <p:column headerText="Название">
-                    <p:link value="#{problem.name}"
-                            outcome="moderation_problem.xhtml">
-                        <f:param name="id" value="#{problem.id}"/>
-                    </p:link>
-                </p:column>
-                <p:column headerText="Тип">
-                    <h:outputText value="#{problem.type}"
-                                  converter="problemTypeConverter"/>
-                </p:column>
-                <p:column headerText="Лимит по времени">
-                    <h:outputText value="#{problem.timeLimit} ms"/>
-                </p:column>
-                <p:column headerText="Лимит по памяти">
-                    <h:outputText value="#{problem.memoryLimit} MB"/>
-                </p:column>
-                <p:column headerText="Валидация">
-                    <h:outputText value="#{moderatingProblemsController.getValidatedDescription(problem)}"/>
-                </p:column>
-            </p:dataTable>
-            <h:form>
+            <h:form id="problemsForm">
+                <p:dataTable var="problem" value="#{moderatingProblemsController.problemsList}"
+                             rows="50" paginator="true"
+                             paginatorTemplate="{PageLinks}"
+                             emptyMessage="Задач пока нет.">
+                    <p:column headerText="Название">
+                        <p:link value="#{problem.name}"
+                                outcome="moderation_problem.xhtml">
+                            <f:param name="id" value="#{problem.id}"/>
+                        </p:link>
+                    </p:column>
+                    <p:column headerText="Тип">
+                        <h:outputText value="#{problem.type}"
+                                      converter="problemTypeConverter"/>
+                    </p:column>
+                    <p:column headerText="Лимит по времени">
+                        <h:outputText value="#{problem.timeLimit} ms"/>
+                    </p:column>
+                    <p:column headerText="Лимит по памяти">
+                        <h:outputText value="#{problem.memoryLimit} MB"/>
+                    </p:column>
+                    <p:column headerText="Валидация">
+                        <h:outputText value="#{moderatingProblemsController.getValidatedDescription(problem)}"/>
+                    </p:column>
+                    <p:column headerText="Операции">
+                        <p:commandButton value="Удалить"
+                                         update="problemsForm"
+                                         action="#{moderatingProblemsController.deleteProblem(problem)}"/>
+                    </p:column>
+                </p:dataTable>
+                <h2>Добавление задачи</h2>
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputText value="Название: "/>
+                    <p:inputText value="#{moderatingProblemsController.newName}"/>
+                </h:panelGrid>
                 <p:commandButton value="Добавить задачу"
-                                 update="problemGrid"
+                                 update="problemsForm"
                                  action="#{moderatingProblemsController.addNewProblem()}"
                                  ajax="true"/>
             </h:form>

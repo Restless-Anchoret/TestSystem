@@ -24,7 +24,6 @@ import com.netcracker.testing.evaluation.EvaluationSystemRegistry;
 import com.netcracker.testing.language.LanguageToolkit;
 import com.netcracker.testing.language.LanguageToolkitRegistry;
 import com.netcracker.testing.system.CodeFileSupplier;
-import com.netcracker.testing.system.MultithreadTestingSystem;
 import com.netcracker.testing.system.ProblemFileSupplier;
 import com.netcracker.testing.system.TestGroupType;
 import com.netcracker.testing.system.TestTable;
@@ -32,7 +31,6 @@ import com.netcracker.testing.system.TestingInfo;
 import com.netcracker.testing.system.Verdict;
 import com.netcracker.testing.tester.ProblemTester;
 import com.netcracker.testing.tester.ProblemTesterRegistry;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,12 +38,11 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.LocalBean;
@@ -55,6 +52,9 @@ import javax.ejb.TransactionAttributeType;
 @Stateless
 @LocalBean
 public class CompetitionEJB {
+    
+    @Resource(name = "timeZoneId")
+    private String timeZoneId;
     
     @EJB(beanName = "SubmissionFacade")
     private SubmissionFacadeLocal submissionFacade;
@@ -66,6 +66,10 @@ public class CompetitionEJB {
     private TestGroupFacadeLocal testGroupFacade;
     @EJB(beanName = "ParticipationResultFacade")
     ParticipationResultFacadeLocal participationResultFacade;
+
+    public String getTimeZoneId() {
+        return timeZoneId;
+    }
     
     public CompetitionPhase getCompetitionPhase(Competition competition) {
         if (competition.getFinished()) {

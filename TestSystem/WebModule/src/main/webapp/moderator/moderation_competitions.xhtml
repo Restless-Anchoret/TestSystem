@@ -9,37 +9,47 @@
         <ui:define name="title">Модерирование соревнований</ui:define>
         <ui:define name="subcontent">
             <h1>Модерирование соревнований</h1>
-            <p:dataTable id="competitionGrid" rowStyleClass= "#{competition.id ge 3 ? 'red' : null}"
-                         var="competition" value="#{moderatingCompetitionsController.competitionsList}"
-                         rows="50" paginator="true"
-                         paginatorTemplate="{PageLinks}"
-                         emptyMessage="Соревнований пока нет.">
-                <p:column headerText="Название">
-                    <p:link value="#{competition.name}"
-                            outcome="moderation_competition.xhtml">
-                        <f:param name="id" value="#{competition.id}"/>
-                    </p:link>
-                </p:column>
-                <p:column headerText="Тип">
-                    <h:outputText value="#{competitionsController.getTypeDescription(competition)}" />
-                </p:column>
-                <p:column headerText="Тип регистрации">
-                    <h:outputText value="#{competition.registrationType}"
-                                  converter="registrationTypeConverter"/>
-                </p:column>
-                <p:column headerText="Система оценивания">
-                    <h:outputText value="#{competition.evaluationType}"/>
-                </p:column>
-                <p:column headerText="Начало">
-                    <h:outputText value="#{competition.competitionStart}" converter="dateConverter"/>
-                </p:column>
-                <p:column headerText="Длительность">
-                    <h:outputText value="#{competition.competitionInterval}" />
-                </p:column>
-            </p:dataTable>
-            <h:form>
+            <h:form id="competitionsForm">
+                <p:dataTable rowStyleClass= "#{competition.id ge 3 ? 'red' : null}"
+                             var="competition" value="#{moderatingCompetitionsController.competitionsList}"
+                             rows="50" paginator="true"
+                             paginatorTemplate="{PageLinks}"
+                             emptyMessage="Соревнований пока нет.">
+                    <p:column headerText="Название">
+                        <p:link value="#{competition.name}"
+                                outcome="moderation_competition.xhtml">
+                            <f:param name="id" value="#{competition.id}"/>
+                        </p:link>
+                    </p:column>
+                    <p:column headerText="Тип">
+                        <h:outputText value="#{competitionsController.getTypeDescription(competition)}" />
+                    </p:column>
+                    <p:column headerText="Тип регистрации">
+                        <h:outputText value="#{competition.registrationType}"
+                                      converter="registrationTypeConverter"/>
+                    </p:column>
+                    <p:column headerText="Система оценивания">
+                        <h:outputText value="#{competition.evaluationType}"/>
+                    </p:column>
+                    <p:column headerText="Начало">
+                        <h:outputText value="#{competition.competitionStart}" converter="dateConverter"/>
+                    </p:column>
+                    <p:column headerText="Длительность">
+                        <h:outputText value="#{competition.competitionInterval}" />
+                    </p:column>
+                    <p:column headerText="Операции">
+                        <p:commandButton value="Удалить"
+                                         update="competitionsForm"
+                                         action="#{moderatingCompetitionsController.deleteCompetition(competition)}"/>
+                    </p:column>
+                </p:dataTable>
+                <h2>Добавление соревнования</h2>
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputText value="Название: "/>
+                    <p:inputText value="#{moderatingCompetitionsController.newName}"/>
+                </h:panelGrid>
                 <p:commandButton value="Добавить соревнование"
-                                 update="competitionGrid"
+                                 update="competitionsForm"
                                  action="#{moderatingCompetitionsController.addNewCompetition()}"
                                  ajax="true"/>
             </h:form>

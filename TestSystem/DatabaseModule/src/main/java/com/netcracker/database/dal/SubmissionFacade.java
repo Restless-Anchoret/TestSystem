@@ -66,7 +66,7 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
     public List<Submission> findAllSubmissionsByCompetitionId(Object competitionId) {
         Competition competition = competitionFacade.find(competitionId);
         Date finish = getFinishCompetition(competition);
-        TypedQuery query = em.createNamedQuery("Submission.findAllByUserIdAndCompetitionProblemId", 
+        TypedQuery query = em.createNamedQuery("Submission.findAllSubmissionsByCompetitionId", 
                 Submission.class);
         query.setParameter("competitionId", competitionId);
         query.setParameter("start", competition.getCompetitionStart());

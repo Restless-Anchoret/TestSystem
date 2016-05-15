@@ -5,10 +5,14 @@ import com.netcracker.businesslogic.holding.RegistrationType;
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
 import com.netcracker.database.dal.CompetitionProblemFacadeLocal;
+import com.netcracker.database.dal.ParticipationFacadeLocal;
 import com.netcracker.database.dal.ProblemFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.CompetitionProblem;
+import com.netcracker.database.entity.Participation;
 import com.netcracker.database.entity.Problem;
+import com.netcracker.monitoring.info.TotalResultInfo;
+import com.netcracker.monitoring.monitor.Monitor;
 import com.netcracker.testing.evaluation.EvaluationSystemRegistry;
 import java.util.Calendar;
 import java.util.Collections;
@@ -38,6 +42,8 @@ public class ModeratingCompetitionEJB {
     private ProblemFacadeLocal problemFacade;
     @EJB(beanName = "CompetitionProblemFacade")
     private CompetitionProblemFacadeLocal competitionProblemFacade;
+    @EJB(beanName = "ParticipationFacade")
+    private ParticipationFacadeLocal participationFacade;
     
     public List<Competition> getAllCompetitions() {
         try {
@@ -49,10 +55,13 @@ public class ModeratingCompetitionEJB {
     }
     
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public Competition addNewCompetition() {
+    public Competition addNewCompetition(String competitionName) {
+        if (competitionName == null) {
+            competitionName = DEFAULT_COMPETITION_NAME;
+        }
         try {
             Competition competition = new Competition();
-            competition.setName(DEFAULT_COMPETITION_NAME);
+            competition.setName(competitionName);
             String evaluationType = EvaluationSystemRegistry.registry().getAvailableIds().iterator().next();
             competition.setEvaluationType(evaluationType);
             competition.setRegistrationType(RegistrationType.PUBLIC.toString().toLowerCase());
@@ -123,6 +132,42 @@ public class ModeratingCompetitionEJB {
             return true;
         } catch (Throwable throwable) {
             BusinessLogicLogging.logger.log(Level.FINE, "Exception while removing competition problem", throwable);
+            return false;
+        }
+    }
+    
+    public boolean removeCompetition(Competition competition) {
+        try {
+            if (!competition.getCompetitionProblemList().isEmpty() ||
+                    !competition.getParticipationList().isEmpty()) {
+                return false;
+            }
+            competitionFacade.remove(competition);
+            return true;
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.FINE, "Exception while removing competition", throwable);
+            return false;
+        }
+    }
+    
+    public boolean finalizeCompetition(Competition competition) {
+        try {
+            Monitor monitor = applicationEJB.getMonitorPool().getMonitor(competition.getId());
+            List<TotalResultInfo> totalResults = monitor.getActualResults();
+            for (TotalResultInfo totalResultInfo: totalResults) {
+                Participation participation = participationFacade.findByCompetitionIdAndUserId(
+                        competition.getId(), totalResultInfo.getId());
+                participation.setPoints(totalResultInfo.getPoints());
+                participation.setFine(totalResultInfo.getFine());
+                participation.setPlace((short)totalResultInfo.getPlace());
+                participation.setSolvedProblems((short)totalResultInfo.getSolvedProblems());
+                participationFacade.edit(participation);
+            }
+            competition.setFinished(true);
+            competitionFacade.edit(competition);
+            return true;
+        } catch (Throwable throwable) {
+            BusinessLogicLogging.logger.log(Level.FINE, "Exception while finalizing competition", throwable);
             return false;
         }
     }
