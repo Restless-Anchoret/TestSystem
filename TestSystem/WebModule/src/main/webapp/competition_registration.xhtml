@@ -72,7 +72,7 @@
                                  update="registrationFom"
                                  action="#{competitionRegistrationController.registrateForCompetition()}"
                                  rendered="#{!competitionRegistrationController.alreadyMadeRequest}"
-                                 ajax="false">
+                                 ajax="true">
                     <f:param name="competitionId" 
                              value="#{competitionRegistrationController.competition.id}"/>
                 </p:commandButton>

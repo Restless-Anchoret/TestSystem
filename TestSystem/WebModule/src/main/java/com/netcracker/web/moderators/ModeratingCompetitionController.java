@@ -3,7 +3,6 @@ package com.netcracker.web.moderators;
 import com.netcracker.businesslogic.holding.CompetitionEJB;
 import com.netcracker.businesslogic.moderating.ModeratingCompetitionEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
-import com.netcracker.database.dal.ProblemFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.CompetitionProblem;
 import com.netcracker.database.entity.Problem;
@@ -136,7 +135,16 @@ public class ModeratingCompetitionController {
     }
 
     public void finalizeCompetition() {
-        JSFUtil.addInfoMessage("Unsupported operation", "");
+        if (!getCompetitionPhase().equals(CompetitionPhase.WAITING_RESULTS)) {
+            JSFUtil.addInfoMessage("Неверная фаза соревнования", "");
+            return;
+        }
+        boolean finalizingResult = moderatingCompetitionEJB.finalizeCompetition(competition);
+        if (finalizingResult) {
+            JSFUtil.addInfoMessage("Соревнование успешно завершено", "");
+        } else {
+            JSFUtil.addErrorMessage("Ошибка при завершении соревнования", "");
+        }
     }
 
     public void addCompetitionProblem() {

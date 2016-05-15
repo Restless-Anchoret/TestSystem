@@ -87,6 +87,7 @@ public class CompetitionRegistrationController {
             } else {
                 competitionFacade.registrationNewParticipation(competition, authenticationEJB.getCurrentUser());
             }
+            alreadyMadeRequest = true;
             JSFUtil.addInfoMessage("Регистрация на соревнование прошла успешно", "");
         } catch (Throwable exception) {
             JSFUtil.addErrorMessage("Ошибка при регистрации", 
