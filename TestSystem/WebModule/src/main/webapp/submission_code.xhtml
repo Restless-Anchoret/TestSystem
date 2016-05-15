@@ -6,8 +6,28 @@
     <ui:composition template="main_template.xhtml">
         <ui:define name="title">Код посылки</ui:define>
         <ui:define name="content">             
-            <h:form>                
-                <p:inputTextarea readonly="true" style="width: 100%; font:Consola;" value="#{submissionCodeController.submissionText}"/>
+            <h:form>    
+                <h:panelGrid columns="2">
+                    <h:outputText value="Название соревнования:" />
+                    <h:outputText value="#{submissionCodeController.submission.competitionProblemId.competitionId.name}" />
+                    <h:outputText value="Название задачи:" />
+                    <h:outputText value="#{submissionCodeController.submission.competitionProblemId.problemId.name}" />
+                    <h:outputText value="Компилятор:" />
+                    <h:outputText value="#{submissionCodeController.submission.compilatorId.name}" /> 
+                    <h:outputText value="Пользователь:" />
+                    <h:outputText value="#{submissionCodeController.submission.userId.login}" />
+                    <h:outputText value="Дата отправки:" />
+                    <h:outputText value="#{submissionCodeController.submission.submissionTime}" />  
+                    <h:outputText value="Вердикт:" />
+                    <h:outputText value="#{submissionCodeController.submission.verdict}" />                    
+                    <h:outputText value="Номер проваленного теста:" />
+                    <h:outputText value="#{submissionCodeController.submission.wrongTestNumber}" />
+                    <h:outputText value="Время работы посылки:" />
+                    <h:outputText value="#{submissionCodeController.submission.decisionTime}" /> 
+                    <h:outputText value="Очки:" />
+                    <h:outputText value="#{submissionCodeController.submission.points}" />                     
+                </h:panelGrid>
+                <p:inputTextarea readonly="true" style="width: 100%; font-family: Consolas;" value="#{submissionCodeController.submissionText}"/>
             </h:form>
         </ui:define>
     </ui:composition>

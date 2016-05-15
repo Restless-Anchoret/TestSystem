@@ -57,4 +57,8 @@ public class SubmissionCodeController {
         return submissionText;
     }
 
+    public Submission getSubmission() {
+        return submission;
+    }
+
 }
