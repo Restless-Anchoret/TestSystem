@@ -19,7 +19,7 @@
                     <f:convertDateTime dateStyle="full" timeStyle="long" type="both"/>
                 </h:outputText>
             </h:panelGrid>
-            <h:form>
+            <h:form rendered="#{profileController.needShowPasswordChanging}">
                 <h:panelGrid id="profileGrid" columns="2" cellpadding="5">
                     <h:outputText value="Старый пароль: "/>
                     <p:password id="oldPassword" value="#{profileController.oldPassword}" required="true"/>

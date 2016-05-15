@@ -92,12 +92,20 @@ public class ProfileController {
         return authenticationEJB.getCurrentUser().getId().equals(user.getId());
     }
 
+    public boolean isNeedShowPasswordChanging() {
+        User currentUser = authenticationEJB.getCurrentUser();
+        return currentUser.equals(user) ||
+                currentUser.getRole().equals(Role.ADMIN.toString().toLowerCase()) ||
+                currentUser.getRole().equals(Role.MODERATOR.toString().toLowerCase()) &&
+                user.getRole().equals(Role.PARTICIPANT.toString().toLowerCase());
+    }
+    
     public boolean isNeedShowActuality() {
         User currentUser = authenticationEJB.getCurrentUser();
-        return currentUser.getRole().equals(Role.ADMIN.toString().toLowerCase())
-                && !user.getRole().equals(Role.ADMIN.toString().toLowerCase())
-                || currentUser.getRole().equals(Role.MODERATOR.toString().toLowerCase())
-                && user.getRole().equals(Role.PARTICIPANT.toString().toLowerCase());
+        return currentUser.getRole().equals(Role.ADMIN.toString().toLowerCase()) &&
+                !user.getRole().equals(Role.ADMIN.toString().toLowerCase()) ||
+                currentUser.getRole().equals(Role.MODERATOR.toString().toLowerCase()) &&
+                user.getRole().equals(Role.PARTICIPANT.toString().toLowerCase());
     }
 
     public void doChangePassword() {
