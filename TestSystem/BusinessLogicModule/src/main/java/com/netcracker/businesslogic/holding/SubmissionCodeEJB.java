@@ -9,13 +9,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import javax.ejb.EJB;
 import java.io.InputStream;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 @Stateless
+@LocalBean
 public class SubmissionCodeEJB {
 
-    @EJB(beanName = "SubmissionFacade")
-    private SubmissionFacadeLocal submissionFacade;
     @EJB(beanName = "ApplicationEJB")
     private ApplicationEJB applicationEJB;
     private FileSupplier fileSupplier;
@@ -33,5 +33,4 @@ public class SubmissionCodeEJB {
             return result.toString();
         }
     }
-;
 }
