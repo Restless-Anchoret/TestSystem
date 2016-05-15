@@ -25,9 +25,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
@@ -37,7 +35,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
-import javax.faces.validator.ValidatorException;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.UploadedFile;
@@ -67,6 +64,7 @@ public class CompetitionController {
     private final long SIZELIMIT = 262144;
     private List<Submission> submissions;
     private List<Submission> submissionsAfterCompetition;
+    private List<Submission> allSubmissions;
     private List<TotalResultInfo> results;
     private List<Participation> participations;
     private List<MonitorColumn> columns;
@@ -99,6 +97,9 @@ public class CompetitionController {
                 break;
             case "competition_monitor.xhtml":
                 initMonitorPage();
+                break;
+            case "competition_all_submissions.xhtml":
+                initAllSubmissionsPage();
                 break;
         }
     }
@@ -177,6 +178,15 @@ public class CompetitionController {
         }
         else
             results = monitor.getActualResults();
+    }
+    
+    public void initAllSubmissionsPage() {
+        try {
+            allSubmissions = submissionFacade.findAllSubmissionsByCompetitionId(competitionId);
+        } catch (Throwable ex) {
+            WebLogging.logger.log(Level.SEVERE, null, ex);
+            allSubmissions = Collections.EMPTY_LIST;
+        }
     }
     
     public void upLoadFile() {
@@ -378,6 +388,14 @@ public class CompetitionController {
 
     public void setSubmissionsAfterCompetition(List<Submission> submissionsAfterCompetition) {
         this.submissionsAfterCompetition = submissionsAfterCompetition;
+    }
+
+    public List<Submission> getAllSubmissions() {
+        return allSubmissions;
+    }
+
+    public void setAllSubmissions(List<Submission> allSubmissions) {
+        this.allSubmissions = allSubmissions;
     }
     
 }
