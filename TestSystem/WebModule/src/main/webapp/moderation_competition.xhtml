@@ -17,9 +17,8 @@
                     <h:outputText value="#{moderatingCompetitionController.competitionPhase}"
                                   converter="competitionPhaseConverter"/>
                     <h:outputText value="Начало: "/>
-                    <p:inputText value="#{moderatingCompetitionController.competition.competitionStart}" label="Date">
-                        <f:convertDateTime type="both" pattern="dd.MM.yyyy HH:mm:ss"/>
-                    </p:inputText>
+                    <p:inputText value="#{moderatingCompetitionController.competition.competitionStart}"
+                                 converter="dateConverter"/>
                     <h:outputText value="Длительность (мин.): "/>
                     <p:inputText value="#{moderatingCompetitionController.competition.competitionInterval}"/>
                     <h:outputText value="Длительность заморозки (мин.): "/>

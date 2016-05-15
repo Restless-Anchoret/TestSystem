@@ -40,5 +40,13 @@
                 <env-entry-value>password943</env-entry-value>
             </env-entry>
         </session>
+        <session>
+            <ejb-name>CompetitionEJB</ejb-name>
+            <env-entry>
+                <env-entry-name>timeZoneId</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>GMT+3</env-entry-value>
+            </env-entry>
+        </session>
     </enterprise-beans>
 </ejb-jar>
