@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 
 public class StandardMonitor implements Monitor {
@@ -44,7 +45,6 @@ public class StandardMonitor implements Monitor {
     @Override
     public synchronized void startMonitoring() {
         competitionFolder = databaseDelegate.getCompetitionInfo(competitionId).getCompetitionFolder();
-        databaseDelegate.initilizeProblemResults(competitionId);
         updateResults();
     }
 
@@ -71,6 +71,7 @@ public class StandardMonitor implements Monitor {
         if (competitionPhase.equals(CompetitionPhase.BEFORE)) {
             return;
         }
+        databaseDelegate.initilizeProblemResults(competitionId);
         Date currentMoment = new Date();
         if (actualResults == null || currentMoment.getTime() - lastUpdatingMoment.getTime() >= updatingDelay) {
             List<ProblemResultInfo> problemResultInfos = databaseDelegate.getProblemResultInfos(competitionId);
@@ -78,19 +79,28 @@ public class StandardMonitor implements Monitor {
             lastUpdatingMoment = currentMoment;
         }
         if (competitionPhase.equals(CompetitionPhase.CODING)) {
+            if (visibleResultsSavingTask != null) {
+                return;
+            }
+            MonitoringLogging.logger.info("Before creating results saving task");
             ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
             Date dateNow = new Date();
             Date dateMoment = competitionInfo.getTimeOfFreezing();
             long milliseconds = dateMoment.getTime() - dateNow.getTime();
             VisibleResultsSavingTask task = new VisibleResultsSavingTask(service);
             visibleResultsSavingTask = service.schedule(task, milliseconds, TimeUnit.MILLISECONDS);
+            MonitoringLogging.logger.info("After creating results saving task");
         } else {
             if (visibleResults != null) {
                 return;
             }
             if (visibleResultsSavingTask != null) {
                 try {
-                    visibleResults = visibleResultsSavingTask.get();
+                    visibleResults = visibleResultsSavingTask.get(2, TimeUnit.SECONDS);
+                } catch (TimeoutException exception) {
+                    MonitoringLogging.logger.log(Level.FINE, "TimeoutException while getting visible results", exception);
+                    visibleResultsSavingTask.cancel(true);
+                    visibleResults = createVisibleResultsNow();
                 } catch (InterruptedException | ExecutionException exception) {
                     MonitoringLogging.logger.log(Level.FINE, "Exception while calling get()-method of saving task", exception);
                 }
@@ -99,11 +109,15 @@ public class StandardMonitor implements Monitor {
                 if (tempVisibleResults != null) {
                     visibleResults = tempVisibleResults;
                 } else {
-                    VisibleResultsSavingTask task = new VisibleResultsSavingTask(null);
-                    visibleResults = task.call();
+                    visibleResults = createVisibleResultsNow();
                 }
             }
         }
+    }
+    
+    private List<TotalResultInfo> createVisibleResultsNow() {
+        VisibleResultsSavingTask task = new VisibleResultsSavingTask(null);
+        return task.call();
     }
     
     private class VisibleResultsSavingTask implements Callable<List<TotalResultInfo>> {
@@ -116,7 +130,9 @@ public class StandardMonitor implements Monitor {
         @Override
         public List<TotalResultInfo> call() {
             List<TotalResultInfo> nowActualResults = actualResults;
+            MonitoringLogging.logger.info("Before persisting visible results");
             resultsConservator.persistVisibleResults(competitionFolder, nowActualResults);
+            MonitoringLogging.logger.info("After persisting visible results");
             if (executor != null) {
                 executor.shutdown();
             }

@@ -13,6 +13,7 @@ public class TotalResultInfo {
     private int place = 0;
     private short points = 0;
     private int fine = 0;
+    private int solvedProblems = 0;
 
     public TotalResultInfo() { }
 
@@ -21,6 +22,11 @@ public class TotalResultInfo {
         this.problemResultInfoList = problemResultInfoList;
         problemResultInfoList.forEach(info -> this.points += info.getPoints());
         problemResultInfoList.forEach(info -> this.fine += info.getFine());
+        problemResultInfoList.forEach(info -> {
+            if (info.getPoints() > 0) {
+                this.solvedProblems++;
+            }
+        });
     }
 
     public List<ProblemResultInfo> getProblemResultInfoList() {
@@ -41,6 +47,10 @@ public class TotalResultInfo {
 
     public int getId() {
         return id;
+    }
+    
+    public int getSolvedProblems() {
+        return solvedProblems;
     }
 
     @XmlElement(name = "problem-result")
@@ -67,6 +77,11 @@ public class TotalResultInfo {
     @XmlElement
     public void setFine(int fine) {
         this.fine = fine;
+    }
+
+    @XmlElement
+    public void setSolvedProblems(int solvedProblems) {
+        this.solvedProblems = solvedProblems;
     }
 
 }
