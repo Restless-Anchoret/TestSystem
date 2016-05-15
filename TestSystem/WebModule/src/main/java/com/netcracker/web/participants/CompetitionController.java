@@ -19,11 +19,11 @@ import com.netcracker.web.logging.WebLogging;
 import com.netcracker.web.session.AuthenticationController;
 import com.netcracker.web.util.CompetitionProblemComporatorOfProblemNumber;
 import com.netcracker.web.util.CompilatorNameConverter;
+import com.netcracker.web.util.JSFUtil;
 import com.netcracker.web.util.MonitorColumn;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.UploadedFile;
 
 @Named
@@ -73,20 +72,20 @@ public class CompetitionController {
     
     @PostConstruct
     public void initPage() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        Integer id;
+        String stringId = JSFUtil.getRequestParameter("competitionId");
+        if (stringId == null) {
+            return;
+        }
         try {
-            String strId = request.getParameter("competitionId");
-            id = Integer.parseInt(strId);
-            competition = competitionFacade.find(id);
+            competitionId = Integer.parseInt(stringId);
+            competition = competitionFacade.find(competitionId);
         }
         catch(Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
             return;
         }
-        competitionId = id;
         authenticationEJB = AuthenticationController.getSessionAuthenticationEJB();
-        Path path = Paths.get(request.getRequestURI());
+        Path path = JSFUtil.getRequestURIPath();
         String pageName = path.getFileName().toString();
         switch (pageName) {
             case "competition_problems.xhtml":

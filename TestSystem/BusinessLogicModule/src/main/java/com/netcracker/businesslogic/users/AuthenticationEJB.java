@@ -2,14 +2,13 @@ package com.netcracker.businesslogic.users;
 
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.businesslogic.support.HashCreator;
+import com.netcracker.businesslogic.support.SessionMediator;
 import com.netcracker.database.dal.UserFacadeLocal;
 import com.netcracker.database.entity.User;
 import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.ejb.LocalBean;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpSession;
 
 @Stateful
 @LocalBean
@@ -40,9 +39,8 @@ public class AuthenticationEJB {
             if (hash.equals(user.getPasswordHash())) {
                 currentUser = user;
                 try {
-                    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-                    session.setAttribute(ROLE_PARAM, user.getRole());
-                    session.setAttribute(USER_ID_PARAM, user.getId().toString());
+                    SessionMediator.setSessionParameter(ROLE_PARAM, user.getRole());
+                    SessionMediator.setSessionParameter(USER_ID_PARAM, user.getId().toString());
                 } catch (Throwable throwable) {
                     BusinessLogicLogging.logger.log(Level.FINE, "Exception while setting session attributes", throwable);
                 }
@@ -59,9 +57,8 @@ public class AuthenticationEJB {
     public void logOut() {
         currentUser = null;
         try {
-            HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-            session.setAttribute(ROLE_PARAM, null);
-            session.setAttribute(USER_ID_PARAM, null);
+            SessionMediator.setSessionParameter(ROLE_PARAM, null);
+            SessionMediator.setSessionParameter(USER_ID_PARAM, null);
         } catch (Throwable throwable) {
             BusinessLogicLogging.logger.log(Level.FINE, "Exception while removing session attributes", throwable);
         }

@@ -48,5 +48,13 @@
                 <env-entry-value>GMT+3</env-entry-value>
             </env-entry>
         </session>
+        <session>
+            <ejb-name>SubmissionPresentationEJB</ejb-name>
+            <env-entry>
+                <env-entry-name>usedEvaluationSystemType</env-entry-name>
+                <env-entry-type>java.lang.String</env-entry-type>
+                <env-entry-value>check</env-entry-value>
+            </env-entry>
+        </session>
     </enterprise-beans>
 </ejb-jar>

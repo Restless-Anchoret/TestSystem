@@ -2,35 +2,19 @@ package com.netcracker.businesslogic.holding;
 
 import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
-import com.netcracker.businesslogic.support.ProblemFileSupplierImpl;
-import com.netcracker.businesslogic.support.SubmissionFileSupplier;
-import com.netcracker.businesslogic.support.CheckSubmissition;
-import com.netcracker.businesslogic.support.CheckSubmissitionCompetition;
+import com.netcracker.businesslogic.support.CheckSubmissionHandler;
+import com.netcracker.businesslogic.support.CheckSubmissionCompetitionHandler;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
 import com.netcracker.database.dal.ParticipationResultFacadeLocal;
 import com.netcracker.database.dal.SubmissionFacadeLocal;
-import com.netcracker.database.dal.TestGroupFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.CompetitionProblem;
 import com.netcracker.database.entity.Compilator;
 import com.netcracker.database.entity.Submission;
-import com.netcracker.database.entity.TestGroup;
 import com.netcracker.database.entity.User;
 import com.netcracker.monitoring.info.CompetitionPhase;
-import com.netcracker.testing.checker.Checker;
-import com.netcracker.testing.checker.CheckerRegistry;
-import com.netcracker.testing.evaluation.EvaluationSystem;
 import com.netcracker.testing.evaluation.EvaluationSystemRegistry;
-import com.netcracker.testing.language.LanguageToolkit;
-import com.netcracker.testing.language.LanguageToolkitRegistry;
-import com.netcracker.testing.system.CodeFileSupplier;
-import com.netcracker.testing.system.ProblemFileSupplier;
-import com.netcracker.testing.system.TestGroupType;
-import com.netcracker.testing.system.TestTable;
-import com.netcracker.testing.system.TestingInfo;
 import com.netcracker.testing.system.Verdict;
-import com.netcracker.testing.tester.ProblemTester;
-import com.netcracker.testing.tester.ProblemTesterRegistry;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,10 +46,10 @@ public class CompetitionEJB {
     private ApplicationEJB applicationEJB;
     @EJB(beanName = "CompetitionFacade")
     private CompetitionFacadeLocal competitionFacade;
-    @EJB(beanName = "TestGroupFacade")
-    private TestGroupFacadeLocal testGroupFacade;
     @EJB(beanName = "ParticipationResultFacade")
-    ParticipationResultFacadeLocal participationResultFacade;
+    private ParticipationResultFacadeLocal participationResultFacade;
+    @EJB(beanName = "SendingSubmissionEJB")
+    private SendingSubmissionEJB sendingSubmissionEJB;
 
     public String getTimeZoneId() {
         return timeZoneId;
@@ -131,35 +115,44 @@ public class CompetitionEJB {
             BusinessLogicLogging.logger.log(Level.SEVERE, null, ex);
             return false;
         }
-        ProblemTester problemTester = ProblemTesterRegistry.registry().get("coding");
         Competition competition = competitionFacade.find(competitionId);
-        EvaluationSystem evaluationSystem = EvaluationSystemRegistry.registry().
-                get(competition.getEvaluationType());
-        LanguageToolkit languageToolkit = LanguageToolkitRegistry.registry().get(compilator.getName());
-        Checker checker = CheckerRegistry.registry().getDefault();
-        CodeFileSupplier codeFileSupplier = new SubmissionFileSupplier(submission.getFolderName(),
-                applicationEJB.getFileSupplier());
-        ProblemFileSupplier problemFileSupplier = new ProblemFileSupplierImpl(
-                competitionProblem.getProblemId().getFolderName(),
-                applicationEJB.getFileSupplier());
-        TestTable testTable = new TestTable();
-        List<TestGroup> testGroups = testGroupFacade.getTestGroupsByProblemId(competitionProblem.
-                getProblemId().getId());
-        for (TestGroup testGroup: testGroups)
-            testTable.putTestGroup(TestGroupType.valueOf(testGroup.getTestGroupType().toUpperCase()),
-                    testGroup.getPointsForTest(), testGroup.getTestsQuantity());
-        CheckSubmissition checkSubmissition;
+        CheckSubmissionHandler handler;
         if (submission.getSubmissionTime().compareTo(getCompetitionEnd(competition)) < 0)
-            checkSubmissition = new CheckSubmissitionCompetition(submission, submissionFacade,
+            handler = new CheckSubmissionCompetitionHandler(submission, submissionFacade,
                 participationResultFacade);
         else
-            checkSubmissition = new CheckSubmissition(submission, submissionFacade);
-        TestingInfo testingInfo = new TestingInfo(checkSubmissition,
-                problemTester, evaluationSystem, languageToolkit, checker, codeFileSupplier,
-                problemFileSupplier, competition.getPretestsOnly(),
-                competitionProblem.getProblemId().getTimeLimit(), 
-                competitionProblem.getProblemId().getMemoryLimit(), testTable);
-        applicationEJB.getTestingSystem().addSubmission(testingInfo);
+            handler = new CheckSubmissionHandler(submission, submissionFacade);
+        sendingSubmissionEJB.sendSubmission(competitionProblem, submission.getFolderName(),
+                competition.getEvaluationType(), competition.getPretestsOnly(), compilator, handler);
+//        ProblemTester problemTester = ProblemTesterRegistry.registry().get("coding");
+//        Competition competition = competitionFacade.find(competitionId);
+//        EvaluationSystem evaluationSystem = EvaluationSystemRegistry.registry().
+//                get(competition.getEvaluationType());
+//        LanguageToolkit languageToolkit = LanguageToolkitRegistry.registry().get(compilator.getName());
+//        Checker checker = CheckerRegistry.registry().getDefault();
+//        CodeFileSupplier codeFileSupplier = new SubmissionFileSupplier(submission.getFolderName(),
+//                applicationEJB.getFileSupplier());
+//        ProblemFileSupplier problemFileSupplier = new ProblemFileSupplierImpl(
+//                competitionProblem.getProblemId().getFolderName(),
+//                applicationEJB.getFileSupplier());
+//        TestTable testTable = new TestTable();
+//        List<TestGroup> testGroups = testGroupFacade.getTestGroupsByProblemId(competitionProblem.
+//                getProblemId().getId());
+//        for (TestGroup testGroup: testGroups)
+//            testTable.putTestGroup(TestGroupType.valueOf(testGroup.getTestGroupType().toUpperCase()),
+//                    testGroup.getPointsForTest(), testGroup.getTestsQuantity());
+//        CheckSubmissionHandler checkSubmissition;
+//        if (submission.getSubmissionTime().compareTo(getCompetitionEnd(competition)) < 0)
+//            checkSubmissition = new CheckSubmissionCompetitionHandler(submission, submissionFacade,
+//                participationResultFacade);
+//        else
+//            checkSubmissition = new CheckSubmissionHandler(submission, submissionFacade);
+//        TestingInfo testingInfo = new TestingInfo(checkSubmissition,
+//                problemTester, evaluationSystem, languageToolkit, checker, codeFileSupplier,
+//                problemFileSupplier, competition.getPretestsOnly(),
+//                competitionProblem.getProblemId().getTimeLimit(), 
+//                competitionProblem.getProblemId().getMemoryLimit(), testTable);
+//        applicationEJB.getTestingSystem().addSubmission(testingInfo);
         return true;
     }
     

@@ -36,6 +36,10 @@
                                 outcome="/privateUser/submission_code.xhtml">
                             <f:param name="id" value="#{submission.id}"/>
                         </p:link>
+                        <h:outputText value="  "/>
+                        <p:commandLink value="Запустить"
+                                       action="#{sendingSubmissionController.runSubmissionForPresentation(submission)}"
+                                       rendered="#{authenticationController.authenticatedModeratorOrAdmin}"/>
                     </p:column>
                 </p:dataTable>               
             </h:form>
