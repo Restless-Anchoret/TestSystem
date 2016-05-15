@@ -5,7 +5,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-    <ui:composition template="competition_template.xhtml">
+    <ui:composition template="/template/competition_template.xhtml">
         <ui:define name="title">Задачи</ui:define>
         <ui:define name="subcontent">
             <h:form>
@@ -22,8 +22,9 @@
 
                     <p:column headerText="Скачать условие">
                         <p:link value="скачать" target="_blank" 
-                                       outcome="downloadFile">
+                                       outcome="/participant/downloadFile">
                             <f:param name="problemId" value="#{competitionProblem.problemId.id}"/>
+                            <f:param name="competitionId" value="#{competitionController.competition.id}"/>
                         </p:link>
                     </p:column>                    
                 </p:dataTable>               

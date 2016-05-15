@@ -11,13 +11,13 @@
         <ui:define name="content">
             <h:form>  
                 <p:menubar>
-                    <p:menuitem value="Задачи" outcome="competition_problems">
+                    <p:menuitem value="Задачи" outcome="/competition/competition_problems">
                         <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
-                    <p:menuitem value="Посылки" outcome="competition_submissions">
+                    <p:menuitem value="Посылки" outcome="/competition/competition_submissions">
                         <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
-                    <p:menuitem value="Монитор" outcome="competition_monitor">
+                    <p:menuitem value="Монитор" outcome="/competition/competition_monitor">
                         <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
                 </p:menubar>

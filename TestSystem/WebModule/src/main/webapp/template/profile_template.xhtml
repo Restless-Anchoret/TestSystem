@@ -9,15 +9,15 @@
         <ui:define name="content">
             <h:form>
                 <p:menubar>
-                    <p:menuitem value="Пользователь" outcome="user_profile.xhtml">
+                    <p:menuitem value="Пользователь" outcome="/privateUser/user_profile.xhtml">
                         <f:param name="userId" value="#{profileController.user.id}"
                                  rendered="#{!profileController.profileOfCurrentUser}"/>
                     </p:menuitem>
-                    <p:menuitem value="Посылки" outcome="user_submissions.xhtml">
+                    <p:menuitem value="Посылки" outcome="/privateUser/user_submissions.xhtml">
                         <f:param name="userId" value="#{profileController.user.id}"
                                  rendered="#{!profileController.profileOfCurrentUser}"/>
                     </p:menuitem>
-                    <p:menuitem value="Достижения" outcome="user_achievements.xhtml">
+                    <p:menuitem value="Достижения" outcome="/privateUser/user_achievements.xhtml">
                         <f:param name="userId" value="#{profileController.user.id}"
                                  rendered="#{!profileController.profileOfCurrentUser}"/>
                     </p:menuitem>

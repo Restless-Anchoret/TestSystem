@@ -23,6 +23,6 @@
         <param-value>home</param-value>  
     </context-param>  
     <welcome-file-list>
-        <welcome-file>faces/log_in.xhtml</welcome-file>
+        <welcome-file>faces/guest/log_in.xhtml</welcome-file>
     </welcome-file-list>
 </web-app>

@@ -10,16 +10,16 @@
     </h:head>
     <h:body>
         <p:growl id="growl" life="5000" showDetail="true" autoUpdate="true"/>
-        <h:graphicImage value="logo_kolibri.png"/>
+        <h:graphicImage value="/resourse/logo_kolibri.png"/>
         <h:form>
             <p:menubar>
-                <p:menuitem value="Главная" outcome="competitions.xhtml"/>
-                <p:menuitem value="Профиль" outcome="user_profile.xhtml"/>
-                <p:menuitem value="Модерирование" outcome="moderation_competitions.xhtml"
+                <p:menuitem value="Главная" outcome="/participant/competitions.xhtml"/>
+                <p:menuitem value="Профиль" outcome="/privateUser/user_profile.xhtml"/>
+                <p:menuitem value="Модерирование" outcome="/moderator/moderation_competitions.xhtml"
                             rendered="#{authenticationController.authenticatedModeratorOrAdmin}"/>
                 <f:facet name="options">
                     <h:panelGrid columns="3">
-                        <p:link value="#{authenticationController.currentUserLogin}" outcome="user_profile.xhtml"/>
+                        <p:link value="#{authenticationController.currentUserLogin}" outcome="/privateUser/user_profile.xhtml"/>
                         <h:outputText value="  "/>
                         <p:commandLink value = "Выйти" action="#{logOutController.doLogOut()}"/>
                     </h:panelGrid>

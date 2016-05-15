@@ -44,7 +44,7 @@ public class LogInController {
         String summary = null;
         switch (authenticationResult.getInfo()) {
             case SUCCESS:
-                return "competitions.xhtml";
+                return "/participant/competitions.xhtml";
             case REFUSE:
                 summary = "Неверные комбинация логина и пароля";
                 break;

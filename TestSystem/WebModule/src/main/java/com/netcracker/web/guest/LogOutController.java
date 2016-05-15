@@ -21,7 +21,7 @@ public class LogOutController {
     
     public String doLogOut() {
         authenticationEJB.logOut();
-        return "log_in.xhtml";
+        return "/guest/log_in.xhtml";
     }
 
 }

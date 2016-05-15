@@ -6,7 +6,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:pe="http://primefaces.org/ui/extensions">
-    <ui:composition template="main_template.xhtml">
+    <ui:composition template="/template/main_template.xhtml">
         <ui:define name="title">Соревнования</ui:define>
         <ui:define name="content">
             <h:form>
@@ -20,13 +20,13 @@
                         <br/>
                         <p:link disabled="#{not competitionsController.isAccess(competition)}"      
                                 value="Войти"
-                                outcome="competition_problems">
+                                outcome="/competition/competition_problems">
                             <f:param name="competitionId" value="#{competition.id}"/>
                         </p:link>
                         <br/>
                         <p:link rendered="#{competitionsController.toRegistrate(competition)}"
                                 value="Зарегистрироваться"
-                                outcome="competition_registration">
+                                outcome="/competition/competition_registration">
                             <f:param name="competitionId" value="#{competition.id}"/>
                         </p:link>
                     </p:column>
