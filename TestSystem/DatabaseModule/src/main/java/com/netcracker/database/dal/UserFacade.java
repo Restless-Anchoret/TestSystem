@@ -80,6 +80,12 @@ public class UserFacade extends AbstractFacade<User> implements UserFacadeLocal 
         else
             return results.get(0);
     }
+
+    @Override
+    public List<User> findAll() {
+        TypedQuery query = em.createNamedQuery("User.findAll", User.class);
+        return query.getResultList();
+    }
     
     
     

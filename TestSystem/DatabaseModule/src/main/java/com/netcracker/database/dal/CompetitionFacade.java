@@ -145,4 +145,10 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
         }
     }    
     
+    @Override
+    public List<Competition> findAll() {
+        TypedQuery query = em.createNamedQuery("Competition.findAll", Competition.class);
+        return query.getResultList();
+    }
+    
 }

@@ -10,7 +10,7 @@
             <h:form>
                 
                 <p:dataTable var="submission" value="#{competitionController.submissionsAfterCompetition}"
-                             rows="15" paginator="true"
+                             rows="50" paginator="true"
                              paginatorTemplate="{PageLinks}"
                              emptyMessage="Посылок нет."
                              rendered="#{competitionController.viewTable}">
@@ -18,7 +18,7 @@
                         <h:outputText value="Посылки, отправленные после заверения соревнования"/>
                     </f:facet>
                     <p:column headerText="Когда">
-                        <h:outputText value="#{submission.submissionTime}" />
+                        <h:outputText value="#{submission.submissionTime}" converter="dateConverter"/>
                     </p:column>
 
                     <p:column headerText="Задача">
@@ -37,15 +37,18 @@
                         <h:outputText value="#{submission.decisionTime}"/>
                     </p:column>
 
-                    <p:column headerText="Память">
-                        <h:outputText value="#{submission.decisionMemory}"/>
+                    <p:column headerText="Код посылки">
+                        <p:link value="открыть" outcome="/privateUser/submission_code.xhtml" 
+                                target="_blanc">
+                            <f:param name="id" value="#{submission.id}"/>
+                        </p:link>
                     </p:column>
                 </p:dataTable>
                 
                 <h1>Посылки</h1>
                 
                 <p:dataTable var="submission" value="#{competitionController.submissions}"
-                             rows="15" paginator="true" id="submissions"
+                             rows="50" paginator="true" id="submissions"
                              paginatorTemplate="{PageLinks}"
                              emptyMessage="Посылок нет.">
                     <p:column headerText="Когда">
@@ -68,8 +71,11 @@
                         <h:outputText value="#{submission.decisionTime}"/>
                     </p:column>
                     
-                    <p:column headerText="Память">
-                        <h:outputText value="#{submission.decisionMemory}"/>
+                    <p:column headerText="Код посылки">
+                        <p:link value="открыть" outcome="/privateUser/submission_code.xhtml" 
+                                target="_blanc">
+                            <f:param name="id" value="#{submission.id}"/>
+                        </p:link>
                     </p:column>
                 </p:dataTable>               
             </h:form>

@@ -121,4 +121,10 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
         return result;
     }
     
+    @Override
+    public List<Submission> findAll() {
+        TypedQuery query = em.createNamedQuery("Submission.findAll", Submission.class);
+        return query.getResultList();
+    }
+    
 }

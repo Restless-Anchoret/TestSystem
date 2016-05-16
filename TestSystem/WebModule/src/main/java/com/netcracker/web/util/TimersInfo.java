@@ -33,11 +33,17 @@ public class TimersInfo {
         if (competition.getCompetitionStart().after(new Date()) &&
                 ((competition.getCompetitionStart().getTime() - new Date().getTime()) / 1000 > 86_400))
             return "больше 24 часов";
-        else if (competitionEJB.getCompetitionPhase(competition) == CompetitionPhase.CODING ||
-                 competitionEJB.getCompetitionPhase(competition) == CompetitionPhase.CODING_FROZEN)
-            return "соревнование идет";
-        else
-            return "соревнование закончилось";
+        switch (competitionEJB.getCompetitionPhase(competition)) {
+            case CODING:
+            case CODING_FROZEN:
+                return "соревнование идет";
+            case WAITING_RESULTS:
+                return "ожидаются результаты";
+            case FINISHED:
+                return "соревнование закончилось";
+            default:
+                return "";
+        }
     }
     
     public long getSecondsBeforeEnd(Competition competition) {
