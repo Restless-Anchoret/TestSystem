@@ -222,7 +222,7 @@ public class CompetitionController {
             is = file.getInputstream();
         } catch (IOException ex) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", 
-                    "Произошда ошибка при загрузке файла, попробуйте загрузить еще раз.");
+                    "Произошла ошибка при загрузке файла, попробуйте загрузить еще раз.");
             FacesContext.getCurrentInstance().addMessage(null, message);
             WebLogging.logger.log(Level.SEVERE, null, ex);
             file = null;
@@ -238,7 +238,7 @@ public class CompetitionController {
         }
         else {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.", 
-                    "Произошда ошибка при загрузке файла, попробуйте загрузить еще раз.");
+                    "Произошла ошибка при загрузке файла, попробуйте загрузить еще раз.");
             FacesContext.getCurrentInstance().addMessage(null, message);
             file = null;
         }

@@ -83,7 +83,7 @@ public class CompetitionRegistrationController {
             JSFUtil.addInfoMessage("Регистрация на соревнование прошла успешно", "");
         } catch (Throwable exception) {
             JSFUtil.addErrorMessage("Ошибка при регистрации", 
-                    "Произощла ошибка при регистрации, повторите попытку позже.");
+                    "Произошла ошибка при регистрации, повторите попытку позже.");
             WebLogging.logger.log(Level.SEVERE, null, exception);
         }
     }
