@@ -54,5 +54,10 @@ public class ProblemFacade extends AbstractFacade<Problem> implements ProblemFac
         return query.getResultList();
     }
     
+    @Override
+    public List<Problem> findAll() {
+        TypedQuery query = em.createNamedQuery("Problem.findAll", Problem.class);
+        return query.getResultList();
+    }
     
 }

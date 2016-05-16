@@ -26,8 +26,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "competition", catalog = "test_system", schema = "public")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Competition.findByHoldCompetition", query = "SELECT c FROM Competition c WHERE c.holdCompetition = :holdCompetition ORDER BY c.competitionStart NULLS LAST"),
-    @NamedQuery(name = "Competition.findByVisibleAndHoldCompetition", query = "SELECT c FROM Competition c WHERE c.visible = :visible AND c.holdCompetition = :holdCompetition ORDER BY c.competitionStart NULLS LAST"),
+    @NamedQuery(name = "Competition.findByHoldCompetition", query = "SELECT c FROM Competition c WHERE c.holdCompetition = :holdCompetition ORDER BY c.competitionStart DESC NULLS LAST"),
+    @NamedQuery(name = "Competition.findByVisibleAndHoldCompetition", query = "SELECT c FROM Competition c WHERE c.visible = :visible AND c.holdCompetition = :holdCompetition ORDER BY c.competitionStart DESC NULLS LAST"),
+    @NamedQuery(name = "Competition.findAll", query = "SELECT c FROM Competition c ORDER BY c.competitionStart DESC"),
     @NamedQuery(name = "Competition.findById", query = "SELECT c FROM Competition c WHERE c.id = :id")})
 public class Competition implements Serializable {
 
