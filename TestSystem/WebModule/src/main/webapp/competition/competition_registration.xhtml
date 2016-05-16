@@ -71,7 +71,7 @@
                 <p:commandButton value="Зарегистрироваться"
                                  update="registrationFom"
                                  action="#{competitionRegistrationController.registrateForCompetition()}"
-                                 rendered="#{!competitionRegistrationController.alreadyMadeRequest}"
+                                 rendered="#{competitionRegistrationController.viewRegistrationButton}"
 
                                  ajax="true">
                     <f:param name="competitionId" 

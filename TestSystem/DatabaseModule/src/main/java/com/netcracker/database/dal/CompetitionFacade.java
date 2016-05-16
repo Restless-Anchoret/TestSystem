@@ -9,6 +9,7 @@ import com.netcracker.database.entity.User;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,6 +18,12 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class CompetitionFacade extends AbstractFacade<Competition> implements CompetitionFacadeLocal {
 
+    @EJB(beanName = "ParticipationFacade")
+    private ParticipationFacadeLocal participationFacade;
+    
+    @EJB(beanName = "CompetitionProblemFacade")
+    private CompetitionProblemFacadeLocal competitionProblemFacadeFacade;
+    
     @PersistenceContext(unitName = "com.netcracker_DatabaseModule_ejb_1.0-SNAPSHOTPU")
     private EntityManager em;
 
@@ -54,12 +61,14 @@ public class CompetitionFacade extends AbstractFacade<Competition> implements Co
 
     @Override
     public List<ParticipationResult> createNullsResults(Competition competition) {
-        em.merge(competition);
         List<ParticipationResult> participationResults = new ArrayList<>();
         ParticipationResult participationResult;
-        for (Participation participation: competition.getParticipationList()) {
+        List<Participation> participations = participationFacade.findByCompetitionId(competition.getId());
+        List<CompetitionProblem> competitionProblems = competitionProblemFacadeFacade.
+                findByCompetitionId(competition.getId());
+        for (Participation participation: participations) {
             if (participation.getRegistered()) {
-                for (CompetitionProblem competitionProblem: competition.getCompetitionProblemList()) {
+                for (CompetitionProblem competitionProblem: competitionProblems) {
                     participationResult = new ParticipationResult();
                     participationResult.setUserId(participation.getUserId());
                     participationResult.setCompetitionProblemId(competitionProblem);

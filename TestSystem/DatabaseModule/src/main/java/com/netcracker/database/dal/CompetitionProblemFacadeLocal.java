@@ -21,4 +21,6 @@ public interface CompetitionProblemFacadeLocal {
     
     CompetitionProblem loadCompetition(CompetitionProblem competitionProblem);
     
+    List<CompetitionProblem> findByCompetitionId(Object competitionId);
+    
 }
