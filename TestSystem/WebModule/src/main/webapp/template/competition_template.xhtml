@@ -17,7 +17,8 @@
                     <p:menuitem value="Посылки" outcome="/competition/competition_submissions">
                         <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
-                    <p:menuitem value="Монитор" outcome="/competition/competition_monitor">
+                    <p:menuitem value="Монитор" outcome="/competition/competition_monitor" 
+                                rendered="#{competitionController.competition.showMonitor}">
                         <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
                     <p:menuitem value="Все посылки" outcome="/moderator/competition_all_submissions"

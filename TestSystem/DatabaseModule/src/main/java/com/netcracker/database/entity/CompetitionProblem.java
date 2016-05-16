@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "CompetitionProblem.findById", query = "SELECT c FROM CompetitionProblem c WHERE c.id = :id"),
-    @NamedQuery(name = "CompetitionProblem.findByCompetitionId", query = "SELECT c FROM CompetitionProblem c WHERE c.problemId.id = :competitionId")})
+    @NamedQuery(name = "CompetitionProblem.findByCompetitionId", query = "SELECT c FROM CompetitionProblem c WHERE c.competitionId.id = :competitionId ORDER BY c.problemNumber")})
 public class CompetitionProblem implements Serializable {
 
     private static final long serialVersionUID = 1L;

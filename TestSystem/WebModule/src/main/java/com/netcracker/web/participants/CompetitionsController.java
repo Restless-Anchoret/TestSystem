@@ -4,6 +4,7 @@ import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.holding.CompetitionEJB;
 import com.netcracker.businesslogic.users.AuthenticationEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
+import com.netcracker.database.dal.ParticipationFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.Participation;
 import com.netcracker.database.entity.User;
@@ -25,6 +26,8 @@ public class CompetitionsController {
 
     @EJB(beanName = "CompetitionFacade")
     private CompetitionFacadeLocal competitionFacade;
+    @EJB(beanName = "ParticipationFacade")
+    private ParticipationFacadeLocal participationFacade;
     @EJB(beanName = "CompetitionEJB")
     private CompetitionEJB competitionEJB;
     private AuthenticationEJB authenticationEJB;
@@ -56,13 +59,13 @@ public class CompetitionsController {
         if (user.getRole().equals("admin") || user.getRole().equals("moderator"))
             return true;
         switch (competitionEJB.getCompetitionPhase(competition)) {
-            case BEFORE:
-            case WAITING_RESULTS:    
+            case BEFORE:    
                 return false;
             case CODING:
             case CODING_FROZEN:
-                competitionFacade.loadParticipations(competition);
-                List<Participation> participations = competition.getParticipationList();
+            case WAITING_RESULTS:
+                List<Participation> participations = 
+                        participationFacade.findByCompetitionId(competition.getId());
                 for (Participation participation : participations) {
                     if (participation.getUserId().getId().equals(user.getId())) {
                         result = participation.getRegistered();

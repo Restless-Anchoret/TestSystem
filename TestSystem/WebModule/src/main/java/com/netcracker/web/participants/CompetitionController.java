@@ -4,6 +4,7 @@ import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.holding.CompetitionEJB;
 import com.netcracker.businesslogic.users.AuthenticationEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
+import com.netcracker.database.dal.CompetitionProblemFacadeLocal;
 import com.netcracker.database.dal.CompilatorFacadeLocal;
 import com.netcracker.database.dal.SubmissionFacadeLocal;
 import com.netcracker.database.entity.Competition;
@@ -11,13 +12,13 @@ import com.netcracker.database.entity.CompetitionProblem;
 import com.netcracker.database.entity.Compilator;
 import com.netcracker.database.entity.Participation;
 import com.netcracker.database.entity.Submission;
+import com.netcracker.database.entity.User;
 import com.netcracker.monitoring.info.CompetitionPhase;
 import com.netcracker.monitoring.info.ProblemResultInfo;
 import com.netcracker.monitoring.info.TotalResultInfo;
 import com.netcracker.monitoring.monitor.Monitor;
 import com.netcracker.web.logging.WebLogging;
 import com.netcracker.web.session.AuthenticationController;
-import com.netcracker.web.util.CompetitionProblemComporatorOfProblemNumber;
 import com.netcracker.web.util.CompilatorNameConverter;
 import com.netcracker.web.util.JSFUtil;
 import com.netcracker.web.util.MonitorColumn;
@@ -44,6 +45,8 @@ public class CompetitionController {
 
     @EJB(beanName = "CompetitionFacade")
     private CompetitionFacadeLocal competitionFacade;
+    @EJB(beanName = "CompetitionProblemFacade")
+    private CompetitionProblemFacadeLocal competitionProblemFacade;
     @EJB(beanName = "CompilatorFacade")
     private CompilatorFacadeLocal compilatorFacade;
     @EJB(beanName = "ApplicationEJB")
@@ -107,8 +110,8 @@ public class CompetitionController {
     
     public void initProblemsPage() {
         try {
-            competitionProblems = competitionFacade.loadCompetitionProblems(competition).getCompetitionProblemList();
-            competitionProblems.sort(new CompetitionProblemComporatorOfProblemNumber());
+            competitionProblems = 
+                    competitionProblemFacade.findByCompetitionId(competitionId);
             competitionProblemsItems = new ArrayList<>();
             for (CompetitionProblem problem: competitionProblems) {
                 competitionProblemsItems.add(new SelectItem(problem.getId(), problem.getProblemId().getName()));
@@ -164,8 +167,8 @@ public class CompetitionController {
             return;
         }
         try {
-            competitionProblems = competitionFacade.loadCompetitionProblems(competition).getCompetitionProblemList();
-            competitionProblems.sort(new CompetitionProblemComporatorOfProblemNumber());
+            competitionProblems = 
+                    competitionProblemFacade.findByCompetitionId(competitionId);
         } catch (Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
             competitionProblems = Collections.EMPTY_LIST;
@@ -178,6 +181,11 @@ public class CompetitionController {
                     competitionProblems.get(i).getProblemNumber()));
         participations = competitionFacade.loadParticipations(competition).getParticipationList();
         competitionType = competition.getEvaluationType();
+        User user = authenticationEJB.getCurrentUser();
+        if (user.getRole().equals("admin") || user.getRole().equals("moderator")) {
+            results = monitor.getActualResults();
+            return;
+        }
         if (phase == CompetitionPhase.WAITING_RESULTS || phase == CompetitionPhase.CODING_FROZEN) {
             results = monitor.getVisibleResults();
         }
@@ -297,6 +305,25 @@ public class CompetitionController {
     
     public boolean isViewTable() {
         return !submissionsAfterCompetition.isEmpty();
+    }
+    
+    public boolean isDisabledToSendButton() {
+        User user = authenticationEJB.getCurrentUser();
+        if (user.getRole().equals("admin") || user.getRole().equals("moderator")) {
+            return false;
+        }
+        switch (competitionEJB.getCompetitionPhase(competition)) {
+            case BEFORE:
+            case WAITING_RESULTS:    
+                return true;
+            case CODING:
+            case CODING_FROZEN:
+                return false;
+            case FINISHED:
+                return competition.getPracticePermition();
+            default:
+                return true;    
+        }
     }
     
     public List<CompetitionProblem> getCompetitionProblems() {
