@@ -21,6 +21,7 @@ import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import com.netcracker.monitoring.info.CompetitionPhase;
+import java.nio.file.Path;
 
 @Named
 @RequestScoped
@@ -55,10 +56,15 @@ public class ProfileController {
             } else {
                 user = userFacade.find(Integer.parseInt(userId));
             }
+            Path path = JSFUtil.getRequestURIPath();
+            String pageName = path.getFileName().toString();
+            if (pageName.equals("user_submissions.xhtml")) {
+                initUserSubmissions();
+            }
         } catch (Exception exception) {
             WebLogging.logger.log(Level.FINE, "Exception while loading profile page", exception);
         }
-    }//у юзера partisip*получили парт лист
+    }
 
     public User getUser() {
         return user;
@@ -139,15 +145,11 @@ public class ProfileController {
     }
 
     public void initUserAchievements() {
-        userFacade.loadParticipations(user);
         participations = user.getParticipationList();
-
     }
 
     public void initUserSubmissions() {
-        userFacade.loadSubmissions(user);
         submissions = user.getSubmissionList();
-
     }
 
     public List<Participation> getParticipations() {
@@ -168,9 +170,9 @@ public class ProfileController {
 
     public String getTypeDescription(Participation participation) {
         if (participation.getRegistered()) {
-            return "Зарегестрирован";
+            return "Зарегистрирован";
         } else {
-            return "Не зарегестрирован";
+            return "Не зарегистрирован";
         }
     }
 

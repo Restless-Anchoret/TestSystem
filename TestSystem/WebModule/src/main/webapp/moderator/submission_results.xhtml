@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/template/main_template.xhtml">
+        <ui:define name="title">Результаты посылки</ui:define>
+        <ui:define name="content">
+            <h1>Результаты посылки</h1>
+            <h:form id="presentationForm">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputText value="Соревнование:" />
+                    <h:outputText value="#{submissionResultsConroller.presentationSubmission.competitionProblemId.competitionId.name}" />
+                    <h:outputText value="Задача:" />
+                    <h:outputText value="#{submissionResultsConroller.presentationSubmission.competitionProblemId.problemId.name}" />
+                    <h:outputText value="Пользователь:" />
+                    <h:outputText value="#{submissionResultsConroller.presentationSubmission.userId.login}" />
+                    <h:outputText value="Время отправки:" />
+                    <h:outputText value="#{submissionResultsConroller.presentationSubmission.submissionTime}"
+                                  converter="dateConverter"/> 
+                    <h:outputText value="Компилятор:" />
+                    <h:outputText value="#{submissionResultsConroller.presentationSubmission.compilatorId.name}" />
+                    <h:outputText value="Вердикт: "/>
+                    <h:outputText value="#{submissionResultsConroller.verdict}"/>
+                </h:panelGrid>
+                <p:commandButton value="Обновить" update="presentationForm"/>
+                <h:panelGrid columns="2" cellpadding="5"
+                             rendered="#{submissionResultsConroller.presentationReady}">
+                    
+                </h:panelGrid>
+                <p:dataTable var="test" value="#{submissionResultsConroller.testDescriptions}"
+                             emptyMessage="Тестов нет"
+                             rendered="#{submissionResultsConroller.presentationReady}">
+                    <p:column headerText="Номер теста">
+                        <h:outputText value="#{test.number}"/>
+                    </p:column>
+                    <p:column headerText="Группа">
+                        <h:outputText value="#{test.testGroupType}"/>
+                    </p:column>
+                    <p:column headerText="Вердикт">
+                        <h:outputText value="#{test.verdict}"/>
+                    </p:column>
+                    <p:column headerText="Время">
+                        <h:outputText value="#{test.decisionTime}"/>
+                    </p:column>
+                    <p:column headerText="Тест">
+                        <p:link value="Тест"
+                                outcome="test_content.xhtml">
+                            <f:param name="problemId" value="#{submissionResultsConroller.presentationSubmission.competitionProblemId.problemId.id}"/>
+                            <f:param name="test_group" value="#{test.testGroupType}"/>
+                            <f:param name="test_number" value="#{test.numberInGroup}"/>
+                        </p:link>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

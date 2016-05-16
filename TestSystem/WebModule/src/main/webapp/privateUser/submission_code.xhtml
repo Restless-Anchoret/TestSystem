@@ -1,12 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
-        <ui:composition template="/template/main_template.xhtml">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/template/main_template.xhtml">
         <ui:define name="title">Код посылки</ui:define>
-        <ui:define name="content">             
+        <ui:define name="content">  
+            <h1>Код посылки</h1>
             <h:form>    
                 <h:panelGrid columns="2">
                     <h:outputText value="Название соревнования:" />
@@ -17,18 +18,16 @@
                     <h:outputText value="#{submissionCodeController.submission.compilatorId.name}" /> 
                     <h:outputText value="Пользователь:" />
                     <h:outputText value="#{submissionCodeController.submission.userId.login}" />
-                    <h:outputText value="Дата отправки:" />
-                    <h:outputText value="#{submissionCodeController.submission.submissionTime}" />  
+                    <h:outputText value="Дата отправки:"/>
+                    <h:outputText value="#{submissionCodeController.submission.submissionTime}">
+                        <f:convertDateTime dateStyle="full" timeStyle="long" type="both"/>
+                    </h:outputText>  
                     <h:outputText value="Вердикт:" />
-                    <h:outputText value="#{submissionCodeController.submission.verdict}" />                    
-                    <h:outputText value="Номер проваленного теста:" />
-                    <h:outputText value="#{submissionCodeController.submission.wrongTestNumber}" />
+                    <h:outputText value="#{submissionCodeController.submission.verdict}" /> 
                     <h:outputText value="Время работы посылки:" />
-                    <h:outputText value="#{submissionCodeController.submission.decisionTime}" /> 
-                    <h:outputText value="Очки:" />
-                    <h:outputText value="#{submissionCodeController.submission.points}" />                     
+                    <h:outputText value="#{submissionCodeController.submission.decisionTime}" />              
                 </h:panelGrid>
-                <p:inputTextarea readonly="true" style="width: 100%; font-family: Consolas;" value="#{submissionCodeController.submissionText}"/>
+                <p:inputTextarea readonly="true" style="width: 99%; font-family: Consolas;" value="#{submissionCodeController.submissionText}"/>
             </h:form>
         </ui:define>
     </ui:composition>

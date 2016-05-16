@@ -19,15 +19,13 @@ import com.netcracker.web.logging.WebLogging;
 import com.netcracker.web.session.AuthenticationController;
 import com.netcracker.web.util.CompetitionProblemComporatorOfProblemNumber;
 import com.netcracker.web.util.CompilatorNameConverter;
+import com.netcracker.web.util.JSFUtil;
 import com.netcracker.web.util.MonitorColumn;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
@@ -37,9 +35,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
-import javax.faces.validator.ValidatorException;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.UploadedFile;
 
 @Named
@@ -63,10 +59,13 @@ public class CompetitionController {
     private List<Compilator> compilators;
     private List<SelectItem> compilatorsName;
     private String currentCompilator;
-    private String currentCompetitionProblem;
+    //private String currentCompetitionProblem;
+    private Integer currentCompetitionProblemId;
+    private List<SelectItem> competitionProblemsItems;
     private final long SIZELIMIT = 262144;
     private List<Submission> submissions;
     private List<Submission> submissionsAfterCompetition;
+    private List<Submission> allSubmissions;
     private List<TotalResultInfo> results;
     private List<Participation> participations;
     private List<MonitorColumn> columns;
@@ -75,20 +74,20 @@ public class CompetitionController {
     
     @PostConstruct
     public void initPage() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        Integer id;
+        String stringId = JSFUtil.getRequestParameter("competitionId");
+        if (stringId == null) {
+            return;
+        }
         try {
-            String strId = request.getParameter("competitionId");
-            id = Integer.parseInt(strId);
-            competition = competitionFacade.find(id);
+            competitionId = Integer.parseInt(stringId);
+            competition = competitionFacade.find(competitionId);
         }
         catch(Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
             return;
         }
-        competitionId = id;
         authenticationEJB = AuthenticationController.getSessionAuthenticationEJB();
-        Path path = Paths.get(request.getRequestURI());
+        Path path = JSFUtil.getRequestURIPath();
         String pageName = path.getFileName().toString();
         switch (pageName) {
             case "competition_problems.xhtml":
@@ -100,6 +99,9 @@ public class CompetitionController {
             case "competition_monitor.xhtml":
                 initMonitorPage();
                 break;
+            case "competition_all_submissions.xhtml":
+                initAllSubmissionsPage();
+                break;
         }
     }
     
@@ -107,6 +109,10 @@ public class CompetitionController {
         try {
             competitionProblems = competitionFacade.loadCompetitionProblems(competition).getCompetitionProblemList();
             competitionProblems.sort(new CompetitionProblemComporatorOfProblemNumber());
+            competitionProblemsItems = new ArrayList<>();
+            for (CompetitionProblem problem: competitionProblems) {
+                competitionProblemsItems.add(new SelectItem(problem.getId(), problem.getProblemId().getName()));
+            }
         } catch (Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
             competitionProblems = Collections.EMPTY_LIST;
@@ -179,6 +185,15 @@ public class CompetitionController {
             results = monitor.getActualResults();
     }
     
+    public void initAllSubmissionsPage() {
+        try {
+            allSubmissions = submissionFacade.findAllSubmissionsByCompetitionId(competitionId);
+        } catch (Throwable ex) {
+            WebLogging.logger.log(Level.SEVERE, null, ex);
+            allSubmissions = Collections.EMPTY_LIST;
+        }
+    }
+    
     public void upLoadFile() {
         if (file == null || file.getFileName().equals("")) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.",
@@ -205,7 +220,7 @@ public class CompetitionController {
             file = null;
             return;
         }
-        if (competitionEJB.addSubmission(competitionId, getFromProblems(currentCompetitionProblem),
+        if (competitionEJB.addSubmission(competitionId, getFromProblems(currentCompetitionProblemId),
                 authenticationEJB.getCurrentUser(), getFromCompilators(currentCompilator), is, 
                 file.getFileName(), file.getSize())) {
             file = null;
@@ -221,9 +236,9 @@ public class CompetitionController {
         }
     }
     
-    public CompetitionProblem getFromProblems(String name) {
+    public CompetitionProblem getFromProblems(Integer id) {
         for (CompetitionProblem problem: competitionProblems) {
-            if (problem.getProblemId().getName().equals(name))
+            if (problem.getId().equals(id))
                 return problem;
         }
         return null;
@@ -324,12 +339,12 @@ public class CompetitionController {
         this.currentCompilator = currentCompilator;
     }
 
-    public String getCurrentCompetitionProblem() {
-        return currentCompetitionProblem;
+    public Integer getCurrentCompetitionProblemId() {
+        return currentCompetitionProblemId;
     }
 
-    public void setCurrentCompetitionProblem(String currentCompetitionProblem) {
-        this.currentCompetitionProblem = currentCompetitionProblem;
+    public void setCurrentCompetitionProblemId(Integer currentCompetitionProblemId) {
+        this.currentCompetitionProblemId = currentCompetitionProblemId;
     }
 
     public List<Submission> getSubmissions() {
@@ -372,12 +387,28 @@ public class CompetitionController {
         this.compilatorsName = compilatorsName;
     }
 
+    public List<SelectItem> getCompetitionProblemsItems() {
+        return competitionProblemsItems;
+    }
+
+    public void setCompetitionProblemsItems(List<SelectItem> competitionProblemsItems) {
+        this.competitionProblemsItems = competitionProblemsItems;
+    }
+
     public List<Submission> getSubmissionsAfterCompetition() {
         return submissionsAfterCompetition;
     }
 
     public void setSubmissionsAfterCompetition(List<Submission> submissionsAfterCompetition) {
         this.submissionsAfterCompetition = submissionsAfterCompetition;
+    }
+
+    public List<Submission> getAllSubmissions() {
+        return allSubmissions;
+    }
+
+    public void setAllSubmissions(List<Submission> allSubmissions) {
+        this.allSubmissions = allSubmissions;
     }
     
 }

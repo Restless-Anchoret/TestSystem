@@ -6,7 +6,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:pe="http://primefaces.org/ui/extensions">
-    <ui:composition template="main_template.xhtml">
+    <ui:composition template="/template/main_template.xhtml">
         <ui:define name="title">Соревнование</ui:define>
         <ui:define name="content">
             <h:form>  
@@ -18,6 +18,10 @@
                         <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
                     <p:menuitem value="Монитор" outcome="/competition/competition_monitor">
+                        <f:param name="competitionId" value="#{competitionController.competitionId}"/>
+                    </p:menuitem>
+                    <p:menuitem value="Все посылки" outcome="/moderator/competition_all_submissions"
+                                rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
                         <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
                 </p:menubar>

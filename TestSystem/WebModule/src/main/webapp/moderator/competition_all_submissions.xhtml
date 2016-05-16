@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition template="/template/competition_template.xhtml">
+        <ui:define name="title">Посылки</ui:define>
+        <ui:define name="subcontent">
+            <h:form id="submissionsForm">
+                <h1>Все посылки</h1>
+                <p:dataTable var="submission" value="#{competitionController.allSubmissions}"
+                             rows="50" paginator="true"
+                             paginatorTemplate="{PageLinks}"
+                             emptyMessage="Посылок пока нет.">
+                    <p:column headerText="Участник">
+                        <h:outputText value="#{submission.userId.login}"/>
+                    </p:column>
+                    <p:column headerText="Когда">
+                        <h:outputText value="#{submission.submissionTime}" converter="dateConverter"/>
+                    </p:column>
+                    <p:column headerText="Задача">
+                        <h:outputText value="#{submission.competitionProblemId.problemId.name}"/>
+                    </p:column>
+                    <p:column headerText="Компилятор">
+                        <h:outputText value="#{submission.compilatorId.name}"/>
+                    </p:column>
+                    <p:column headerText="Вердикт">
+                        <h:outputText value="#{submission.verdict}"/>
+                    </p:column>
+                    <p:column headerText="Время">
+                        <h:outputText value="#{submission.decisionTime} ms"/>
+                    </p:column>
+                    <p:column headerText="Операции">
+                        <p:link value="Код посылки"
+                                outcome="/privateUser/submission_code.xhtml">
+                            <f:param name="id" value="#{submission.id}"/>
+                        </p:link>
+                        <h:outputText value="  "/>
+                        <p:commandLink value="Запустить"
+                                       action="#{sendingSubmissionController.runSubmissionForPresentation(submission)}"
+                                       rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
+                            <f:param name="competitionId" value="#{competitionController.competitionId}"/>
+                        </p:commandLink>
+                    </p:column>
+                </p:dataTable>               
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
