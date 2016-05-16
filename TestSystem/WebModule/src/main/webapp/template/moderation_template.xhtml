@@ -8,12 +8,13 @@
         <ui:define name="content">
             <h:form>
                 <p:menubar>
-                    <p:menuitem value="Соревнования" outcome="/moderator/moderation_competitions.xhtml"/>
-                    <p:menuitem value="Задачи" outcome="/moderator/moderation_problems.xhtml"/>
-                    <p:menuitem value="Заявки" outcome="/moderator/moderation_registration.xhtml"/>
                     <p:menuitem value="Участники" outcome="/moderator/moderation_participants.xhtml"/>
                     <p:menuitem value="Модераторы" outcome="/admin/moderation_moderators.xhtml"
                                 rendered="#{authenticationController.authenticatedAdmin}"/>
+                    <p:menuitem value="Соревнования" outcome="/moderator/moderation_competitions.xhtml"/>
+                    <p:menuitem value="Задачи" outcome="/moderator/moderation_problems.xhtml"/>
+                    <p:menuitem value="Заявки" outcome="/moderator/moderation_registration.xhtml"
+                                rendered="false"/>
                 </p:menubar>
             </h:form>
             <ui:insert name="subcontent">Страница пуста</ui:insert>
