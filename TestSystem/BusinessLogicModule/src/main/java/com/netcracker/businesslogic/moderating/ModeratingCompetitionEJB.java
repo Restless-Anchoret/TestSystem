@@ -104,8 +104,9 @@ public class ModeratingCompetitionEJB {
             competitionProblem.setProblemId(problem);
             competitionProblem.setCompetitionId(competition);
             competitionProblem.setProblemNumber(problemNumber);
-            competition.getCompetitionProblemList().add(competitionProblem);
-            competitionFacade.edit(competition);
+            competitionProblemFacade.create(competitionProblem);
+//            competition.getCompetitionProblemList().add(competitionProblem);
+//            competitionFacade.edit(competition);
             return true;
         } catch (Throwable throwable) {
             BusinessLogicLogging.logger.log(Level.FINE, "Exception while adding new competition problem", throwable);
@@ -125,9 +126,9 @@ public class ModeratingCompetitionEJB {
 //                System.out.println("Submissions list: " + competitionProblem.getSubmissionList().isEmpty());
                 return false;
             }
-            competition.getCompetitionProblemList().remove(competitionProblem);
-            competitionFacade.edit(competition);
-            //competitionProblemFacade.remove(competitionProblem);
+//            competition.getCompetitionProblemList().remove(competitionProblem);
+//            competitionFacade.edit(competition);
+            competitionProblemFacade.remove(competitionProblem);
             //competitionFacade.loadCompetitionProblems(competition);
             return true;
         } catch (Throwable throwable) {

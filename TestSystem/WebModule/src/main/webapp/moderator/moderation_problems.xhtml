@@ -34,9 +34,9 @@
                         <h:outputText value="#{moderatingProblemsController.getValidatedDescription(problem)}"/>
                     </p:column>
                     <p:column headerText="Операции">
-                        <p:commandButton value="Удалить"
-                                         update="problemsForm"
-                                         action="#{moderatingProblemsController.deleteProblem(problem)}"/>
+                        <p:commandLink value="Удалить"
+                                       update="problemsForm"
+                                       action="#{moderatingProblemsController.deleteProblem(problem)}"/>
                     </p:column>
                 </p:dataTable>
                 <h2>Добавление задачи</h2>

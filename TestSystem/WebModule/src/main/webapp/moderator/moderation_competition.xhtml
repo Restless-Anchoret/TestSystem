@@ -75,11 +75,11 @@
                         </p:link>
                     </p:column>
                     <p:column headerText="Операции">
-                        <p:commandButton value="Удалить"
-                                         update="problemsForm"
-                                         action="#{moderatingCompetitionController.deleteCompetitionProblem(problem)}">
+                        <p:commandLink value="Удалить"
+                                       update="problemsForm"
+                                       action="#{moderatingCompetitionController.deleteCompetitionProblem(problem)}">
                             <f:param name="id" value="#{moderatingCompetitionController.competition.id}"/>
-                        </p:commandButton>
+                        </p:commandLink>
                     </p:column>
                 </p:dataTable>
                 <h2>Добавление задач</h2>

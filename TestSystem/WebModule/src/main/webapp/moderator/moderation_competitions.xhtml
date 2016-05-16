@@ -39,9 +39,9 @@
                             <f:param name="competitionId" value="#{competition.id}"/>
                         </p:link>
                         <h:outputText value="  "/>
-                        <p:commandButton value="Удалить"
-                                         update="competitionsForm"
-                                         action="#{moderatingCompetitionsController.deleteCompetition(competition)}"/>
+                        <p:commandLink value="Удалить"
+                                       update="competitionsForm"
+                                       action="#{moderatingCompetitionsController.deleteCompetition(competition)}"/>
                     </p:column>
                 </p:dataTable>
                 <h2>Добавление соревнования</h2>

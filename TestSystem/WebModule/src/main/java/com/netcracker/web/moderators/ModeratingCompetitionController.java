@@ -3,6 +3,7 @@ package com.netcracker.web.moderators;
 import com.netcracker.businesslogic.holding.CompetitionEJB;
 import com.netcracker.businesslogic.moderating.ModeratingCompetitionEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
+import com.netcracker.database.dal.CompetitionProblemFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.CompetitionProblem;
 import com.netcracker.database.entity.Problem;
@@ -26,6 +27,8 @@ public class ModeratingCompetitionController {
 
     @EJB(beanName = "CompetitionFacade")
     private CompetitionFacadeLocal competitionFacade;
+    @EJB(beanName = "CompetitionProblemFacade")
+    private CompetitionProblemFacadeLocal competitionProblemFacade;
     @EJB(beanName = "CompetitionEJB")
     private CompetitionEJB competitionEJB;
     @EJB(beanName = "ModeratingCompetitionEJB")
@@ -61,9 +64,10 @@ public class ModeratingCompetitionController {
     private void updateProblemsList() {
         validatedProblemItems.clear();
         List<Problem> validatedProblems = moderatingCompetitionEJB.getAllValidatedProblems();
+        List<CompetitionProblem> competitionProblems = competitionProblemFacade.findByCompetitionId(competition.getId());
         for (Problem problem : validatedProblems) {
             boolean problemIsAlreadyInCompetition = false;
-            for (CompetitionProblem competitionProblem : competition.getCompetitionProblemList()) {
+            for (CompetitionProblem competitionProblem : competitionProblems) {
                 if (problem.getId().equals(competitionProblem.getProblemId().getId())) {
                     problemIsAlreadyInCompetition = true;
                 }
@@ -97,7 +101,7 @@ public class ModeratingCompetitionController {
     }
 
     public List<CompetitionProblem> getCompetitionProblems() {
-        return competition.getCompetitionProblemList();
+        return competitionProblemFacade.findByCompetitionId(competition.getId());
     }
 
     public List<SelectItem> getValidatedProblemItems() {

@@ -28,9 +28,9 @@
                                       converter="dateConverter"/>
                     </p:column>
                     <p:column headerText="Операции">
-                        <p:commandButton value="Удалить"
-                                         update="usersForm"
-                                         action="#{moderatingUsersController.deleteUser(user)}"/>
+                        <p:commandLink value="Удалить"
+                                       update="usersForm"
+                                       action="#{moderatingUsersController.deleteUser(user)}"/>
                     </p:column>
                 </p:dataTable>
                 <h2>Добавление участников</h2>
