@@ -52,7 +52,7 @@
                 </h:panelGrid>
                 <p:commandButton value="Отправить" ajax="false" 
                                  action="#{competitionController.upLoadFile()}"
-                                 disabled="#{not competitionsController.isAccess(competitionController.competition)}">
+                                 disabled="#{competitionController.disabledToSendButton}">
                     <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                 </p:commandButton>
             </h:form>

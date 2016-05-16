@@ -62,14 +62,6 @@ public class CompetitionRegistrationController {
     public void setPersonalData(PersonalData personalData) {
         this.personalData = personalData;
     }
-
-    public boolean isAlreadyMadeRequest() {
-        return alreadyMadeRequest;
-    }
-
-    public void setAlreadyMadeRequest(boolean alreadyMadeRequest) {
-        this.alreadyMadeRequest = alreadyMadeRequest;
-    }
     
     public boolean isNeedPersonalData() {
         return !RegistrationType.PUBLIC.toString().toLowerCase().equals(competition.getRegistrationType());
@@ -107,4 +99,12 @@ public class CompetitionRegistrationController {
             this.patronymic = patronymic;
     }
 
+    public boolean isViewRegistrationButton() {
+        if (authenticationEJB.getCurrentUser().getRole().equals("admin") ||
+                authenticationEJB.getCurrentUser().getRole().equals("moderator"))
+            return false;
+        else
+            return !alreadyMadeRequest;
+    }
+    
 }

@@ -79,11 +79,17 @@ public class CompetitionFilter implements Filter{
         Path path = Paths.get(req.getRequestURI());
         String pageName = path.getFileName().toString();
         boolean resultCheck;
-        if (pageName.equals("competition_registration.xhtml")) {
-            resultCheck = registrationCheck(competition);
-        }
-        else {
-            resultCheck = competitionCheck(competition.getId(), id);
+        switch (pageName) {
+            case "competition_registration.xhtml":
+                resultCheck = registrationCheck(competition);
+                break;
+            case "competition_monitor.xhtml":
+                resultCheck = competitionCheck(competition.getId(), id) && 
+                        competition.getShowMonitor();
+                break;
+            default:
+                resultCheck = competitionCheck(competition.getId(), id);
+                break;
         }
         if (resultCheck)
             chain.doFilter(request, response);
