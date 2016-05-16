@@ -1,6 +1,5 @@
 package com.netcracker.businesslogic.moderating;
 
-import com.netcracker.businesslogic.holding.SendingSubmissionEJB;
 import com.netcracker.businesslogic.support.PresentationResultsHandler;
 import com.netcracker.businesslogic.support.SessionMediator;
 import com.netcracker.businesslogic.support.SubmissionPresentation;

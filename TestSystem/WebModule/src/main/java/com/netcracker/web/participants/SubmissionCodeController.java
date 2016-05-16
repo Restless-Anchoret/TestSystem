@@ -1,11 +1,10 @@
 package com.netcracker.web.participants;
 
-import com.netcracker.businesslogic.holding.SubmissionCodeEJB;
+import com.netcracker.businesslogic.holding.FileContentEJB;
 import com.netcracker.database.dal.SubmissionFacadeLocal;
 import com.netcracker.database.entity.Submission;
 import com.netcracker.web.logging.WebLogging;
 import com.netcracker.web.util.JSFUtil;
-import java.io.IOException;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -16,8 +15,8 @@ import javax.inject.Named;
 @RequestScoped
 public class SubmissionCodeController {
 
-    @EJB(beanName = "SubmissionCodeEJB")
-    private SubmissionCodeEJB submissionCodeEJB;
+    @EJB(beanName = "FileContentEJB")
+    private FileContentEJB fileContentEJB;
     @EJB(beanName = "SubmissionFacade")
     private SubmissionFacadeLocal submissionFacade;
     private Integer id;
@@ -42,10 +41,9 @@ public class SubmissionCodeController {
         }
         id = tmpId;
         submission = submissionFacade.find(id);
-        try {
-            submissionText = submissionCodeEJB.getSubmissionCode(submission);
-        } catch (IOException ex) {
-            WebLogging.logger.log(Level.SEVERE, null, ex);
+        submissionText = fileContentEJB.getSubmissionCode(submission);
+        if (submissionText == null) {
+            submissionText = "Невозможно отобразить содержимое посылки";
         }
     }
 

@@ -7,12 +7,12 @@
     <ui:composition template="/template/competition_template.xhtml">
         <ui:define name="title">Посылки</ui:define>
         <ui:define name="subcontent">
-            <h:form>
+            <h:form id="submissionsForm">
                 <h1>Все посылки</h1>
                 <p:dataTable var="submission" value="#{competitionController.allSubmissions}"
-                             rows="50" paginator="true" id="submissions"
+                             rows="50" paginator="true"
                              paginatorTemplate="{PageLinks}"
-                             emptyMessage="Посылок нет.">
+                             emptyMessage="Посылок пока нет.">
                     <p:column headerText="Участник">
                         <h:outputText value="#{submission.userId.login}"/>
                     </p:column>
@@ -39,7 +39,9 @@
                         <h:outputText value="  "/>
                         <p:commandLink value="Запустить"
                                        action="#{sendingSubmissionController.runSubmissionForPresentation(submission)}"
-                                       rendered="#{authenticationController.authenticatedModeratorOrAdmin}"/>
+                                       rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
+                            <f:param name="competitionId" value="#{competitionController.competitionId}"/>
+                        </p:commandLink>
                     </p:column>
                 </p:dataTable>               
             </h:form>

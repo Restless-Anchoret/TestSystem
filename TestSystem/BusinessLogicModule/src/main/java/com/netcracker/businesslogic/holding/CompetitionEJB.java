@@ -1,5 +1,6 @@
 package com.netcracker.businesslogic.holding;
 
+import com.netcracker.businesslogic.moderating.SendingSubmissionEJB;
 import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.businesslogic.support.CheckSubmissionHandler;
@@ -124,35 +125,6 @@ public class CompetitionEJB {
             handler = new CheckSubmissionHandler(submission, submissionFacade);
         sendingSubmissionEJB.sendSubmission(competitionProblem, submission.getFolderName(),
                 competition.getEvaluationType(), competition.getPretestsOnly(), compilator, handler);
-//        ProblemTester problemTester = ProblemTesterRegistry.registry().get("coding");
-//        Competition competition = competitionFacade.find(competitionId);
-//        EvaluationSystem evaluationSystem = EvaluationSystemRegistry.registry().
-//                get(competition.getEvaluationType());
-//        LanguageToolkit languageToolkit = LanguageToolkitRegistry.registry().get(compilator.getName());
-//        Checker checker = CheckerRegistry.registry().getDefault();
-//        CodeFileSupplier codeFileSupplier = new SubmissionFileSupplier(submission.getFolderName(),
-//                applicationEJB.getFileSupplier());
-//        ProblemFileSupplier problemFileSupplier = new ProblemFileSupplierImpl(
-//                competitionProblem.getProblemId().getFolderName(),
-//                applicationEJB.getFileSupplier());
-//        TestTable testTable = new TestTable();
-//        List<TestGroup> testGroups = testGroupFacade.getTestGroupsByProblemId(competitionProblem.
-//                getProblemId().getId());
-//        for (TestGroup testGroup: testGroups)
-//            testTable.putTestGroup(TestGroupType.valueOf(testGroup.getTestGroupType().toUpperCase()),
-//                    testGroup.getPointsForTest(), testGroup.getTestsQuantity());
-//        CheckSubmissionHandler checkSubmissition;
-//        if (submission.getSubmissionTime().compareTo(getCompetitionEnd(competition)) < 0)
-//            checkSubmissition = new CheckSubmissionCompetitionHandler(submission, submissionFacade,
-//                participationResultFacade);
-//        else
-//            checkSubmissition = new CheckSubmissionHandler(submission, submissionFacade);
-//        TestingInfo testingInfo = new TestingInfo(checkSubmissition,
-//                problemTester, evaluationSystem, languageToolkit, checker, codeFileSupplier,
-//                problemFileSupplier, competition.getPretestsOnly(),
-//                competitionProblem.getProblemId().getTimeLimit(), 
-//                competitionProblem.getProblemId().getMemoryLimit(), testTable);
-//        applicationEJB.getTestingSystem().addSubmission(testingInfo);
         return true;
     }
     

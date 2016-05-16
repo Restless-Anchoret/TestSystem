@@ -21,15 +21,11 @@ public class SubmissionResultsConroller {
 
     @EJB(beanName = "SubmissionPresentationEJB")
     private SubmissionPresentationEJB submissionPresentationEJB;
-//    @EJB(beanName = "SubmissionFacade")
-//    private SubmissionFacadeLocal submissionFacade;
     private SubmissionPresentation presentation;
     private List<TestDescription> testDescriptions = new ArrayList<>();
     
     @PostConstruct
     public void initController() {
-//        String submissionId = JSFUtil.getRequestParameter("id");
-//        Submission submission = submissionId
         presentation = submissionPresentationEJB.getSubmissionPresentation();
         if (presentation.isReady()) {
             int testsCounter = 0;
@@ -41,21 +37,11 @@ public class SubmissionResultsConroller {
                     testDescriptions.add(new TestDescription(testsCounter,
                             testGroupType.toString().toLowerCase(),
                             verdictInfo.getVerdict().toString().toLowerCase(),
-                            verdictInfo.getDecisionTime()));
+                            verdictInfo.getDecisionTime(), i));
                 }
             }
         }
     }
-    
-//    public String runSubmissionForPresentation(Submission submission) {
-//        submissionPresentationEJB.runSubmissionForPresentation(submission);
-//        return "submission_results.xhtml";
-//    }
-//    
-//    public String runSubmissionForPresentation() {
-//        Submission submission = submissionFacade.find(1);
-//        return runSubmissionForPresentation(submission);
-//    }
 
     public Submission getPresentationSubmission() {
         return presentation.getSubmission();

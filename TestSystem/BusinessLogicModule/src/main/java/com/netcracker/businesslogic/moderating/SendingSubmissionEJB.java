@@ -1,4 +1,4 @@
-package com.netcracker.businesslogic.holding;
+package com.netcracker.businesslogic.moderating;
 
 import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.support.ProblemFileSupplierImpl;

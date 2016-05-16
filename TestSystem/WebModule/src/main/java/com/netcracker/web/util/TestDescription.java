@@ -6,12 +6,14 @@ public class TestDescription {
     private String testGroupType;
     private String verdict;
     private Integer decisionTime;
+    private Integer numberInGroup;
 
-    public TestDescription(Integer number, String testGroupType, String verdict, Integer decisionTime) {
+    public TestDescription(Integer number, String testGroupType, String verdict, Integer decisionTime, Integer numberInGroup) {
         this.number = number;
         this.testGroupType = testGroupType;
         this.verdict = verdict;
         this.decisionTime = decisionTime;
+        this.numberInGroup = numberInGroup;
     }
 
     public Integer getNumber() {
@@ -28,6 +30,10 @@ public class TestDescription {
 
     public Integer getDecisionTime() {
         return decisionTime;
+    }
+
+    public Integer getNumberInGroup() {
+        return numberInGroup;
     }
     
 }
