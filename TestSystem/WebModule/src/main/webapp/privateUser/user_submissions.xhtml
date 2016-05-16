@@ -14,12 +14,7 @@
                              rows="15" paginator="true" id="submissions"
                              paginatorTemplate="{PageLinks}"
                              emptyMessage="Посылок нет.">
-                    <f:facet name="header">
-                        Посылки
 
-                        <p:commandButton  id="toggler" type="button" value="Выбор колонок" style="float:right" icon="ui-icon-calculator" />
-                        <p:columnToggler  datasource="submissions" trigger="toggler" />
-                    </f:facet>
                     <p:column headerText="Название соревнования">
                         <h:outputText value="#{submission.competitionProblemId.competitionId.name}" />
                     </p:column>
