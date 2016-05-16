@@ -19,13 +19,6 @@
                              paginatorTemplate="{PageLinks}"
                              emptyMessage="Достижений нет.">
 
-                    <f:facet name="header">
-                        Достижения
-
-                        <p:commandButton id="toggler" type="button" value="Выбор колонок" style="float:right" icon="ui-icon-calculator" />
-                        <p:columnToggler datasource="participations" trigger="toggler" />
-                    </f:facet>
-
                     <p:column headerText="Название соревнования">
                         <h:outputText value="#{participation.competitionId.name}" />
                     </p:column>

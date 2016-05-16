@@ -1,46 +1,36 @@
-#blok{ 
-position:fixed; 
-left:0px; 
-top:0px; 
-color: blue; 
-} 
-p{ 
-bottom: auto; 
-color: black; 
-} 
-knopka { 
-position: absolute; 
-color: black; /* цвет текста */ 
-text-decoration: none; /* убирать подчёркивание у ссылок */ 
-right: 100px; 
-
-
-} 
-h1{ 
-
-} 
-h2{ 
-
-} 
-
-
 .ui-widget-content{ 
-background: white; 
-border: none; 
+    background: white; 
+    border: none; 
 } 
 .ui-widget{ 
-font-family: initial; 
+    font-family: initial;
+
 } 
+h1{
+  font-family: TimesNewRoman, sans-serif, fantasy;  
+}
+h2{
+    font-family: TimesNewRoman, sans-serif, fantasy;
+}
 element.style{ 
-background: none; 
-border: none; 
+    background: none; 
+    border: none; 
 } 
 .ui-columntoggler{ 
-overflow: visible; 
+    overflow: visible; 
 } 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{ 
-font-weight: lighter; 
+    font-weight: lighter; 
 } 
 .ui-paginator{ 
-text-align: center; 
+    text-align: center; 
+}
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button{
+    font-family: initial; 
+}
+.ui-widget .ui-widget{
+    font-size: 1.1em;
+}
+a:-webkit-any-link{
+    color: black;
 }

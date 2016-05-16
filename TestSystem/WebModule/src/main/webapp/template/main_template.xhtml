@@ -12,7 +12,7 @@
         <h:outputStylesheet library="css" name="kolibri.css"  />
         <p:growl id="growl" life="5000" showDetail="true" autoUpdate="true"/>
         <h:form>
-            <h:graphicImage value="/resources/css/logo_kolibri.png" style="position: relative; left: 20px; top: 0px"/>
+            <h:graphicImage value="#{resource['logo_kolibri.png']}" style="position: relative; left: 20px; top: 0px"/>
             <h:panelGrid columns="2" style="position: absolute; right: 50px; top: 10px" cellpadding="3" cellspacing="2">
                 <p:link value="#{authenticationController.currentUserLogin}" outcome="/privateUser/user_profile.xhtml"/>
                 <p:commandLink value = "Выйти" action="#{logOutController.doLogOut()}"/>
