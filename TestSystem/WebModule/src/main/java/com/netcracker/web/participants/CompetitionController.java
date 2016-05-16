@@ -59,7 +59,9 @@ public class CompetitionController {
     private List<Compilator> compilators;
     private List<SelectItem> compilatorsName;
     private String currentCompilator;
-    private String currentCompetitionProblem;
+    //private String currentCompetitionProblem;
+    private Integer currentCompetitionProblemId;
+    private List<SelectItem> competitionProblemsItems;
     private final long SIZELIMIT = 262144;
     private List<Submission> submissions;
     private List<Submission> submissionsAfterCompetition;
@@ -107,6 +109,10 @@ public class CompetitionController {
         try {
             competitionProblems = competitionFacade.loadCompetitionProblems(competition).getCompetitionProblemList();
             competitionProblems.sort(new CompetitionProblemComporatorOfProblemNumber());
+            competitionProblemsItems = new ArrayList<>();
+            for (CompetitionProblem problem: competitionProblems) {
+                competitionProblemsItems.add(new SelectItem(problem.getId(), problem.getProblemId().getName()));
+            }
         } catch (Throwable ex) {
             WebLogging.logger.log(Level.SEVERE, null, ex);
             competitionProblems = Collections.EMPTY_LIST;
@@ -214,7 +220,7 @@ public class CompetitionController {
             file = null;
             return;
         }
-        if (competitionEJB.addSubmission(competitionId, getFromProblems(currentCompetitionProblem),
+        if (competitionEJB.addSubmission(competitionId, getFromProblems(currentCompetitionProblemId),
                 authenticationEJB.getCurrentUser(), getFromCompilators(currentCompilator), is, 
                 file.getFileName(), file.getSize())) {
             file = null;
@@ -230,9 +236,9 @@ public class CompetitionController {
         }
     }
     
-    public CompetitionProblem getFromProblems(String name) {
+    public CompetitionProblem getFromProblems(Integer id) {
         for (CompetitionProblem problem: competitionProblems) {
-            if (problem.getProblemId().getName().equals(name))
+            if (problem.getId().equals(id))
                 return problem;
         }
         return null;
@@ -333,12 +339,12 @@ public class CompetitionController {
         this.currentCompilator = currentCompilator;
     }
 
-    public String getCurrentCompetitionProblem() {
-        return currentCompetitionProblem;
+    public Integer getCurrentCompetitionProblemId() {
+        return currentCompetitionProblemId;
     }
 
-    public void setCurrentCompetitionProblem(String currentCompetitionProblem) {
-        this.currentCompetitionProblem = currentCompetitionProblem;
+    public void setCurrentCompetitionProblemId(Integer currentCompetitionProblemId) {
+        this.currentCompetitionProblemId = currentCompetitionProblemId;
     }
 
     public List<Submission> getSubmissions() {
@@ -379,6 +385,14 @@ public class CompetitionController {
 
     public void setCompilatorsName(List<SelectItem> compilatorsName) {
         this.compilatorsName = compilatorsName;
+    }
+
+    public List<SelectItem> getCompetitionProblemsItems() {
+        return competitionProblemsItems;
+    }
+
+    public void setCompetitionProblemsItems(List<SelectItem> competitionProblemsItems) {
+        this.competitionProblemsItems = competitionProblemsItems;
     }
 
     public List<Submission> getSubmissionsAfterCompetition() {
