@@ -1,6 +1,8 @@
 package com.netcracker.web.guest;
 
+import com.netcracker.businesslogic.support.SessionMediator;
 import com.netcracker.businesslogic.users.AuthenticationEJB;
+import com.netcracker.web.Filters.MainTemplateFilter;
 import com.netcracker.web.session.AuthenticationController;
 import com.netcracker.web.util.JSFUtil;
 import javax.annotation.PostConstruct;
@@ -44,6 +46,7 @@ public class LogInController {
         String summary = null;
         switch (authenticationResult.getInfo()) {
             case SUCCESS:
+                SessionMediator.setSessionParameter(MainTemplateFilter.MAIN_MENU_ACTIVE_ITEM, 0);
                 return "/participant/competitions.xhtml";
             case REFUSE:
                 summary = "Неверные комбинация логина и пароля";

@@ -1,0 +1,46 @@
+#blok{ 
+position:fixed; 
+left:0px; 
+top:0px; 
+color: blue; 
+} 
+p{ 
+bottom: auto; 
+color: black; 
+} 
+knopka { 
+position: absolute; 
+color: black; /* цвет текста */ 
+text-decoration: none; /* убирать подчёркивание у ссылок */ 
+right: 100px; 
+
+
+} 
+h1{ 
+
+} 
+h2{ 
+
+} 
+
+
+.ui-widget-content{ 
+background: white; 
+border: none; 
+} 
+.ui-widget{ 
+font-family: initial; 
+} 
+element.style{ 
+background: none; 
+border: none; 
+} 
+.ui-columntoggler{ 
+overflow: visible; 
+} 
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{ 
+font-weight: lighter; 
+} 
+.ui-paginator{ 
+text-align: center; 
+}
