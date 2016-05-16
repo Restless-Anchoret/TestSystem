@@ -17,8 +17,8 @@
                     <f:facet name="header">
                         Посылки
 
-                        <p:commandButton id="toggler" type="button" value="Выбор колонок" style="float:right" icon="ui-icon-calculator" />
-                        <p:columnToggler datasource="submissions" trigger="toggler" />
+                        <p:commandButton  id="toggler" type="button" value="Выбор колонок" style="float:right" icon="ui-icon-calculator" />
+                        <p:columnToggler  datasource="submissions" trigger="toggler" />
                     </f:facet>
                     <p:column headerText="Название соревнования">
                         <h:outputText value="#{submission.competitionProblemId.competitionId.name}" />
@@ -45,12 +45,12 @@
                     </p:column>
 
                     <p:column headerText="Операции">
-                        <p:link value="Код посылки"
+                        <p:link target="_blanc" value="Код посылки"
                                 outcome="submission_code.xhtml">
                             <f:param name="id" value="#{submission.id}"/>
                         </p:link>
                         <h:outputText value="  "/>
-                        <p:commandLink value="Запустить"
+                        <p:commandLink target="_blanc" value="Запустить"
                                        action="#{sendingSubmissionController.runSubmissionForPresentation(submission)}"
                                        rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
                             <f:param name="userId" value="#{profileController.user.id}"/>
