@@ -20,7 +20,7 @@
             <p:tabMenu activeIndex="#{session.getAttribute('main_menu_active_item')}">
                 <p:menuitem id="menu_item_main" value="Соревнования" outcome="/participant/competitions.xhtml"/>
                 <p:menuitem id="menu_item_profile" value="Профиль" outcome="/privateUser/user_profile.xhtml"/>
-                <p:menuitem id="menu_item_moderating" value="Модерирование" outcome="/moderator/moderation_competitions.xhtml"
+                <p:menuitem id="menu_item_moderating" value="Модерирование" outcome="/moderator/moderation_participants.xhtml"
                             rendered="#{authenticationController.authenticatedModeratorOrAdmin}"/>
             </p:tabMenu>
         </h:form>

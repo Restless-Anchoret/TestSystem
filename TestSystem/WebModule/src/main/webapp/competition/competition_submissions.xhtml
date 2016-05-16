@@ -43,6 +43,15 @@
                             <f:param name="id" value="#{submission.id}"/>
                         </p:link>
                     </p:column>
+                    
+                    <p:column headerText="Запустить посылку"
+                              rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
+                        <p:commandLink value="Запустить"
+                                       action="#{sendingSubmissionController.
+                                                 runSubmissionForPresentation(submission)}">
+                            <f:param name="competitionId" value="#{competitionController.competitionId}"/>
+                        </p:commandLink>
+                    </p:column>
                 </p:dataTable>
                 
                 <h1>Посылки</h1>
@@ -76,6 +85,14 @@
                                 target="_blanc">
                             <f:param name="id" value="#{submission.id}"/>
                         </p:link>
+                    </p:column>
+                    <p:column headerText="Запустить посылку"
+                              rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
+                        <p:commandLink value="Запустить"
+                                       action="#{sendingSubmissionController.
+                                                 runSubmissionForPresentation(submission)}">
+                            <f:param name="competitionId" value="#{competitionController.competitionId}"/>
+                        </p:commandLink>
                     </p:column>
                 </p:dataTable>               
             </h:form>
