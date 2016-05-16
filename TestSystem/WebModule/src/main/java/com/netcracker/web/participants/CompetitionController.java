@@ -203,6 +203,14 @@ public class CompetitionController {
     }
     
     public void upLoadFile() {
+        if (!AuthenticationController.getSessionAuthenticationController().isAuthenticatedModeratorOrAdmin()
+                && competitionEJB.getCompetitionPhase(competition) == CompetitionPhase.WAITING_RESULTS) {
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Загрузка файла.",
+                    "Отправлять посылки больше нельзя, соревнование закончилось.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            file = null;
+            return;
+        }
         if (file == null || file.getFileName().equals("")) {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ошибка загрузки файла.",
                     "Выберите файл.");
