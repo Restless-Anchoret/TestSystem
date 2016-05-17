@@ -31,14 +31,14 @@ public class ProfileController {
     private PasswordChangeEJB passwordChangeEJB;
     @EJB(beanName = "UserFacade")
     private UserFacadeLocal userFacade;
-
+    @EJB(beanName = "SubmissionFacade")
+    private SubmissionFacadeLocal submissionFacade;
+    
     private User user;
     private String oldPassword;
     private String newPassword;
     private AuthenticationEJB authenticationEJB;
     private List<Submission> submissions;
-    private SubmissionFacadeLocal submissionFacade;
-    private Integer competitionId;
     private List<Participation> participations;
     @EJB(beanName = "CompetitionEJB")
     private CompetitionEJB competitionEJB;
@@ -115,7 +115,8 @@ public class ProfileController {
     }
 
     public void doChangePassword() {
-        PasswordChangeEJB.Info resultInfo = passwordChangeEJB.tryChangePassword(user, oldPassword, newPassword);
+        PasswordChangeEJB.Info resultInfo = passwordChangeEJB.
+                tryChangePassword(user, oldPassword, newPassword);
         String summary = "";
         switch (resultInfo) {
             case SUCCESS:
@@ -149,7 +150,8 @@ public class ProfileController {
     }
 
     public void initUserSubmissions() {
-        submissions = user.getSubmissionList();
+        submissions = submissionFacade.
+                findAllSubmissionsByUserId(user.getId());
     }
 
     public List<Participation> getParticipations() {

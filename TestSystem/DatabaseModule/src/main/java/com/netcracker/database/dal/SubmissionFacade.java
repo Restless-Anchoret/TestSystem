@@ -106,14 +106,15 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
     }
 
     @Override
-    public List<Submission> findAllSubmissionsByUserIdAndCompetitionIdAfterCompetition(Object userId, Object competitionId) {
+    public List<Submission> findAllSubmissionsByUserIdAndCompetitionIdOutCompetition(Object userId, Object competitionId) {
         Competition competition = competitionFacade.find(competitionId);
         Date finish = getFinishCompetition(competition);
-        TypedQuery query = em.createNamedQuery("Submission.findAllSubmissionsByUserIdAndCompetitionIdAfterCompetition",
+        TypedQuery query = em.createNamedQuery("Submission.findAllSubmissionsByUserIdAndCompetitionIdOutCompetition",
                 Submission.class);
         query.setParameter("competitionId", competitionId);
         query.setParameter("userId", userId);
         query.setParameter("finish", finish);
+        query.setParameter("start", competition.getCompetitionStart());
         List<Submission> result = query.getResultList();
         for (Submission submission : result) {
             submission.getCompetitionProblemId();
@@ -124,6 +125,14 @@ public class SubmissionFacade extends AbstractFacade<Submission> implements Subm
     @Override
     public List<Submission> findAll() {
         TypedQuery query = em.createNamedQuery("Submission.findAll", Submission.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Submission> findAllSubmissionsByUserId(Object userId) {
+        TypedQuery query = em.createNamedQuery("Submission.findAllSubmissionsByUserId",
+                Submission.class);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
     

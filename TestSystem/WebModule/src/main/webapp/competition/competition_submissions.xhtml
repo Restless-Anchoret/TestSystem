@@ -9,13 +9,13 @@
         <ui:define name="subcontent">
             <h:form>
                 
-                <p:dataTable var="submission" value="#{competitionController.submissionsAfterCompetition}"
+                <p:dataTable var="submission" value="#{competitionController.submissionsOutCompetition}"
                              rows="50" paginator="true"
                              paginatorTemplate="{PageLinks}"
                              emptyMessage="Посылок нет."
                              rendered="#{competitionController.viewTable}">
                     <f:facet name="header">
-                        <h:outputText value="Посылки, отправленные после заверения соревнования"/>
+                        <h:outputText value="Посылки, отправленные вне соревнования"/>
                     </f:facet>
                     <p:column headerText="Когда">
                         <h:outputText value="#{submission.submissionTime}" converter="dateConverter"/>

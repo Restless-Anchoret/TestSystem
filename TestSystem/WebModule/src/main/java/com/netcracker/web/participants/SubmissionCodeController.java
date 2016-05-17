@@ -25,11 +25,9 @@ public class SubmissionCodeController {
 
     @PostConstruct
     public void initSubmissionPage() {
-        WebLogging.logger.log(Level.INFO, "submission page");
         Integer tmpId;
         try {
             String strId = JSFUtil.getRequestParameter("id");
-            WebLogging.logger.log(Level.SEVERE, "id {0}", strId);
             if (strId == null) {
                 WebLogging.logger.log(Level.SEVERE, "submissionId is null");
                 return;

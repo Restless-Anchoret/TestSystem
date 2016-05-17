@@ -62,12 +62,11 @@ public class CompetitionController {
     private List<Compilator> compilators;
     private List<SelectItem> compilatorsName;
     private String currentCompilator;
-    //private String currentCompetitionProblem;
     private Integer currentCompetitionProblemId;
     private List<SelectItem> competitionProblemsItems;
     private final long SIZELIMIT = 262144;
     private List<Submission> submissions;
-    private List<Submission> submissionsAfterCompetition;
+    private List<Submission> submissionsOutCompetition;
     private List<Submission> allSubmissions;
     private List<TotalResultInfo> results;
     private List<Participation> participations;
@@ -143,18 +142,12 @@ public class CompetitionController {
             WebLogging.logger.log(Level.SEVERE, null, ex);
             submissions = Collections.EMPTY_LIST;
         }
-        if (competitionEJB.getCompetitionPhase(competition) == CompetitionPhase.FINISHED) {
-            try {
-                submissionsAfterCompetition = submissionFacade.
-                        findAllSubmissionsByUserIdAndCompetitionIdAfterCompetition(
-                                authenticationEJB.getCurrentUser().getId(), competitionId);
-            } catch (Throwable ex) {
-                WebLogging.logger.log(Level.SEVERE, null, ex);
-                submissionsAfterCompetition = Collections.EMPTY_LIST;
-            }
-        }
-        else {
-            submissionsAfterCompetition = Collections.EMPTY_LIST;
+        try {
+            submissionsOutCompetition = submissionFacade.findAllSubmissionsByUserIdAndCompetitionIdOutCompetition(
+                            authenticationEJB.getCurrentUser().getId(), competitionId);
+        } catch (Throwable ex) {
+            WebLogging.logger.log(Level.SEVERE, null, ex);
+            submissionsOutCompetition = Collections.EMPTY_LIST;
         }
     }
     
@@ -312,7 +305,7 @@ public class CompetitionController {
     }
     
     public boolean isViewTable() {
-        return !submissionsAfterCompetition.isEmpty();
+        return !submissionsOutCompetition.isEmpty();
     }
     
     public boolean isDisabledToSendButton() {
@@ -328,7 +321,7 @@ public class CompetitionController {
             case CODING_FROZEN:
                 return false;
             case FINISHED:
-                return competition.getPracticePermition();
+                return !competition.getPracticePermition();
             default:
                 return true;    
         }
@@ -430,12 +423,12 @@ public class CompetitionController {
         this.competitionProblemsItems = competitionProblemsItems;
     }
 
-    public List<Submission> getSubmissionsAfterCompetition() {
-        return submissionsAfterCompetition;
+    public List<Submission> getSubmissionsOutCompetition() {
+        return submissionsOutCompetition;
     }
 
-    public void setSubmissionsAfterCompetition(List<Submission> submissionsAfterCompetition) {
-        this.submissionsAfterCompetition = submissionsAfterCompetition;
+    public void setSubmissionsOutCompetition(List<Submission> submissionsOutCompetition) {
+        this.submissionsOutCompetition = submissionsOutCompetition;
     }
 
     public List<Submission> getAllSubmissions() {

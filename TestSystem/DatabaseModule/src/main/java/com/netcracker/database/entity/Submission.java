@@ -30,9 +30,10 @@ import javax.xml.bind.annotation.XmlRootElement;
             query = "SELECT s FROM Submission s WHERE s.competitionProblemId.competitionId.id = :competitionId AND s.folderName IS NOT NULL AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime DESC"),
     @NamedQuery(name = "Submission.findAllSubmissionsByUserIdAndCompetitionId", 
             query = "SELECT s FROM Submission s WHERE s.competitionProblemId.competitionId.id = :competitionId AND s.userId.id = :userId AND s.folderName IS NOT NULL AND s.submissionTime BETWEEN :start AND :finish ORDER BY s.submissionTime DESC"),
-    @NamedQuery(name = "Submission.findAllSubmissionsByUserIdAndCompetitionIdAfterCompetition", 
-            query = "SELECT s FROM Submission s WHERE s.competitionProblemId.competitionId.id = :competitionId AND s.userId.id = :userId AND s.folderName IS NOT NULL AND s.submissionTime > :finish ORDER BY s.submissionTime DESC"),
+    @NamedQuery(name = "Submission.findAllSubmissionsByUserIdAndCompetitionIdOutCompetition", 
+            query = "SELECT s FROM Submission s WHERE s.competitionProblemId.competitionId.id = :competitionId AND s.userId.id = :userId AND s.folderName IS NOT NULL AND (s.submissionTime > :finish OR s.submissionTime < :start) ORDER BY s.submissionTime DESC"),
     @NamedQuery(name = "Submission.findAll", query = "SELECT s FROM Submission s ORDER BY s.submissionTime DESC"),
+    @NamedQuery(name = "Submission.findAllSubmissionsByUserId", query = "SELECT s FROM Submission s WHERE s.userId.id = :userId AND s.folderName IS NOT NULL ORDER BY s.submissionTime DESC"),
     @NamedQuery(name = "Submission.findById", query = "SELECT s FROM Submission s WHERE s.id = :id")})
 public class Submission implements Serializable {
 

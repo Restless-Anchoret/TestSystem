@@ -25,9 +25,11 @@ public interface SubmissionFacadeLocal {
     
     List<Submission> findAllSubmissionsByUserIdAndCompetitionId(Object userId, Object competitionId);
     
-    List<Submission> findAllSubmissionsByUserIdAndCompetitionIdAfterCompetition(Object userId, 
+    List<Submission> findAllSubmissionsByUserIdAndCompetitionIdOutCompetition(Object userId, 
             Object competitionId);
     
     Submission loadUserAndCompetitionProblemAndCompetition(Submission submission);
+    
+    List<Submission> findAllSubmissionsByUserId(Object userId);
     
 }

@@ -5,6 +5,8 @@ import com.netcracker.businesslogic.application.ApplicationEJB;
 import com.netcracker.businesslogic.logging.BusinessLogicLogging;
 import com.netcracker.businesslogic.support.CheckSubmissionHandler;
 import com.netcracker.businesslogic.support.CheckSubmissionCompetitionHandler;
+import com.netcracker.businesslogic.users.AuthenticationEJB;
+import com.netcracker.businesslogic.users.Role;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
 import com.netcracker.database.dal.ParticipationResultFacadeLocal;
 import com.netcracker.database.dal.SubmissionFacadeLocal;
@@ -51,7 +53,9 @@ public class CompetitionEJB {
     private ParticipationResultFacadeLocal participationResultFacade;
     @EJB(beanName = "SendingSubmissionEJB")
     private SendingSubmissionEJB sendingSubmissionEJB;
-
+    private AuthenticationEJB authenticationEJB;
+    
+    
     public String getTimeZoneId() {
         return timeZoneId;
     }
@@ -118,7 +122,10 @@ public class CompetitionEJB {
         }
         Competition competition = competitionFacade.find(competitionId);
         CheckSubmissionHandler handler;
-        if (submission.getSubmissionTime().compareTo(getCompetitionEnd(competition)) < 0)
+        if (Role.valueOf(user.getRole().toUpperCase()) == Role.ADMIN ||
+                Role.valueOf(user.getRole().toUpperCase()) == Role.MODERATOR)
+            handler = new CheckSubmissionHandler(submission, submissionFacade);
+        else if (submission.getSubmissionTime().compareTo(getCompetitionEnd(competition)) < 0)
             handler = new CheckSubmissionCompetitionHandler(submission, submissionFacade,
                 participationResultFacade);
         else
