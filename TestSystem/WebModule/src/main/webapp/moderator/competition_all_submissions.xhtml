@@ -23,13 +23,17 @@
                         <h:outputText value="#{submission.competitionProblemId.problemId.name}"/>
                     </p:column>
                     <p:column headerText="Компилятор">
-                        <h:outputText value="#{submission.compilatorId.name}"/>
+                        <h:outputText value="#{submission.compilatorId.name}"
+                                      converter="compilatorNameConverter"/>
                     </p:column>
                     <p:column headerText="Вердикт">
-                        <h:outputText value="#{submission.verdict}"/>
+                        <h:outputText value="#{verdictInfoController.getVerdictInfo(
+                                               submission.verdict, submission.points, submission.wrongTestNumber)}"
+                                      converter="verdictInfoConverter"/>
                     </p:column>
                     <p:column headerText="Время">
-                        <h:outputText value="#{submission.decisionTime} ms"/>
+                        <h:outputText value="#{submission.decisionTime}"
+                                      converter="decisionTimeConverter"/>
                     </p:column>
                     <p:column headerText="Операции">
                         <p:link target="_blanc" value="Код посылки"

@@ -7,6 +7,7 @@ import com.netcracker.testing.system.TestGroupType;
 import com.netcracker.testing.system.TestTable;
 import com.netcracker.testing.system.VerdictInfo;
 import com.netcracker.web.util.TestDescription;
+import com.netcracker.web.util.VerdictInfoConverter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,9 +56,9 @@ public class SubmissionResultsConroller {
         return presentation.isReady();
     }
     
-    public String getVerdict() {
+    public String getVerdictInfo() {
         if (presentation.isReady()) {
-            return presentation.getTestingInfo().getVerdictInfo().getVerdict().toString();
+            return new VerdictInfoConverter().getAsString(null, null, presentation.getTestingInfo().getVerdictInfo());
         } else {
             return "Обновите для вывода результатов...";
         }

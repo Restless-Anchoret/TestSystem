@@ -20,9 +20,10 @@
                     <h:outputText value="#{submissionResultsConroller.presentationSubmission.submissionTime}"
                                   converter="dateConverter"/> 
                     <h:outputText value="Компилятор:" />
-                    <h:outputText value="#{submissionResultsConroller.presentationSubmission.compilatorId.name}" />
+                    <h:outputText value="#{submissionResultsConroller.presentationSubmission.compilatorId.name}"
+                                  converter="compilatorNameConverter"/>
                     <h:outputText value="Вердикт: "/>
-                    <h:outputText value="#{submissionResultsConroller.verdict}"/>
+                    <h:outputText value="#{submissionResultsConroller.verdictInfo}"/>
                 </h:panelGrid>
                 <p:commandButton value="Обновить" update="presentationForm"/>
                 <h:panelGrid columns="2" cellpadding="5"
@@ -39,10 +40,12 @@
                         <h:outputText value="#{test.testGroupType}"/>
                     </p:column>
                     <p:column headerText="Вердикт">
-                        <h:outputText value="#{test.verdict}"/>
+                        <h:outputText value="#{verdictInfoController.getVerdictInfo(test.verdict, null, null)}"
+                                      converter="verdictInfoConverter"/>
                     </p:column>
                     <p:column headerText="Время">
-                        <h:outputText value="#{test.decisionTime}"/>
+                        <h:outputText value="#{test.decisionTime}"
+                                      converter="decisionTimeConverter"/>
                     </p:column>
                     <p:column headerText="Тест">
                         <p:link value="Тест"
