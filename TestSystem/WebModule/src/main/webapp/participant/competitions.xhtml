@@ -30,13 +30,13 @@
                             <f:param name="competitionId" value="#{competition.id}"/>
                         </p:link>
                     </p:column>
-                    <p:column headerText="Тип">
+                    <p:column style="width: 18%" headerText="Тип">
                         <h:outputText value="#{competitionsController.getTypeDescription(competition)}" />
                     </p:column>
-                    <p:column headerText="Начало">
+                    <p:column style="width: 18%" headerText="Начало">
                         <h:outputText value="#{competition.competitionStart}" converter="dateConverter" />
                     </p:column>
-                    <p:column headerText="Длительность">
+                    <p:column style="width: 14%" headerText="Длительность">
                         <h:outputText value="#{competition.competitionInterval}" />
                     </p:column>
                     <p:column headerText="До начала осталось">

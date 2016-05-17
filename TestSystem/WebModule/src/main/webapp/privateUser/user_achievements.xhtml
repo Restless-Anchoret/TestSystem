@@ -23,11 +23,11 @@
                         <h:outputText value="#{participation.competitionId.name}" />
                     </p:column>
 
-                    <p:column headerText="Статус">
+                    <p:column style="width: 12%" headerText="Статус">
                         <h:outputText value="#{profileController.competitionEJB.getCompetitionPhase(participation.competitionId)}" converter="competitionPhaseConverter" />
                     </p:column>
 
-                    <p:column headerText="Начало">
+                    <p:column style="width: 14%" headerText="Начало">
                         <h:outputText value="#{participation.competitionId.competitionStart}" converter="dateConverter" />
                     </p:column>
 
@@ -35,10 +35,10 @@
                         <h:outputText value="#{profileController.getTypeDescription(participation)}"/>
                     </p:column>
 
-                    <p:column headerText="Количество решенных задач">
+                    <p:column style="width: 19%" headerText="Количество решенных задач">
                         <h:outputText value="#{participation.solvedProblems}"/>
                     </p:column>
-                    <p:column headerText="Место">
+                    <p:column style="width: 9%" headerText="Место">
                         <h:outputText value="#{participation.place}"/>
                     </p:column>
                 </p:dataTable>               

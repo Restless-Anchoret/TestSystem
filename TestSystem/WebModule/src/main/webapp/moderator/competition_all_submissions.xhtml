@@ -22,7 +22,7 @@
                     <p:column headerText="Задача">
                         <h:outputText value="#{submission.competitionProblemId.problemId.name}"/>
                     </p:column>
-                    <p:column headerText="Компилятор">
+                    <p:column style="width: 14%" headerText="Компилятор">
                         <h:outputText value="#{submission.compilatorId.name}"
                                       converter="compilatorNameConverter"/>
                     </p:column>
@@ -31,11 +31,11 @@
                                                submission.verdict, submission.points, submission.wrongTestNumber)}"
                                       converter="verdictInfoConverter"/>
                     </p:column>
-                    <p:column headerText="Время">
+                    <p:column style="width: 11%" headerText="Время">
                         <h:outputText value="#{submission.decisionTime}"
                                       converter="decisionTimeConverter"/>
                     </p:column>
-                    <p:column headerText="Операции">
+                    <p:column style="width: 17%" headerText="Операции">
                         <p:link target="_blanc" value="Код посылки"
                                 outcome="/privateUser/submission_code.xhtml">
                             <f:param name="id" value="#{submission.id}"/>

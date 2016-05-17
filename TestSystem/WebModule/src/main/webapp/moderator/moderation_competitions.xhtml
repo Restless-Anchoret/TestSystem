@@ -24,16 +24,16 @@
                         <h:outputText value="#{competition.registrationType}"
                                       converter="registrationTypeConverter"/>
                     </p:column>
-                    <p:column headerText="Система оценивания">
+                    <p:column style="width: 10%"   headerText="Система оценивания">
                         <h:outputText value="#{competition.evaluationType}"/>
                     </p:column>
-                    <p:column headerText="Начало">
+                    <p:column style="width: 15%" headerText="Начало">
                         <h:outputText value="#{competition.competitionStart}" converter="dateConverter"/>
                     </p:column>
-                    <p:column headerText="Длительность">
+                    <p:column style="width: 11%" headerText="Длительность">
                         <h:outputText value="#{competition.competitionInterval} минут"/>
                     </p:column>
-                    <p:column headerText="Операции">
+                    <p:column style="width: 17%" headerText="Операции">
                         <p:link value="Войти"
                                 outcome="/competition/competition_problems.xhtml">
                             <f:param name="competitionId" value="#{competition.id}"/>

@@ -32,12 +32,12 @@
                                       converter="verdictInfoConverter"/>
                     </p:column>
 
-                    <p:column headerText="Время">
+                    <p:column style="width: 11%" headerText="Время">
                         <h:outputText value="#{submission.decisionTime}"
                                       converter="decisionTimeConverter"/>
                     </p:column>
 
-                    <p:column headerText="Посылка">
+                    <p:column style="width: 17%" headerText="Посылка">
                         <p:link value="Код посылки" outcome="/privateUser/submission_code.xhtml" 
                                 target="_blanc">
                             <f:param name="id" value="#{submission.id}"/>
@@ -77,12 +77,12 @@
                                       converter="verdictInfoConverter"/>
                     </p:column>
 
-                    <p:column headerText="Время">
+                    <p:column style="width: 11%" headerText="Время">
                         <h:outputText value="#{submission.decisionTime}"
                                       converter="decisionTimeConverter"/>
                     </p:column>
 
-                    <p:column headerText="Посылка">
+                    <p:column style="width: 17%" headerText="Посылка">
                         <p:link value="Код посылки" outcome="/privateUser/submission_code.xhtml" 
                                 target="_blanc">
                             <f:param name="id" value="#{submission.id}"/>

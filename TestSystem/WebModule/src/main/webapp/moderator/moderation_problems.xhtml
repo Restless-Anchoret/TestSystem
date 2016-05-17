@@ -24,16 +24,16 @@
                         <h:outputText value="#{problem.type}"
                                       converter="problemTypeConverter"/>
                     </p:column>
-                    <p:column headerText="Лимит по времени">
+                    <p:column style="width: 16%" headerText="Лимит по времени">
                         <h:outputText value="#{problem.timeLimit} ms"/>
                     </p:column>
-                    <p:column headerText="Лимит по памяти">
+                    <p:column style="width: 16%" headerText="Лимит по памяти">
                         <h:outputText value="#{problem.memoryLimit} MB"/>
                     </p:column>
-                    <p:column headerText="Валидация">
+                    <p:column style="width: 15%" headerText="Валидация">
                         <h:outputText value="#{moderatingProblemsController.getValidatedDescription(problem)}"/>
                     </p:column>
-                    <p:column headerText="Операции">
+                    <p:column style="width: 12%" headerText="Операции">
                         <p:commandLink value="Удалить"
                                        update="problemsForm"
                                        action="#{moderatingProblemsController.deleteProblem(problem)}"/>
