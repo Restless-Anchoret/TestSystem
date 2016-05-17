@@ -6,9 +6,9 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="/template/moderation_template.xhtml">
-        <ui:define name="title">Модерирование задач</ui:define>
+        <ui:define name="title">Редактирование задач</ui:define>
         <ui:define name="subcontent">
-            <h1>Модерирование задач</h1>
+            <h1>Редактирование задач</h1>
             <h:form id="problemsForm">
                 <p:dataTable var="problem" value="#{moderatingProblemsController.problemsList}"
                              rows="50" paginator="true"

@@ -25,17 +25,22 @@
                                 rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
                         <f:param name="competitionId" value="#{competitionController.competitionId}"/>
                     </p:menuitem>
+                    <f:facet name="options">
+                        <h:panelGrid columns="3">
+                            <h:outputText value="#{timersInfo.statusCompetitionOnCompetitionPage(competitionController.competition)}"/>
+                            <h:outputText value="  "/>
+                            <pe:timer timeout="#{timersInfo.getSecondsBeforeEnd(competitionController.competition)}" 
+                                      format="HH:mm:ss" 
+                                      rendered="#{timersInfo.isViewTimerBeforeEnd(competitionController.competition)}">
+                                <f:param name="competitionId" value="#{competitionController.competitionId}"/>
+                            </pe:timer>
+                        </h:panelGrid>
+                    </f:facet>
                 </p:menubar>
-                <h:panelGrid columns="3">
-                    <h:outputText value="#{timersInfo.statusCompetitionOnCompetitionPage(competitionController.competition)}"/>
-                    <h:outputText value="  "/>
-                    <pe:timer timeout="#{timersInfo.getSecondsBeforeEnd(competitionController.competition)}" 
-                              format="HH:mm:ss" 
-                              rendered="#{timersInfo.isViewTimerBeforeEnd(competitionController.competition)}">
-                        <f:param name="competitionId" value="#{competitionController.competitionId}"/>
-                    </pe:timer>
-                </h:panelGrid>
             </h:form>
+            <h1>
+                <h:outputText value="#{competitionController.competition.name}"/>
+            </h1>
             <ui:insert name="subcontent">Страница пуста</ui:insert>
         </ui:define>
     </ui:composition>
