@@ -9,6 +9,18 @@
         <title>File not found</title>
     </h:head>
     <h:body>
-        <h:outputText value="Файл не найден"/>
+        <h:outputStylesheet library="css" name="kolibri.css"  />
+        <p:growl id="growl" life="5000" showDetail="true" autoUpdate="true"/>
+        <div style="margin: auto; width: 30%">
+            <h:graphicImage value="#{resource['logo_kolibri_big.png']}" style="width: 100%"/>
+            <p:spacer width="8%"/>
+            <div style="margin: auto; width: 30%">
+                <h:outputText style="font-weight: bold" value="Файл не найден"/>
+            </div>
+            <p:spacer width="3%"/>
+            <div style="margin: auto; width: 23%">
+                <p:link  style="margin: auto;" value="На главную" outcome="/participant/competitions.xhtml"/>
+            </div>
+        </div>
     </h:body>
 </html>
