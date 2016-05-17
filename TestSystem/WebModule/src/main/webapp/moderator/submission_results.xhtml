@@ -25,7 +25,9 @@
                     <h:outputText value="Вердикт: "/>
                     <h:outputText value="#{submissionResultsConroller.verdictInfo}"/>
                 </h:panelGrid>
-                <p:commandButton value="Обновить" update="presentationForm"/>
+                <p:commandButton value="Обновить" update="presentationForm">
+                    <f:param name="id" value="#{submissionResultsConroller.presentationSubmission.id}"/>
+                </p:commandButton>
                 <h:panelGrid columns="2" cellpadding="5"
                              rendered="#{submissionResultsConroller.presentationReady}">
                     

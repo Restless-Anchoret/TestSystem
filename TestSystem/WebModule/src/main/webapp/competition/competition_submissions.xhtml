@@ -43,18 +43,17 @@
                             <f:param name="id" value="#{submission.id}"/>
                         </p:link>
                         <h:outputText value="  "/>
-                        <p:commandLink value="Запустить"
-                                       action="#{sendingSubmissionController.
-                                                 runSubmissionForPresentation(submission)}"
-                                       rendered="#{authenticationController.authenticatedModeratorOrAdmin}">>
-                            <f:param name="competitionId" value="#{competitionController.competitionId}"/>
-                        </p:commandLink>
+                        <p:link value="Запустить"
+                                outcome="/moderator/submission_results.xhtml"
+                                rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
+                            <f:param name="id" value="#{submission.id}"/>
+                        </p:link>
                     </p:column>
                 </p:dataTable>
             </h:form>
             <h:form>
                 <h1>Посылки</h1>
-                
+
                 <p:dataTable var="submission" value="#{competitionController.submissions}"
                              rows="50" paginator="true" id="submissions"
                              paginatorTemplate="{PageLinks}"
@@ -62,7 +61,7 @@
                     <p:column headerText="Когда">
                         <h:outputText value="#{submission.submissionTime}" converter="dateConverter" />
                     </p:column>
-                    
+
                     <p:column headerText="Задача">
                         <h:outputText value="#{submission.competitionProblemId.problemId.name}" />
                     </p:column>
@@ -82,19 +81,18 @@
                         <h:outputText value="#{submission.decisionTime}"
                                       converter="decisionTimeConverter"/>
                     </p:column>
-                    
+
                     <p:column headerText="Посылка">
                         <p:link value="Код посылки" outcome="/privateUser/submission_code.xhtml" 
                                 target="_blanc">
                             <f:param name="id" value="#{submission.id}"/>
                         </p:link>
                         <h:outputText value="  "/>
-                        <p:commandLink value="Запустить"
-                                       action="#{sendingSubmissionController.
-                                                 runSubmissionForPresentation(submission)}"
-                                       rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
-                            <f:param name="competitionId" value="#{competitionController.competitionId}"/>
-                        </p:commandLink>
+                        <p:link value="Запустить"
+                                outcome="/moderator/submission_results.xhtml"
+                                rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
+                            <f:param name="id" value="#{submission.id}"/>
+                        </p:link>
                     </p:column>
                 </p:dataTable>               
             </h:form>

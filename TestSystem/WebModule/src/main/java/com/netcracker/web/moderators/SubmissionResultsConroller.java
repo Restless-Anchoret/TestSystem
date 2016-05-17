@@ -6,6 +6,7 @@ import com.netcracker.database.entity.Submission;
 import com.netcracker.testing.system.TestGroupType;
 import com.netcracker.testing.system.TestTable;
 import com.netcracker.testing.system.VerdictInfo;
+import com.netcracker.web.util.JSFUtil;
 import com.netcracker.web.util.TestDescription;
 import com.netcracker.web.util.VerdictInfoConverter;
 import java.util.ArrayList;
@@ -27,7 +28,8 @@ public class SubmissionResultsConroller {
     
     @PostConstruct
     public void initController() {
-        presentation = submissionPresentationEJB.getSubmissionPresentation();
+        Integer submissionId = Integer.parseInt(JSFUtil.getRequestParameter("id"));
+        presentation = submissionPresentationEJB.getSubmissionPresentation(submissionId);
         if (presentation.isReady()) {
             int testsCounter = 0;
             TestTable testTable = presentation.getTestingInfo().getTestTable();
