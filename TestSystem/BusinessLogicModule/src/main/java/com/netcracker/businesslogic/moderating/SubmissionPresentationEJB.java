@@ -1,8 +1,8 @@
 package com.netcracker.businesslogic.moderating;
 
 import com.netcracker.businesslogic.support.PresentationResultsHandler;
-import com.netcracker.businesslogic.support.SessionMediator;
 import com.netcracker.businesslogic.support.SubmissionPresentation;
+import com.netcracker.database.dal.SubmissionFacadeLocal;
 import com.netcracker.database.entity.Submission;
 import com.netcracker.testing.system.TestingInfo;
 import java.util.ArrayList;
@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -23,56 +22,63 @@ import javax.ejb.Singleton;
 @Lock(LockType.WRITE)
 public class SubmissionPresentationEJB {
     
-    public static final String PRESENTATION_PARAM = "submission_presentation_id";
-    public static final int SAVING_PRESENATIONS_DELAY = 30 * 60 * 1000;
+    //public static final String PRESENTATION_PARAM = "submission_presentation_id";
+    public static final int SAVING_PRESENATIONS_DELAY = 5 * 60 * 1000;
 
     @Resource(name = "usedEvaluationSystemType")
     private String usedEvaluationSystemType;
     
     @EJB(beanName = "SendingSubmissionEJB")
     private SendingSubmissionEJB sendingSubmissionEJB;
-    private Map<String, SubmissionPresentation> presentationsMap = new HashMap<>();
-    private Random random = new Random();
+    @EJB(beanName = "SubmissionFacade")
+    private SubmissionFacadeLocal submissionFacade;
+    private Map<Integer, SubmissionPresentation> presentationsMap = new HashMap<>();
+    //private Random random = new Random();
     
-    public void runSubmissionForPresentation(Submission submission) {
+//    public void runSubmissionForPresentation(Submission submission) {
+//        deleteOldPresentations();
+//        //String newPresentationId = getNewPresentationId();
+//        SessionMediator.setSessionParameter(PRESENTATION_PARAM, newPresentationId);
+//        
+//    }
+    
+    public SubmissionPresentation getSubmissionPresentation(Integer submissionId) {
         deleteOldPresentations();
-        String newPresentationId = getNewPresentationId();
-        SessionMediator.setSessionParameter(PRESENTATION_PARAM, newPresentationId);
-        presentationsMap.put(newPresentationId, new SubmissionPresentation(null, submission));
-        PresentationResultsHandler handler = new PresentationResultsHandler(
-                this, newPresentationId, submission);
-        sendingSubmissionEJB.sendSubmission(submission.getCompetitionProblemId(),
-                submission.getFolderName(), usedEvaluationSystemType, false,
-                submission.getCompilatorId(), handler);
+        if (!presentationsMap.containsKey(submissionId)) {
+            Submission submission = submissionFacade.find(submissionId);
+            presentationsMap.put(submissionId, new SubmissionPresentation(null, submission));
+            PresentationResultsHandler handler = new PresentationResultsHandler(
+                    this, null, submission);
+            sendingSubmissionEJB.sendSubmission(submission.getCompetitionProblemId(),
+                    submission.getFolderName(), usedEvaluationSystemType, false,
+                    submission.getCompilatorId(), handler);
+        }
+        return presentationsMap.get(submissionId);
     }
     
-    public SubmissionPresentation getSubmissionPresentation(String presentationId) {
-        return presentationsMap.get(presentationId);
-    }
+//    public SubmissionPresentation getSubmissionPresentation() {
+//        String presentationId = SessionMediator.getSessionStringParameter(PRESENTATION_PARAM);
+//        return getSubmissionPresentation(presentationId);
+//    }
     
-    public SubmissionPresentation getSubmissionPresentation() {
-        String presentationId = SessionMediator.getSessionStringParameter(PRESENTATION_PARAM);
-        return getSubmissionPresentation(presentationId);
-    }
-    
-    public void putTestingInfo(String id, TestingInfo testingInfo, Submission submission) {
+    public void putTestingInfo(Submission submission, TestingInfo testingInfo) {
         deleteOldPresentations();
-        presentationsMap.put(id, new SubmissionPresentation(testingInfo, submission));
+        presentationsMap.put(submission.getId(), new SubmissionPresentation(testingInfo, submission));
     }
     
-    private String getNewPresentationId() {
-        return Integer.toString(random.nextInt());
-    }
+//    private String getNewPresentationId() {
+//        return Integer.toString(random.nextInt());
+//    }
     
     private void deleteOldPresentations() {
         Date currentMoment = new Date();
-        List<String> oldPresentationIds = new ArrayList<>();
-        for (Map.Entry<String, SubmissionPresentation> entry: presentationsMap.entrySet()) {
+        List<Integer> oldPresentationIds = new ArrayList<>();
+        for (Map.Entry<Integer, SubmissionPresentation> entry: presentationsMap.entrySet()) {
             if (currentMoment.getTime() - entry.getValue().getLastUpdatingDate().getTime() > SAVING_PRESENATIONS_DELAY) {
                 oldPresentationIds.add(entry.getKey());
             }
         }
-        for (String presentationId: oldPresentationIds) {
+        for (Integer presentationId: oldPresentationIds) {
             presentationsMap.remove(presentationId);
         }
     }

@@ -2,8 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:p="http://primefaces.org/ui">
     <ui:composition template="/template/main_template.xhtml">
         <ui:define name="title">Код посылки</ui:define>
         <ui:define name="content">  
@@ -15,17 +14,22 @@
                     <h:outputText value="Название задачи:" />
                     <h:outputText value="#{submissionCodeController.submission.competitionProblemId.problemId.name}" />
                     <h:outputText value="Компилятор:" />
-                    <h:outputText value="#{submissionCodeController.submission.compilatorId.name}" /> 
+                    <h:outputText value="#{submissionCodeController.submission.compilatorId.name}"
+                                  converter="compilatorNameConverter"/> 
                     <h:outputText value="Пользователь:" />
                     <h:outputText value="#{submissionCodeController.submission.userId.login}" />
                     <h:outputText value="Дата отправки:"/>
-                    <h:outputText value="#{submissionCodeController.submission.submissionTime}">
-                        <f:convertDateTime dateStyle="full" timeStyle="long" type="both"/>
-                    </h:outputText>  
+                    <h:outputText value="#{submissionCodeController.submission.submissionTime}"
+                                  converter="dateConverter"/>
                     <h:outputText value="Вердикт:" />
-                    <h:outputText value="#{submissionCodeController.submission.verdict}" /> 
+                    <h:outputText value="#{verdictInfoController.getVerdictInfo(
+                                           submissionCodeController.submission.verdict,
+                                           submissionCodeController.submission.points,
+                                           submissionCodeController.submission.wrongTestNumber)}"
+                                  converter="verdictInfoConverter"/> 
                     <h:outputText value="Время работы посылки:" />
-                    <h:outputText value="#{submissionCodeController.submission.decisionTime}" />              
+                    <h:outputText value="#{submissionCodeController.submission.decisionTime}"
+                                  converter="decisionTimeConverter"/>              
                 </h:panelGrid>
                 <p:inputTextarea readonly="true" style="width: 99%; font-family: Consolas;" value="#{submissionCodeController.submissionText}"/>
             </h:form>

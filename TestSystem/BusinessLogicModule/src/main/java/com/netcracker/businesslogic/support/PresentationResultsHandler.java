@@ -20,7 +20,7 @@ public class PresentationResultsHandler implements TestResultHandler {
     
     @Override
     public void process(TestingInfo info) {
-        submissionPresentationEJB.putTestingInfo(presentationId, info, submission);
+        submissionPresentationEJB.putTestingInfo(submission, info);
     }
 
 }

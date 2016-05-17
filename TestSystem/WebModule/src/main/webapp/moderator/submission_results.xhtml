@@ -20,11 +20,14 @@
                     <h:outputText value="#{submissionResultsConroller.presentationSubmission.submissionTime}"
                                   converter="dateConverter"/> 
                     <h:outputText value="Компилятор:" />
-                    <h:outputText value="#{submissionResultsConroller.presentationSubmission.compilatorId.name}" />
+                    <h:outputText value="#{submissionResultsConroller.presentationSubmission.compilatorId.name}"
+                                  converter="compilatorNameConverter"/>
                     <h:outputText value="Вердикт: "/>
-                    <h:outputText value="#{submissionResultsConroller.verdict}"/>
+                    <h:outputText value="#{submissionResultsConroller.verdictInfo}"/>
                 </h:panelGrid>
-                <p:commandButton value="Обновить" update="presentationForm"/>
+                <p:commandButton value="Обновить" update="presentationForm">
+                    <f:param name="id" value="#{submissionResultsConroller.presentationSubmission.id}"/>
+                </p:commandButton>
                 <h:panelGrid columns="2" cellpadding="5"
                              rendered="#{submissionResultsConroller.presentationReady}">
                     
@@ -39,10 +42,12 @@
                         <h:outputText value="#{test.testGroupType}"/>
                     </p:column>
                     <p:column headerText="Вердикт">
-                        <h:outputText value="#{test.verdict}"/>
+                        <h:outputText value="#{verdictInfoController.getVerdictInfo(test.verdict, null, null)}"
+                                      converter="verdictInfoConverter"/>
                     </p:column>
                     <p:column headerText="Время">
-                        <h:outputText value="#{test.decisionTime}"/>
+                        <h:outputText value="#{test.decisionTime}"
+                                      converter="decisionTimeConverter"/>
                     </p:column>
                     <p:column headerText="Тест">
                         <p:link value="Тест"

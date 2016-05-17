@@ -23,13 +23,17 @@
                         <h:outputText value="#{submission.competitionProblemId.problemId.name}"/>
                     </p:column>
                     <p:column headerText="Компилятор">
-                        <h:outputText value="#{submission.compilatorId.name}"/>
+                        <h:outputText value="#{submission.compilatorId.name}"
+                                      converter="compilatorNameConverter"/>
                     </p:column>
                     <p:column headerText="Вердикт">
-                        <h:outputText value="#{submission.verdict}"/>
+                        <h:outputText value="#{verdictInfoController.getVerdictInfo(
+                                               submission.verdict, submission.points, submission.wrongTestNumber)}"
+                                      converter="verdictInfoConverter"/>
                     </p:column>
                     <p:column headerText="Время">
-                        <h:outputText value="#{submission.decisionTime} ms"/>
+                        <h:outputText value="#{submission.decisionTime}"
+                                      converter="decisionTimeConverter"/>
                     </p:column>
                     <p:column headerText="Операции">
                         <p:link target="_blanc" value="Код посылки"
@@ -37,11 +41,11 @@
                             <f:param name="id" value="#{submission.id}"/>
                         </p:link>
                         <h:outputText value="  "/>
-                        <p:commandLink value="Запустить"
-                                       action="#{sendingSubmissionController.runSubmissionForPresentation(submission)}"
+                        <p:link value="Запустить"
+                                       outcome="/moderator/submission_results.xhtml"
                                        rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
-                            <f:param name="competitionId" value="#{competitionController.competitionId}"/>
-                        </p:commandLink>
+                            <f:param name="id" value="#{submission.id}"/>
+                        </p:link>
                     </p:column>
                 </p:dataTable>               
             </h:form>
