@@ -4,13 +4,17 @@
 } 
 .ui-widget{ 
     font-family: initial;
-
-} 
+}
+.ui-menuitem-text{
+    font-weight: bold;
+}
 h1{
-  font-family: TimesNewRoman, sans-serif, fantasy;  
+    font-family: TimesNewRoman, sans-serif, fantasy;
+    font-size: 1.8em;
 }
 h2{
     font-family: TimesNewRoman, sans-serif, fantasy;
+    font-size: 1.4em;
 }
 element.style{ 
     background: none; 
