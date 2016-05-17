@@ -6,10 +6,10 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <ui:composition template="/template/moderation_template.xhtml">
-        <ui:define name="title">Модерирование задачи</ui:define>
+        <ui:define name="title">Редактирование задачи</ui:define>
         <ui:define name="subcontent">
-            <h1>Модерирование задачи</h1>
-            <h:form>
+            <h:form id="problemForm">
+                <h1><h:outputText value="Редактирование задачи #{moderatingProblemController.problem.name}"/></h1>
                 <h:panelGrid id="problemGrid" columns="2" cellpadding="5">
                     <h:outputText value="Название: "/>
                     <p:inputText value="#{moderatingProblemController.problem.name}"/>

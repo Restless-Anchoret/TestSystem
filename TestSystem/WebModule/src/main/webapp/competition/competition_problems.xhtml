@@ -9,7 +9,7 @@
         <ui:define name="title">Задачи</ui:define>
         <ui:define name="subcontent">
             <h:form>
-                <h1>Задачи соревнования</h1>
+                <h2>Задачи</h2>
                 <p:dataTable var="competitionProblem" value="#{competitionController.competitionProblems}"
                              emptyMessage="Для данного соревнования задач нет, зайдите позже.">
                     <p:column headerText="№">
@@ -30,7 +30,7 @@
                 </p:dataTable>               
             </h:form>
             <p:separator/>
-            <h1>Отослать</h1>
+            <h2>Отослать</h2>
             <h:form enctype="multipart/form-data">
                 <p:growl id="messages" showDetail="true" />
                 <h:panelGrid columns="2">

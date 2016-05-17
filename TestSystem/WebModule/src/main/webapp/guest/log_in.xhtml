@@ -12,16 +12,18 @@
         <div style="margin: auto; width: 30%">
             <h:graphicImage value="#{resource['logo_kolibri_big.png']}" style="width: 100%"/>
             <p:spacer/>
-            <h:form>
-                <h:panelGrid id="authenticationGrid" columns="2" cellpadding="5">
-                    <h:outputText value="Логин: "/>
-                    <p:inputText value="#{logInController.login}" required="true"/>
-                    <h:outputText value="Пароль: "/>
-                    <p:password value="#{logInController.password}" required="true"/>
-                </h:panelGrid>
-                <p:commandButton value="Войти" update="authenticationGrid" action="#{logInController.doAuthentication()}"
-                                 ajax="true"/>
-            </h:form>
+            <div style="margin: auto; width: 80%">
+                <h:form>
+                    <h:panelGrid id="authenticationGrid" columns="2" cellpadding="5">
+                        <h:outputText value="Логин: "/>
+                        <p:inputText value="#{logInController.login}" required="true" style="width: 250px"/>
+                        <h:outputText value="Пароль: "/>
+                        <p:password value="#{logInController.password}" required="true" style="width: 250px"/>
+                    </h:panelGrid>
+                    <p:commandButton value="Войти" update="authenticationGrid" action="#{logInController.doAuthentication()}"
+                                     ajax="true"/>
+                </h:form>
+            </div>
             <p:spacer/>
             <h:form>
                 <p:panel style="width: 100%" header="Зарегистрироваться" toggleable="true"

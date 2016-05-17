@@ -49,7 +49,7 @@
                             <f:param name="id" value="#{submission.id}"/>
                         </p:link>
                         <h:outputText value="  "/>
-                        <p:link value="Запустить"
+                        <p:link value="Запустить" target="_blanc" 
                                 outcome="/moderator/submission_results.xhtml"
                                 rendered="#{authenticationController.authenticatedModeratorOrAdmin}">
                             <f:param name="id" value="#{submission.id}"/>

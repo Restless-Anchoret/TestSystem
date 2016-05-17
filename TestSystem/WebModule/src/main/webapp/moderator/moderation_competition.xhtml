@@ -6,10 +6,12 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <ui:composition template="/template/moderation_template.xhtml">
-        <ui:define name="title">Модерирование соревнования</ui:define>
+        <ui:define name="title">Редактирование соревнования</ui:define>
         <ui:define name="subcontent">
-            <h1>Модерирование соревнования</h1>
-            <h:form>
+            <h:form id="competitionForm">
+                <h1>
+                    <h:outputText value="Редактирование соревнования #{moderatingCompetitionController.competition.name}"/>
+                </h1>
                 <h:panelGrid id="competitionGrid" columns="2" cellpadding="5">
                     <h:outputText value="Название: "/>
                     <p:inputText value="#{moderatingCompetitionController.competition.name}"/>
@@ -46,16 +48,16 @@
                     <h:outputText value="Завершено: "/>
                     <p:selectBooleanCheckbox value="#{moderatingCompetitionController.competition.finished}"/>
                 </h:panelGrid>
-                <p:commandButton value="Сохранить" update="competitionGrid"
+                <p:commandButton value="Сохранить" update="competitionForm"
                                  action="#{moderatingCompetitionController.saveCompetitionChanges()}">
                     <f:param name="id" value="#{moderatingCompetitionController.competition.id}"/>
                 </p:commandButton>
-                <p:commandButton value="Провести системное тестирование" update="competitionGrid"
+                <p:commandButton value="Провести системное тестирование" update="competitionForm"
                                  action="#{moderatingCompetitionController.runSystemTesting()}"
                                  rendered="false">
                     <f:param name="id" value="#{moderatingCompetitionController.competition.id}"/>
                 </p:commandButton>
-                <p:commandButton value="Завершить соревнование" update="competitionGrid"
+                <p:commandButton value="Завершить соревнование" update="competitionForm"
                                  action="#{moderatingCompetitionController.finalizeCompetition()}">
                     <f:param name="id" value="#{moderatingCompetitionController.competition.id}"/>
                 </p:commandButton>
