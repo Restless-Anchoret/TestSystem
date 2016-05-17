@@ -9,40 +9,41 @@
     <h:body>
         <h:outputStylesheet library="css" name="kolibri.css"  />
         <p:growl id="growl" life="5000" showDetail="true" autoUpdate="true"/>
-        <h:graphicImage value="#{resource['logo_kolibri.png']}"/>
-        <h1>Войти в систему</h1>
-        <h:form>
-            <h:panelGrid id="authenticationGrid" columns="2" cellpadding="5">
-                <h:outputText value="Логин: "/>
-                <p:inputText value="#{logInController.login}" required="true"/>
-                <h:outputText value="Пароль: "/>
-                <p:password value="#{logInController.password}" required="true"/>
-            </h:panelGrid>
-            <p:commandButton value="Войти" update="authenticationGrid" action="#{logInController.doAuthentication()}"
-                             ajax="true"/>
-        </h:form>
-        
-        <p:spacer height="10" />
-        <p:separator />
-        
-        <h1>Зарегистрироваться</h1>
-        <h:form>
-            <h:panelGrid id="registrationGrid" columns="2" cellpadding="5">
-                <h:outputText value="Логин: "/>
-                <p:inputText value="#{registrationController.login}" required="true"
-                             validator="loginValidator"/>
-                <h:outputText value="Пароль: "/>
-                <p:password id="regPassword" value="#{registrationController.password}" match="regPasswordAgain"
-                            feedback="true" label="Password" required="true" validator="passwordValidator"
-                            promptLabel="Введите пароль" weakLabel="Слабый пароль"
-                            goodLabel="Хороший пароль" strongLabel="Сильный пароль"/>
-                <h:outputText value="Повторите пароль: "/>
-                <p:password id="regPasswordAgain" value="#{registrationController.password}"
-                            label="Password repetition" required="true"/>
-            </h:panelGrid>
-            <p:commandButton value="Зарегистрироваться" update="registrationGrid"
-                             action="#{registrationController.doRegistration()}" ajax="true"/>
-        </h:form>
+        <div style="margin: auto; width: 30%">
+            <h:graphicImage value="#{resource['logo_kolibri_big.png']}" style="width: 100%"/>
+            <p:spacer/>
+            <h:form>
+                <h:panelGrid id="authenticationGrid" columns="2" cellpadding="5">
+                    <h:outputText value="Логин: "/>
+                    <p:inputText value="#{logInController.login}" required="true"/>
+                    <h:outputText value="Пароль: "/>
+                    <p:password value="#{logInController.password}" required="true"/>
+                </h:panelGrid>
+                <p:commandButton value="Войти" update="authenticationGrid" action="#{logInController.doAuthentication()}"
+                                 ajax="true"/>
+            </h:form>
+            <p:spacer/>
+            <h:form>
+                <p:panel style="width: 100%" header="Зарегистрироваться" toggleable="true"
+                         toggleOrientation="vertical" collapsed="true">
+                    <h:panelGrid id="registrationGrid" columns="2" cellpadding="5">
+                        <h:outputText value="Логин: "/>
+                        <p:inputText value="#{registrationController.login}" required="true"
+                                     validator="loginValidator"/>
+                        <h:outputText value="Пароль: "/>
+                        <p:password id="regPassword" value="#{registrationController.password}" match="regPasswordAgain"
+                                    feedback="true" label="Password" required="true" validator="passwordValidator"
+                                    promptLabel="Введите пароль" weakLabel="Слабый пароль"
+                                    goodLabel="Хороший пароль" strongLabel="Сильный пароль"/>
+                        <h:outputText value="Повторите пароль: "/>
+                        <p:password id="regPasswordAgain" value="#{registrationController.password}"
+                                    label="Password repetition" required="true"/>
+                    </h:panelGrid>
+                    <p:commandButton value="Зарегистрироваться" update="registrationGrid"
+                                     action="#{registrationController.doRegistration()}" ajax="true"/>
+                </p:panel>
+            </h:form>
+        </div>
     </h:body>
 </html>
 
