@@ -8,7 +8,7 @@
     <ui:composition template="/template/profile_template.xhtml">
         <ui:define name="title">Профиль</ui:define>
         <ui:define name="subcontent">
-            <h1>Профиль</h1>
+            <h1><h:outputText value="Профиль пользователя #{profileController.user.login}"/></h1>
             <h:panelGrid columns="2" cellpadding="5">
                 <h:outputText value="Логин: "/>
                 <h:outputText value="#{profileController.user.login}"/>
