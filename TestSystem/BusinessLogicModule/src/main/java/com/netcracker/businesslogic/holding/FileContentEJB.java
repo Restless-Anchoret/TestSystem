@@ -28,7 +28,7 @@ public class FileContentEJB {
     
     public String getTestAnswerContent(String problemFolder, String testGroupType, int testNumber) {
         FileSupplier fileSupplier = applicationEJB.getFileSupplier();
-        return getFileContentAsString(fileSupplier.getTestInputFile(problemFolder, testGroupType, testNumber));
+        return getFileContentAsString(fileSupplier.getTestAnswerFile(problemFolder, testGroupType, testNumber));
     }
     
     public String getSubmissionCode(Submission submission) {

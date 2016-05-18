@@ -32,15 +32,15 @@ public class TimersInfo {
     public String statusCompetitionOnCompetitionsPage(Competition competition) {
         if (competition.getCompetitionStart().after(new Date()) &&
                 ((competition.getCompetitionStart().getTime() - new Date().getTime()) / 1000 > 86_400))
-            return "больше 24 часов";
+            return "Больше 24 часов";
         switch (competitionEJB.getCompetitionPhase(competition)) {
             case CODING:
             case CODING_FROZEN:
-                return "соревнование идет";
+                return "Соревнование идет";
             case WAITING_RESULTS:
-                return "ожидаются результаты";
+                return "Ожидаются результаты";
             case FINISHED:
-                return "соревнование закончилось";
+                return "Соревнование закончилось";
             default:
                 return "";
         }
@@ -69,6 +69,8 @@ public class TimersInfo {
             case CODING:
             case CODING_FROZEN:
                 return "До конца соревнования осталось ";
+            case WAITING_RESULTS:
+                return "Ожидаются результаты";
             default:
                 return "Соревнование закончилось ";
         }
