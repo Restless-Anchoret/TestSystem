@@ -4,23 +4,21 @@ import com.netcracker.businesslogic.holding.CompetitionEJB;
 import com.netcracker.businesslogic.users.AuthenticationEJB;
 import com.netcracker.businesslogic.users.PasswordChangeEJB;
 import com.netcracker.businesslogic.users.Role;
+import com.netcracker.database.dal.ParticipationFacadeLocal;
 import com.netcracker.database.dal.UserFacadeLocal;
 import com.netcracker.database.dal.SubmissionFacadeLocal;
-import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.Submission;
 import com.netcracker.database.entity.Participation;
 import com.netcracker.database.entity.User;
 import com.netcracker.web.logging.WebLogging;
 import com.netcracker.web.session.AuthenticationController;
 import com.netcracker.web.util.JSFUtil;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import com.netcracker.monitoring.info.CompetitionPhase;
 import java.nio.file.Path;
 
 @Named
@@ -33,6 +31,8 @@ public class ProfileController {
     private UserFacadeLocal userFacade;
     @EJB(beanName = "SubmissionFacade")
     private SubmissionFacadeLocal submissionFacade;
+    @EJB(beanName = "ParticipationFacade")
+    private ParticipationFacadeLocal participationFacade;
     
     private User user;
     private String oldPassword;
@@ -60,10 +60,20 @@ public class ProfileController {
             String pageName = path.getFileName().toString();
             if (pageName.equals("user_submissions.xhtml")) {
                 initUserSubmissions();
+            } else if (pageName.equals("user_achievements.xhtml")) {
+                initUserAchievements();
             }
         } catch (Exception exception) {
             WebLogging.logger.log(Level.FINE, "Exception while loading profile page", exception);
         }
+    }
+    
+    public void initUserAchievements() {
+        participations = participationFacade.findByUserId(user.getId());
+    }
+
+    public void initUserSubmissions() {
+        submissions = submissionFacade.findAllSubmissionsByUserId(user.getId());
     }
 
     public User getUser() {
@@ -143,15 +153,6 @@ public class ProfileController {
             WebLogging.logger.log(Level.FINE, "Exception while changing actuality of user", exception);
             JSFUtil.addErrorMessage("Ошибка при изменении активности пользователя", "");
         }
-    }
-
-    public void initUserAchievements() {
-        participations = user.getParticipationList();
-    }
-
-    public void initUserSubmissions() {
-        submissions = submissionFacade.
-                findAllSubmissionsByUserId(user.getId());
     }
 
     public List<Participation> getParticipations() {

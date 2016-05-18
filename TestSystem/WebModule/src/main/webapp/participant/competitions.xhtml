@@ -37,7 +37,7 @@
                         <h:outputText value="#{competition.competitionStart}" converter="dateConverter" />
                     </p:column>
                     <p:column style="width: 14%" headerText="Длительность">
-                        <h:outputText value="#{competition.competitionInterval}" />
+                        <h:outputText value="#{competition.competitionInterval} минут" />
                     </p:column>
                     <p:column headerText="До начала осталось">
                         <pe:timer timeout="#{timersInfo.getSecondsBeforeStart(competition)}" 

@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Participation.findById", query = "SELECT p FROM Participation p WHERE p.id = :id"),
     @NamedQuery(name = "Participation.findByCompetitionIdAndUserId", query = "SELECT p FROM Participation p WHERE p.competitionId.id = :competitionId AND p.userId.id = :userId ORDER BY p.id"),
+    @NamedQuery(name = "Participation.findByUserId", query = "SELECT p FROM Participation p WHERE p.userId.id = :userId ORDER BY p.id"),
     @NamedQuery(name = "Participation.findByCompetitionId", query = "SELECT p FROM Participation p WHERE p.competitionId.id = :competitionId ORDER BY p.id")})
 public class Participation implements Serializable {
 

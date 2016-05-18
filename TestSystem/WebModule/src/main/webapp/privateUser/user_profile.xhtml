@@ -15,9 +15,8 @@
                 <h:outputText value="Роль: "/>
                 <h:outputText value="#{profileController.user.role}" converter="roleConverter"/>
                 <h:outputText value="Дата регистрации: "/>
-                <h:outputText value="#{profileController.user.registrationDate}">
-                    <f:convertDateTime dateStyle="full" timeStyle="long" type="both"/>
-                </h:outputText>
+                <h:outputText value="#{profileController.user.registrationDate}"
+                              converter="dateConverter"/>
             </h:panelGrid>
             <h:form rendered="#{profileController.needShowPasswordChanging}">
                 <h:panelGrid id="profileGrid" columns="2" cellpadding="5">

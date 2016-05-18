@@ -62,8 +62,7 @@ public class ModeratingCompetitionEJB {
         try {
             Competition competition = new Competition();
             competition.setName(competitionName);
-            String evaluationType = EvaluationSystemRegistry.registry().getAvailableIds().iterator().next();
-            competition.setEvaluationType(evaluationType);
+            competition.setEvaluationType("icpc");
             competition.setRegistrationType(RegistrationType.PUBLIC.toString().toLowerCase());
             competition.setHoldCompetition(true);
             competition.setCompetitionStart(getFutureDate());

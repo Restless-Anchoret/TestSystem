@@ -6,6 +6,7 @@ import com.netcracker.businesslogic.users.AuthenticationEJB;
 import com.netcracker.database.dal.CompetitionFacadeLocal;
 import com.netcracker.database.dal.CompetitionProblemFacadeLocal;
 import com.netcracker.database.dal.CompilatorFacadeLocal;
+import com.netcracker.database.dal.ParticipationFacadeLocal;
 import com.netcracker.database.dal.SubmissionFacadeLocal;
 import com.netcracker.database.entity.Competition;
 import com.netcracker.database.entity.CompetitionProblem;
@@ -56,6 +57,8 @@ public class CompetitionController {
     private AuthenticationEJB authenticationEJB;
     @EJB(beanName = "SubmissionFacade")
     private SubmissionFacadeLocal submissionFacade;
+    @EJB(beanName = "ParticipationFacade")
+    private ParticipationFacadeLocal participationFacade;
     private Integer competitionId;
     private List<CompetitionProblem> competitionProblems;
     private UploadedFile file;
@@ -172,7 +175,7 @@ public class CompetitionController {
         for (int i = 0; i < competitionProblems.size(); i++)
             columns.add(new MonitorColumn(competitionProblems.get(i).getProblemNumber().toUpperCase(),
                     competitionProblems.get(i).getProblemNumber()));
-        participations = competitionFacade.loadParticipations(competition).getParticipationList();
+        participations = participationFacade.findByCompetitionId(competition.getId());
         competitionType = competition.getEvaluationType();
         User user = authenticationEJB.getCurrentUser();
         if (user.getRole().equals("admin") || user.getRole().equals("moderator")) {

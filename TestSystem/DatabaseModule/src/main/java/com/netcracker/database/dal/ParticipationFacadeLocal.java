@@ -21,4 +21,6 @@ public interface ParticipationFacadeLocal {
     
     List<Participation> findByCompetitionId(Object competitionId);
     
+    List<Participation> findByUserId(Object userId);
+    
 }

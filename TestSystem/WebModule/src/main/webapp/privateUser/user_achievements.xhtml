@@ -10,9 +10,6 @@
         <ui:define name="title">Достижения</ui:define>
         <ui:define name="subcontent">
             <h:form>
-                <f:metadata>
-                    <f:viewAction action="#{profileController.initUserAchievements()}" />
-                </f:metadata>
                 <h1><h:outputText value="Достижения пользователя #{profileController.user.login}"/></h1>
                 <p:dataTable id="participations" var="participation" value="#{profileController.participations}"
                              rows="15" paginator="true" 
