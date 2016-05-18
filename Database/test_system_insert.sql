@@ -23,12 +23,12 @@ insert into public.competition (name, hold_competition, evaluation_type, registr
 insert into public.competition (name, hold_competition, evaluation_type, registration_type, visible, show_monitor, pretests_only, practice_permition, finished, folder_name, competition_start, competition_interval, interval_frozen) values ('Kolibri Round #3', true, 'icpc', 'public', true, false, false, true, false, '7', timestamp'2017-01-01 15:00:00', 120, 0);
 insert into public.competition (name, hold_competition, evaluation_type, registration_type, visible, show_monitor, pretests_only, practice_permition, finished, folder_name, competition_start, competition_interval, interval_frozen) values ('Kolibri Round #4', true, 'icpc', 'public', false, false, false, true, false, '8', timestamp'2017-01-02 15:00:00', 120, 0);
 
-insert into public.problem (type, name, description_file_exists, validated, folder_name) values ('coding', 'A + B', true, true, '1');
-insert into public.problem (type, name, description_file_exists, validated, folder_name) values ('coding', 'Набор чисел', true, true, '2');
-insert into public.problem (type, name, description_file_exists, validated, folder_name) values ('coding', 'Возведение в степень', true, true, '3');
-insert into public.problem (type, name, description_file_exists, validated, folder_name) values ('coding', 'Диалоги', true, true, '4');
-insert into public.problem (type, name, description_file_exists, validated, folder_name) values ('coding', 'Карта', true, true, '5');
-insert into public.problem (type, name, description_file_exists, validated, folder_name) values ('coding', 'Счастливые номера', true, true, '6');
+insert into public.problem (type, name, time_limit, description_file_exists, validated, folder_name) values ('coding', 'A + B', 2000, true, true, '1');
+insert into public.problem (type, name, time_limit, description_file_exists, validated, folder_name) values ('coding', 'Набор чисел', 2000, true, true, '2');
+insert into public.problem (type, name, time_limit, description_file_exists, validated, folder_name) values ('coding', 'Возведение в степень', 2000, true, true, '3');
+insert into public.problem (type, name, time_limit, description_file_exists, validated, folder_name) values ('coding', 'Диалоги', 2000, true, true, '4');
+insert into public.problem (type, name, time_limit, description_file_exists, validated, folder_name) values ('coding', 'Карта', 2000, true, true, '5');
+insert into public.problem (type, name, time_limit, description_file_exists, validated, folder_name) values ('coding', 'Счастливые номера', 2000, true, true, '6');
 
 insert into public.test_group (problem_id, test_group_type, tests_quantity, points_for_test) values (1, 'samples', 2, 0);
 insert into public.test_group (problem_id, test_group_type, tests_quantity, points_for_test) values (1, 'pretests', 1, 0);
